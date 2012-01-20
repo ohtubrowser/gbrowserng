@@ -40,7 +40,7 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 			char c = session.referenceSequence.sequence[i];
 			PrimitiveRenderer.drawRectangle(glx(x), gly(y),
                     glxSize(this.session.halfSizeX * session.payloadSize),
-                    glySize(mySizeY * session.payloadSize), gl, GlobalVariables.genomeColor(c));
+                    glySize(mySizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= mySizeY) {
 				TextureManager.bindTexture(gl, GenoTexID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
@@ -56,7 +56,7 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 				&& x > -1f - glxSize(this.session.halfSizeX); --i) {
 			if (i < session.referenceSequence.sequence.length) {
 				char c = session.referenceSequence.sequence[i];
-				Color genomeColor = GlobalVariables.genomeColor(c);
+				Color genomeColor = GlobalVariables.genomeColors.get(c);
 				PrimitiveRenderer.drawRectangle(glx(x), gly(y),
 						glxSize(this.session.halfSizeX * session.payloadSize),
 						glySize(mySizeY * session.payloadSize), gl, genomeColor);

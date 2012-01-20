@@ -31,19 +31,19 @@ public class GenoWindowListener implements WindowListener {
         }
     }
 
-    public void windowGainedFocus(WindowEvent arg0) {
+    public void windowGainedFocus(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
-    public void windowLostFocus(WindowEvent arg0) {
+    public void windowLostFocus(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
-    public void windowMoved(WindowEvent arg0) {
+    public void windowMoved(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
-    public void windowRepaint(WindowUpdateEvent arg0) {
+    public void windowRepaint(WindowUpdateEvent e) {
         // TODO Auto-generated method stub
     }
 
