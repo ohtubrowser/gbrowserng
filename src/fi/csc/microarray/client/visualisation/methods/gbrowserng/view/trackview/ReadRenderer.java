@@ -47,7 +47,7 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 
 			PrimitiveRenderer.drawRectangle(glx(x), gly(y),
                     glxSize(this.session.halfSizeX * session.payloadSize),
-                    glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColor(c));
+                    glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
 				TextureManager.bindTexture(gl, GenoTexID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
@@ -72,7 +72,7 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 
 			PrimitiveRenderer.drawRectangle(glx(x), gly(y),
 					glxSize(this.session.halfSizeX * session.payloadSize),
-					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColor(c));
+					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
 				TextureManager.bindTexture(gl, GenoTexID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
