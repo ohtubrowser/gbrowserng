@@ -8,50 +8,50 @@ import com.jogamp.newt.event.WindowUpdateEvent;
 import java.util.concurrent.BlockingQueue;
 
 public class GenoWindowListener implements WindowListener {
-	
-	private BlockingQueue<NEWTEvent> eventQueue;
-	
-	public GenoWindowListener(BlockingQueue<NEWTEvent> eventQueue)
-	{
-		this.eventQueue = eventQueue;
-	}
 
-	public void windowDestroyNotify(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    private BlockingQueue<NEWTEvent> eventQueue;
 
-	public void windowDestroyed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public GenoWindowListener(BlockingQueue<NEWTEvent> eventQueue) {
+        this.eventQueue = eventQueue;
+    }
 
-	public void windowGainedFocus(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void windowDestroyNotify(WindowEvent e) {
+        try {
+            this.eventQueue.put(e);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+    }
 
-	public void windowLostFocus(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void windowDestroyed(WindowEvent e) {
+        try {
+            this.eventQueue.put(e);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+    }
 
-	public void windowMoved(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void windowGainedFocus(WindowEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-	public void windowRepaint(WindowUpdateEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void windowLostFocus(WindowEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-	public void windowResized(WindowEvent e) {
-		try {
-			this.eventQueue.put(e);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-	}
+    public void windowMoved(WindowEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
+    public void windowRepaint(WindowUpdateEvent arg0) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowResized(WindowEvent e) {
+        try {
+            this.eventQueue.put(e);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+    }
 }
