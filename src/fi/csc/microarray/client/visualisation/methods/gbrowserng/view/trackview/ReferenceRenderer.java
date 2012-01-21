@@ -13,17 +13,17 @@ import managers.TextureManager;
 
 public class ReferenceRenderer extends CascadingComponent implements VisualComponent {
 
-    private final Session session;
-    private float height = -0.43f; // where the component renders itself
-    private float mySizeY = 0.05f;
+	private final Session session;
+	private float height = -0.43f; // where the component renders itself
+	private float mySizeY = 0.05f;
 
-    public ReferenceRenderer(CascadingComponent parent, Session session) {
-        super(parent);
-        this.session = session;
-        this.setDimensions(2, 2);
-    }
+	public ReferenceRenderer(CascadingComponent parent, Session session) {
+		super(parent);
+		this.session = session;
+		this.setDimensions(2, 2);
+	}
 
-    private void drawRefSeq(SoulGL2 gl, float y) {
+	private void drawRefSeq(SoulGL2 gl, float y) {
 
 		float smoothPosition = ((TrackView)getParent()).getGenePosition();
 		int intPosition = (int) smoothPosition;
@@ -39,8 +39,8 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 				continue;
 			char c = session.referenceSequence.sequence[i];
 			PrimitiveRenderer.drawRectangle(glx(x), gly(y),
-                    glxSize(this.session.halfSizeX * session.payloadSize),
-                    glySize(mySizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
+					glxSize(this.session.halfSizeX * session.payloadSize),
+					glySize(mySizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= mySizeY) {
 				TextureManager.bindTexture(gl, GenoTexID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
@@ -71,11 +71,11 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 		}
 	}
 
-    public void draw(SoulGL2 gl) {
-        this.drawRefSeq(gl, height);
-    }
+	public void draw(SoulGL2 gl) {
+		this.drawRefSeq(gl, height);
+	}
 
-    public void tick(float dt) {
-        cascadingTick(dt);
-    }
+	public void tick(float dt) {
+		cascadingTick(dt);
+	}
 }

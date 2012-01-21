@@ -8,27 +8,27 @@ import javax.media.opengl.GLProfile;
 
 public class GenoWindow {
 	
-    public GLWindow window;
-    private Animator animator;
+	public GLWindow window;
+	private Animator animator;
 	
 	public GenoWindow(int width, int height)
 	{
-        GLProfile.initSingleton();
-        this.window = GLWindow.create(new GLCapabilities(GLProfile.getDefault()));
-        this.window.setSize(width, height);
-        this.window.setTitle("GenomeBrowserNG");
+		GLProfile.initSingleton();
+		this.window = GLWindow.create(new GLCapabilities(GLProfile.getDefault()));
+		this.window.setSize(width, height);
+		this.window.setTitle("GenomeBrowserNG");
 	}
 	
 	public void open()
 	{
-        this.window.setVisible(true);
-        this.animator = new Animator(this.window);
-        this.animator.start();
+		this.window.setVisible(true);
+		this.animator = new Animator(this.window);
+		this.animator.start();
 	}
 	
 	public void close()
 	{
-        this.animator.stop();
-        this.window.destroy();
+		this.animator.stop();
+		this.window.destroy();
 	}
 }

@@ -12,11 +12,11 @@ import gles.SoulGL2;
 
 public class TrackView extends GenosideComponent {
 
-    private TrackSession trackSession;
-    private ReadRenderer readRenderer;
-    private HeatMapRenderer heatMapRenderer;
-    private ReferenceRenderer referenceRenderer;
-    
+	private TrackSession trackSession;
+	private ReadRenderer readRenderer;
+	private HeatMapRenderer heatMapRenderer;
+	private ReferenceRenderer referenceRenderer;
+	
 	private GenoButton deleteButton;
 	private GenoButton minimizeButton;
 	private GenoButton maximizeButton;
@@ -36,13 +36,13 @@ public class TrackView extends GenosideComponent {
 		
 		this.session = session;
 
-        referenceRenderer = new ReferenceRenderer(this, session);
-        trackSession = new TrackSession(session.referenceSequence);
-        readRenderer = new ReadRenderer(session, trackSession.getReads(), this);
-        heatMapRenderer = new HeatMapRenderer(this, trackSession.getHeatMap());
+		referenceRenderer = new ReferenceRenderer(this, session);
+		trackSession = new TrackSession(session.referenceSequence);
+		readRenderer = new ReadRenderer(session, trackSession.getReads(), this);
+		heatMapRenderer = new HeatMapRenderer(this, trackSession.getHeatMap());
 
-        this.readRenderer.setDimensions(2, 2);
-        this.heatMapRenderer.setDimensions(2, 2);
+		this.readRenderer.setDimensions(2, 2);
+		this.heatMapRenderer.setDimensions(2, 2);
 
 		this.minimizeButton = new GenoButton(this, "MIN_BUTTON", -0.95f, 1.0f,
 				+0.04f, -0.04f, GenoTexID.SHRINK_BUTTON);
@@ -54,17 +54,17 @@ public class TrackView extends GenosideComponent {
 		setTrackViewMode(TrackView.READ);
 	}
 	
-    public float getGenePosition() {
-        return this.getParent().getAnimatedValues().getAnimatedValue("POSITION");
-    }
-    
-    public float getHalfWidth() {
-        return this.getParent().getAnimatedValues().getAnimatedValue("ZOOM");
-    }
-    
-    public Session getSession() {
-    	return this.session;
-    }
+	public float getGenePosition() {
+		return this.getParent().getAnimatedValues().getAnimatedValue("POSITION");
+	}
+	
+	public float getHalfWidth() {
+		return this.getParent().getAnimatedValues().getAnimatedValue("ZOOM");
+	}
+	
+	public Session getSession() {
+		return this.session;
+	}
 
 	public void draw(SoulGL2 gl) {
 		switch (this.trackViewMode) {
@@ -79,8 +79,8 @@ public class TrackView extends GenosideComponent {
 				break;
 				
 			case TrackView.READ:
-	            this.referenceRenderer.draw(gl);
-	            this.readRenderer.draw(gl);
+				this.referenceRenderer.draw(gl);
+				this.readRenderer.draw(gl);
 				this.minimizeButton.draw(gl);
 				this.deleteButton.draw(gl);
 				break;
@@ -115,8 +115,8 @@ public class TrackView extends GenosideComponent {
 				break;
 				
 			case TrackView.READ:
-	            this.referenceRenderer.tick(dt);
-	            this.readRenderer.tick(dt);
+				this.referenceRenderer.tick(dt);
+				this.readRenderer.tick(dt);
 				this.minimizeButton.tick(dt);
 				this.deleteButton.tick(dt);
 				break;
