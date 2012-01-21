@@ -110,8 +110,8 @@ public class OverView extends GenosideComponent {
             }
 
         // if there is an active session, let it handle input.
-        if (!activeSessions.isEmpty()) {
-                    return hoverCapsule.getSession().handle(event, x, y);
+        if (!activeSessions.isEmpty() && hoverCapsule != null) {
+            return hoverCapsule.getSession().handle(event, x, y);
         }
 
         // note, x axis is negated to make tracking begin from the mathematical zero angle.
