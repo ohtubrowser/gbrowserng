@@ -42,8 +42,8 @@ public class HeatMapRenderer extends CascadingComponent implements VisualCompone
 			heatColor.b = blueness;
 
 			PrimitiveRenderer.drawRectangle(glx(x), gly(0),
-                    glxSize(this.session.halfSizeX * session.payloadSize),
-                    glySize(0.5f), gl, heatColor);
+					glxSize(this.session.halfSizeX * session.payloadSize),
+					glySize(0.5f), gl, heatColor);
 		}
 
 		x = -halfWidth - offsetPosition * 2 * halfWidth;

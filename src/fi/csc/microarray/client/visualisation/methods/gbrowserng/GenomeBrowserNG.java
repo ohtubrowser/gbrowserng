@@ -24,27 +24,27 @@ public class GenomeBrowserNG {
 	
 	public GenomeBrowserNG(int width, int height) {
 
-        // fill with bogus data
-        AbstractGenome.setName("Bogus Genome");
-        AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
-        AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
-        AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
-        AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
-        AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
-        AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
-        AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+		// fill with bogus data
+		AbstractGenome.setName("Bogus Genome");
+		AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
+		AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
+		AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
+		AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
+		AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
+		AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
+		AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
 
-        this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
+		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
-        this.genoWindow = new GenoWindow(width, height);
-        this.glListener = new GenoGLListener(new OverView());
-        this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue);
-        this.windowListener = new GenoWindowListener(eventQueue);
+		this.genoWindow = new GenoWindow(width, height);
+		this.glListener = new GenoGLListener(new OverView());
+		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue);
+		this.windowListener = new GenoWindowListener(eventQueue);
 
-        this.genoWindow.window.addKeyListener(new Keyboard(eventQueue));
-        this.genoWindow.window.addMouseListener(new Mouse(eventQueue));
-        this.genoWindow.window.addWindowListener(windowListener);
-        this.genoWindow.window.addGLEventListener(glListener);
+		this.genoWindow.window.addKeyListener(new Keyboard(eventQueue));
+		this.genoWindow.window.addMouseListener(new Mouse(eventQueue));
+		this.genoWindow.window.addWindowListener(windowListener);
+		this.genoWindow.window.addGLEventListener(glListener);
 	}
 	
 	public void run() throws InterruptedException {

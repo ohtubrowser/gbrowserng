@@ -23,13 +23,13 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	private GenoVisualBorder border;
 
 	public SessionViewRecentCapsule(int id, Vector2 oldposition, Vector2 oldgenecirclepos, SessionView sessionview, Session session) {
-        super(null);
-        this.id=id;
-        this.session=session;
-        this.sessionView = sessionview;
-        this.oldPosition=oldposition;
-        this.oldGeneCirclePosition=oldgenecirclepos;
-        this.border=new GenoVisualBorder(this.sessionView);
+		super(null);
+		this.id=id;
+		this.session=session;
+		this.sessionView = sessionview;
+		this.oldPosition=oldposition;
+		this.oldGeneCirclePosition=oldgenecirclepos;
+		this.border=new GenoVisualBorder(this.sessionView);
 	}
 	public int getId()
 	{
@@ -60,18 +60,18 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-        Vector2 dimensions = sessionView.getDimensions();
-        Vector2 position = sessionView.getPosition();
+		Vector2 dimensions = sessionView.getDimensions();
+		Vector2 position = sessionView.getPosition();
 
-        if(screen_x > position.x - dimensions.x * 0.5f && screen_x < position.x + dimensions.x * 0.5f)
-        {
-            if(screen_y > position.y - dimensions.y * 0.5f && screen_y < position.y + dimensions.y * 0.5f) {
-                	this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 1);
-                return true;
-            }
-        }
-        this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
-        return false;
+		if(screen_x > position.x - dimensions.x * 0.5f && screen_x < position.x + dimensions.x * 0.5f)
+		{
+			if(screen_y > position.y - dimensions.y * 0.5f && screen_y < position.y + dimensions.y * 0.5f) {
+					this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 1);
+				return true;
+			}
+		}
+		this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
+		return false;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 
 	@Override
 	public void draw(SoulGL2 gl) {
-                // test comment
+				// test comment
 		float r=this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float a=this.getAnimatedValues().getAnimatedValue("ALPHA");
 		border.getAnimatedValues().setAnimatedValue("ALPHA", a);
