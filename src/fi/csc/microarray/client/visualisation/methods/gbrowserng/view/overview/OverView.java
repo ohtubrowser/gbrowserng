@@ -94,6 +94,11 @@ public class OverView extends GenosideComponent {
         }
 
         for (SessionViewCapsule capsule : activeSessions) {
+            int chromosome = capsule.getSession().getSession().referenceSequence.chromosome; 
+            float position = capsule.getSession().getSession().position;
+            float relativePosition = position / capsule.getSession().getSession().referenceSequence.sequence.length;
+            relativePosition = Math.min(Math.max(relativePosition, 0.0f), 1.0f);
+            capsule.updateGeneCirclePosition(geneCircle.getRelativePosition(chromosome, relativePosition));
             capsule.deactivate();
         }
 
