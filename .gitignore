@@ -5,4 +5,5 @@ out/*
 src/META-INF
 ext/lib/jogamp/*
 /build/
+dist/
 nbproject/private/

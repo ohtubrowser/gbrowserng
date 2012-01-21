@@ -60,7 +60,6 @@ public class RecentSessionManager implements Iterable<SessionViewRecentCapsule> 
 
 	@Override
 	public Iterator<SessionViewRecentCapsule> iterator() {
-		Arrays.asList(recentSessions).iterator();
-		return null;
+		return Arrays.asList(recentSessions).iterator();
 	}
 }
