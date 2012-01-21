@@ -4,7 +4,6 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.Color;
 import gles.SoulGL2;
@@ -140,9 +139,7 @@ public class SessionViewCapsule extends GenosideComponent {
         if(this.positionAdjustment.lengthSquared() > 0.00001f) {
             this.getSession().modifyPosition(this.positionAdjustment.x*4, this.positionAdjustment.y*4);
         }
-        // TODO: This is not necessary on every tick.
-        Vector2 pos = this.getGeneCirclePosition();
-        this.setPosition(pos.x, pos.y);
+        this.setPosition(genecirclePosition.x, genecirclePosition.y);
 
         link.tick(dt);
     }

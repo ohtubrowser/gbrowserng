@@ -53,7 +53,6 @@ public class GenomeBrowserNG {
 		this.eventHandler.handleEvents();
 
 		this.genoWindow.close();
-                System.exit(0);
 	}
 	
 	public static void main(String[] s) throws InterruptedException {

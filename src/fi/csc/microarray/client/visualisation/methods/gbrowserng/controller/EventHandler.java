@@ -46,7 +46,7 @@ public class EventHandler {
                     genoEvent.setScreenSize(window.window.getWidth(), window.window.getHeight());
                 } 
                 else if(event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED)
-                    System.exit(0);
+                    return;
             }
         }
     }
