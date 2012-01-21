@@ -51,9 +51,39 @@ public class GeneCircleGFX {
         gl.glDisableVertexAttribArray(vertexPositionHandle);
         shader.stop(gl);
         
+        gl.glEnable(SoulGL2.GL_BLEND);
+		shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
+        shader.start(gl);
+        Matrix4 identityMatrix = new Matrix4();
+        ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
+        ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
+        modelMatrix = new Matrix4();
+		float length = 0.10f;
         for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
-            PrimitiveRenderer.drawLine(0.40f*vec.x, 0.40f*vec.y, 0.55f*vec.x, 0.55f*vec.y, gl, Color.GREEN);
+
+            float x = 0.49f*vec.x;
+            float y = 0.49f*vec.y;
+
+            float dy = 0.55f*vec.y-y;
+			float dx = 0.55f*vec.x-x;
+			
+            float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
+            
+            modelMatrix.makeTranslationMatrix(x, y, 0);
+            modelMatrix.rotate(angle + 90f, 0, 0, 1);
+            modelMatrix.scale(0.01f, length, 0.2f);
+
+            ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
+
+            vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
+            PrimitiveBuffers.squareBuffer.rewind();
+            gl.glEnableVertexAttribArray(vertexPositionHandle);
+            gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
+            gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
+            gl.glDisableVertexAttribArray(vertexPositionHandle);
         }
+        shader.stop(gl);
+        gl.glDisable(SoulGL2.GL_BLEND);
     }
 
     public void tick(float dt) {
