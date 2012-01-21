@@ -26,7 +26,7 @@ public class OverView extends GenosideComponent {
 
     ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
     ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
-    RecentSessionManager recentSessionManager = new RecentSessionManager();
+    RecentSessionManager recentSessions = new RecentSessionManager();
 
     OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 
@@ -79,7 +79,7 @@ public class OverView extends GenosideComponent {
         for(SessionViewCapsule capsule : activeSessions) {
             if(capsule.isActive()) {
                 capsule.die();
-                recentSessionManager.Add(capsule);
+                recentSessions.Add(capsule);
             }
         }
     }
@@ -119,7 +119,7 @@ public class OverView extends GenosideComponent {
         for(SessionViewCapsule capsule : sessions)
             capsule.handle(event, x, y);
         
-        for(SessionViewRecentCapsule capsule : recentSessionManager.getRecentSessions())
+        for(SessionViewRecentCapsule capsule : recentSessions)
         {
         	if(capsule!=null) capsule.handle(event, x, y);
         }
@@ -150,7 +150,7 @@ public class OverView extends GenosideComponent {
 	                        if(!found)
 	                            otherCapsule.hide();
 	                    }
-	                    for(SessionViewRecentCapsule recentCapsule : recentSessionManager.getRecentSessions())
+	                    for(SessionViewRecentCapsule recentCapsule : recentSessions)
 	                    {
 	                    	if(recentCapsule!=null) recentCapsule.hide();
 	                    }
@@ -158,7 +158,7 @@ public class OverView extends GenosideComponent {
 	                    return true;
 	                }
 	            }
-	            for(SessionViewRecentCapsule capsule : recentSessionManager.getRecentSessions())
+	            for(SessionViewRecentCapsule capsule : recentSessions)
 	            {
 	            	if(capsule != null)
 	            	{
@@ -169,7 +169,7 @@ public class OverView extends GenosideComponent {
 		            		Vector2 oldpos=capsule.getOldPosition();
 		            		restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
 		            		sessions.add(restorecapsule);
-		            		recentSessionManager.Remove(capsule);
+		            		recentSessions.Remove(capsule);
 		            		return true;
 		            	}
 	            	}
@@ -190,7 +190,7 @@ public class OverView extends GenosideComponent {
 	                if(capsule.handle(event, x, y)) {
 	                    capsule.die();
 	                    capsule.deactivate();
-	                    recentSessionManager.Add(capsule);
+	                    recentSessions.Add(capsule);
 	                }
 	            }
 	            return true;
@@ -223,7 +223,7 @@ public class OverView extends GenosideComponent {
             capsule.draw(gl);
         }
         
-        for(SessionViewRecentCapsule capsule : recentSessionManager.getRecentSessions())
+        for(SessionViewRecentCapsule capsule : recentSessions)
         {
         	if(capsule!=null) capsule.draw(gl);
         }
@@ -251,7 +251,7 @@ public class OverView extends GenosideComponent {
             capsule.clearPositionAdjustment();
         }
         
-        for(SessionViewRecentCapsule capsule : recentSessionManager.getRecentSessions())
+        for(SessionViewRecentCapsule capsule : recentSessions)
         {
         	if(capsule!=null) capsule.tick(dt);
         }
