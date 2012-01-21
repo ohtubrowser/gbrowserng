@@ -1,6 +1,10 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-public class RecentSessionManager {
+import java.util.Arrays;
+import java.util.Iterator;
+
+// This class is NOT thread-safe
+public class RecentSessionManager implements Iterable<SessionViewRecentCapsule> {
 	private final int MAXSIZE=4;
 	private SessionViewRecentCapsule[] recentSessions;
 	private int elements;
@@ -52,5 +56,11 @@ public class RecentSessionManager {
 			if(recentSessions[i]!=null) recentSessions[i].setId(i);
 		}
 		for(int i=elements; i<recentSessions.length; ++i) recentSessions[i]=null; // Just in case.
+	}
+
+	@Override
+	public Iterator<SessionViewRecentCapsule> iterator() {
+		Arrays.asList(recentSessions).iterator();
+		return null;
 	}
 }
