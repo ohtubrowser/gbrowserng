@@ -1,6 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
-import managers.TextureManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
@@ -10,6 +9,7 @@ import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
 import gles.renderer.TextRenderer;
+import managers.TextureManager;
 
 public class ReferenceRenderer extends CascadingComponent implements VisualComponent {
 
