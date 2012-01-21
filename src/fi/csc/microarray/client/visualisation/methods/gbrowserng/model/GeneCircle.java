@@ -52,4 +52,8 @@ public class GeneCircle {
     public Vector2[] getChromosomeBoundariesPositions() {
         return chromosomeBoundariesPositions;
     }
+
+    public float getRelativePosition(int chromosome, float relativeChromosomePosition) {
+        return chromosomeBoundaries[chromosome] + (chromosomeBoundaries[chromosome+1] - chromosomeBoundaries[chromosome]) * relativeChromosomePosition;
+    }
  }

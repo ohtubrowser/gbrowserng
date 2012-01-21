@@ -49,6 +49,10 @@ public class SessionViewCapsule extends GenosideComponent {
         genecirclePosition.y = 0;
         genecirclePosition.rotate(2 * 3.14159f * relativePos);
     }
+    
+    public void updateGeneCirclePosition(float relativePos){
+        setGeneCirclePosition(0.485f, relativePos);
+    }
 
     public boolean isAlive() {
         return death < 1.0f;
