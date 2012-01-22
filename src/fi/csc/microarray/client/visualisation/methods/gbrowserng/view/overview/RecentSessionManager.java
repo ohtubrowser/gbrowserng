@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -19,21 +20,20 @@ public class RecentSessionManager implements Iterable<SessionViewRecentCapsule> 
 	{
 		return recentSessions;
 	}
-	
+
 	public void Add(SessionViewCapsule capsule)
 	{
 		SessionViewRecentCapsule recent=new SessionViewRecentCapsule(this.elements, capsule.getPosition(), capsule.getGeneCirclePosition(), capsule.getSession(), capsule.getSession().getSession());
 		if(elements<MAXSIZE)
 		{
 			recentSessions[elements++]=recent;
-			for(int i=0; i<elements; ++i) recentSessions[i].show();
 		}
 		else
 		{
 			Remove(0);
 			Add(capsule);
-			recent.show();
 		}
+		recent.show();
 	}
 	public void Remove(SessionViewRecentCapsule capsule)
 	{
@@ -60,6 +60,11 @@ public class RecentSessionManager implements Iterable<SessionViewRecentCapsule> 
 
 	@Override
 	public Iterator<SessionViewRecentCapsule> iterator() {
-		return Arrays.asList(recentSessions).iterator();
+		ArrayList<SessionViewRecentCapsule> list=new ArrayList<SessionViewRecentCapsule>();
+		for(int i=0; i<recentSessions.length; ++i)
+		{
+			if(recentSessions[i]!=null) list.add(recentSessions[i]);
+		}
+		return list.iterator();
 	}
 }

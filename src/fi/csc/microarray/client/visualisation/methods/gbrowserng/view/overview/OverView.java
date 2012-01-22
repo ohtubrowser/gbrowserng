@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -14,6 +15,7 @@ import math.Matrix4;
 import math.Vector2;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import sun.awt.GlobalCursorManager;
 
 public class OverView extends GenosideComponent {
 
@@ -92,9 +94,10 @@ public class OverView extends GenosideComponent {
 		for (SessionViewCapsule otherCapsule : sessions) {
 			otherCapsule.show();
 		}
+		for(SessionViewRecentCapsule recentCapsule : recentSessions) recentCapsule.show();
 
 		for (SessionViewCapsule capsule : activeSessions) {
-			int chromosome = capsule.getSession().getSession().referenceSequence.chromosome; 
+			int chromosome = capsule.getSession().getSession().referenceSequence.chromosome;
 			float position = capsule.getSession().getSession().position;
 			float relativePosition = position / capsule.getSession().getSession().referenceSequence.sequence.length;
 			relativePosition = Math.min(Math.max(relativePosition, 0.0f), 1.0f);
@@ -129,9 +132,7 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewRecentCapsule capsule : recentSessions) {
-			if (capsule != null) {
-				capsule.handle(event, x, y);
-			}
+			capsule.handle(event, x, y);
 		}
 
 		// then see if they actually want the event
@@ -161,25 +162,21 @@ public class OverView extends GenosideComponent {
 							}
 						}
 						for (SessionViewRecentCapsule recentCapsule : recentSessions) {
-							if (recentCapsule != null) {
-								recentCapsule.hide();
-							}
+							recentCapsule.hide();
 						}
 
 						return true;
 					}
 				}
 				for (SessionViewRecentCapsule capsule : recentSessions) {
-					if (capsule != null) {
-						if (capsule.handle(event, x, y)) {
-							SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition());
-							restorecapsule.getSession().setDimensions(0.4f, 0.2f);
-							Vector2 oldpos = capsule.getOldPosition();
-							restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
-							sessions.add(restorecapsule);
-							recentSessions.Remove(capsule);
-							return true;
-						}
+					if (capsule.handle(event, x, y)) {
+						SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition());
+						restorecapsule.getSession().setDimensions(0.4f, 0.2f);
+						Vector2 oldpos = capsule.getOldPosition();
+						restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
+						sessions.add(restorecapsule);
+						recentSessions.Remove(capsule);
+						return true;
 					}
 				}
 				// respond to mouse click
@@ -231,9 +228,7 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewRecentCapsule capsule : recentSessions) {
-			if (capsule != null) {
-				capsule.draw(gl);
-			}
+			capsule.draw(gl);
 		}
 
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
@@ -269,9 +264,7 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewRecentCapsule capsule : recentSessions) {
-			if (capsule != null) {
-				capsule.tick(dt);
-			}
+			capsule.tick(dt);
 		}
 
 		// if no active session, try to place session views in a good way.
