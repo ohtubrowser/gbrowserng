@@ -14,13 +14,14 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.Gen
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 
 public class SessionViewRecentCapsule extends GenosideComponent {
-	
+
 	private int	id;
 	private Session	session;
 	private SessionView	sessionView;
 	private Vector2	oldPosition;
 	private Vector2	oldGeneCirclePosition;
 	private GenoVisualBorder border;
+	private float posy=1.55f;
 
 	public SessionViewRecentCapsule(int id, Vector2 oldposition, Vector2 oldgenecirclepos, SessionView sessionview, Session session) {
 		super(null);
@@ -78,15 +79,16 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	public boolean handle(KeyEvent event) {
 		return false;
 	}
-	
+
 	public void hide()
 	{
-		this.getAnimatedValues().setAnimatedValue("ALPHA", 0.0f);
+		this.posy+=0.30f;
 		System.out.println("hide");
 	}
 	public void show()
 	{
-		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
+		Vector2 currentpos=sessionView.getPosition();
+		this.posy-=0.30f;
 		System.out.println("show");
 	}
 
@@ -94,19 +96,17 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	public void draw(SoulGL2 gl) {
 				// test comment
 		float r=this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
-		float a=this.getAnimatedValues().getAnimatedValue("ALPHA");
-		border.getAnimatedValues().setAnimatedValue("ALPHA", a);
-		Color c=new Color(r,r,r,a);
+		Color c=new Color(r,r,r);
 		gl.glEnable(SoulGL2.GL_BLEND);
 		PrimitiveRenderer.drawRectangle(this.sessionView.getPosition().x, this.sessionView.getPosition().y, 0.05f, 0.05f/GlobalVariables.aspectRatio, gl, c);
-		border.draw(gl, new Color(255,255,255,a));
+		border.draw(gl);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 
 	@Override
 	public void userTick(float dt) {
 		Vector2 dimensions=this.sessionView.getDimensions();
-		this.sessionView.setPosition(-1.0f+(dimensions.x * 0.5f)+(this.id*0.125f), 1.0f-0.05f);
+		this.sessionView.setPosition(-1.0f+(dimensions.x * 0.5f)+(this.id*0.125f), posy);
 		sessionView.tick(dt);
 	}
 
