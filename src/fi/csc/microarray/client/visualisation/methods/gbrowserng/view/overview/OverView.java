@@ -4,9 +4,11 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
@@ -19,6 +21,7 @@ import sun.awt.GlobalCursorManager;
 
 public class OverView extends GenosideComponent {
 
+
 	GeneCircle geneCircle = new GeneCircle();
 	GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
 	GenoFPSCounter fpsCounter = new GenoFPSCounter();
@@ -26,11 +29,14 @@ public class OverView extends GenosideComponent {
 	private SessionViewCapsule hoverCapsule = null;
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
+	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
 	RecentSessionManager recentSessions = new RecentSessionManager();
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 
 	public OverView() {
 		super(null);
+		links.add(new GeneralLink(AbstractGenome.getChromosome(0), AbstractGenome.getChromosome(3), 0, 1, 0, 1));
+		links.peek().calculatePositions(geneCircle);
 	}
 
 	@Override
@@ -229,6 +235,10 @@ public class OverView extends GenosideComponent {
 
 		for (SessionViewRecentCapsule capsule : recentSessions) {
 			capsule.draw(gl);
+		}
+
+		for (GeneralLink link : links) {
+		    link.draw(gl);
 		}
 
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);

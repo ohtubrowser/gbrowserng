@@ -56,4 +56,10 @@ public class GeneCircle {
 	public float getRelativePosition(int chromosome, float relativeChromosomePosition) {
 		return chromosomeBoundaries[chromosome] + (chromosomeBoundaries[chromosome+1] - chromosomeBoundaries[chromosome]) * relativeChromosomePosition;
 	}
+
+    Vector2 getXYPosition(float relativeCirclePos) {
+	Vector2 ret = new Vector2(0.485f, 0.0f);
+	ret.rotate(2*(float)Math.PI*relativeCirclePos);
+	return ret;
+    }
  }
