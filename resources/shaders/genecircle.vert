@@ -17,7 +17,7 @@ void main()
 {
     power = sin( 4.0 * time + (vertexPosition.x * 3.0 + vertexPosition.y * 3.0) ) * 0.5 + 0.5;
     float dot = mouse.x * vertexPosition.x + mouse.y * vertexPosition.y;
-    dot = dot * dot * dot * dot * dot * dot * dot * dot * dot;
+    dot = pow(dot, 30);
     dotproduct = max(0.0, dot);
 
     vec4 vertexPos = modelMatrix * vec4(vertexPosition, 0.0, 1.0);
