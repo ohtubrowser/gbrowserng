@@ -21,7 +21,8 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	private Vector2	oldPosition;
 	private Vector2	oldGeneCirclePosition;
 	private GenoVisualBorder border;
-	private float posy=1.55f;
+	private float posy;
+	private boolean isVisible;
 
 	public SessionViewRecentCapsule(int id, Vector2 oldposition, Vector2 oldgenecirclepos, SessionView sessionview, Session session) {
 		super(null);
@@ -31,6 +32,8 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 		this.oldPosition=oldposition;
 		this.oldGeneCirclePosition=oldgenecirclepos;
 		this.border=new GenoVisualBorder(this.sessionView);
+		this.posy=1.25f;
+		this.isVisible=false;
 	}
 	public int getId()
 	{
@@ -82,13 +85,14 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 
 	public void hide()
 	{
-		this.posy+=0.30f;
+		if(isVisible) this.posy+=0.30f;
+		isVisible=false;
 		System.out.println("hide");
 	}
 	public void show()
 	{
-		Vector2 currentpos=sessionView.getPosition();
-		this.posy-=0.30f;
+		if(!isVisible) this.posy-=0.30f;
+		isVisible=true;
 		System.out.println("show");
 	}
 
