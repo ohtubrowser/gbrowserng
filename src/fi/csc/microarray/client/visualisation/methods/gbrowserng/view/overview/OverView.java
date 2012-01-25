@@ -2,7 +2,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
@@ -17,7 +16,6 @@ import math.Matrix4;
 import math.Vector2;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import sun.awt.GlobalCursorManager;
 
 public class OverView extends GenosideComponent {
 
