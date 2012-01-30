@@ -56,6 +56,6 @@ public class GenomeBrowserNG {
 	}
 	
 	public static void main(String[] s) throws InterruptedException {
-		new GenomeBrowserNG(1440, 900).run();
+		new GenomeBrowserNG(1024, 768).run();
 	}
 }
