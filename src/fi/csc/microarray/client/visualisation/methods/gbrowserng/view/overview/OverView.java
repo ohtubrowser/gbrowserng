@@ -262,6 +262,9 @@ public class OverView extends GenosideComponent {
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
+		for (GeneralLink link : links) {
+		    link.draw(gl);
+		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 
 		for (SessionViewCapsule capsule : sessions) {
@@ -272,9 +275,7 @@ public class OverView extends GenosideComponent {
 			capsule.draw(gl);
 		}
 
-		for (GeneralLink link : links) {
-		    link.draw(gl);
-		}
+		
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
 		TextRenderer.getInstance().drawText(gl, "Draw: " + fpsCounter.getMillis() + "ms", 0, 0.84f, 0.9f);
 
