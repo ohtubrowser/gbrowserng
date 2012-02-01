@@ -11,6 +11,8 @@ import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
 
+import javax.media.opengl.GL2;
+
 public class GeneralLink {
 
 	private AbstractChromosome aChromosome, bChromosome;
@@ -70,10 +72,14 @@ public class GeneralLink {
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
 		smoothings.rewind();
+		gl.glLineWidth(3.0f);
+		gl.glEnable(GL2.GL_LINE_SMOOTH);
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
 		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, smoothings);
 		gl.glDrawArrays(SoulGL2.GL_LINE_STRIP, 0, smoothings.capacity()/2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
+		gl.glDisable(GL2.GL_LINE_SMOOTH);
+		gl.glLineWidth(1.0f);
 
 		shader.stop(gl);
 

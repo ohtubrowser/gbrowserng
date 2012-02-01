@@ -1,4 +1,6 @@
-
+#if __VERSION__ != 110
+precision mediump float;
+#endif
 
 uniform float lifetime;
 uniform float uniAlpha;
@@ -15,6 +17,6 @@ void main()
 
     float alpha = x_alpha * y_alpha;
 
-    gl_FragColor = vec4(lifetime * lifetime * 0.2, 0.3f, 0.4f, alpha * uniAlpha);
+    gl_FragColor = vec4(lifetime * lifetime * 0.2, 0.3, 0.4, alpha * uniAlpha);
 }
 
