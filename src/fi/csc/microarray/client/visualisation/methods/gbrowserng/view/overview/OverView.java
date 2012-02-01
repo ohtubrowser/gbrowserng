@@ -249,6 +249,7 @@ public class OverView extends GenosideComponent {
 		}
 
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
+		TextRenderer.getInstance().drawText(gl, "Draw: " + fpsCounter.getMillis() + "ms", 0, 0.84f, 0.9f);
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
@@ -330,5 +331,9 @@ public class OverView extends GenosideComponent {
 		if (killCapsule != null) {
 			sessions.remove(killCapsule);
 		}
+	}
+
+	public GenoFPSCounter getFpsCounter() {
+		return fpsCounter;
 	}
 }
