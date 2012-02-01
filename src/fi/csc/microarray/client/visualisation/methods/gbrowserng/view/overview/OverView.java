@@ -3,6 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -18,6 +19,7 @@ import managers.TextureManager;
 import math.Matrix4;
 import math.Vector2;
 
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class OverView extends GenosideComponent {
@@ -37,10 +39,6 @@ public class OverView extends GenosideComponent {
 
 	public OverView() {
 		super(null);
-		links.add(new GeneralLink(AbstractGenome.getChromosome(0), AbstractGenome.getChromosome(3), 0, 1, 0, 1));
-		links.add(new GeneralLink(AbstractGenome.getChromosome(1), AbstractGenome.getChromosome(1), 0, 1, 100, 101));
-
-		links.peek().calculatePositions(geneCircle);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 		ConnectionsButton.setDimensions(0.1f, 0.1f);
@@ -246,6 +244,15 @@ public class OverView extends GenosideComponent {
 		else if(event.VK_A == event.getKeyCode()) {
 		    	geneCircle.setSize(geneCircle.getSize()+0.01f);
 			updateCircleSize();
+		}
+		else if(event.VK_SPACE == event.getKeyCode())
+		{
+			Random r = new Random();
+			AbstractChromosome begin=AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			AbstractChromosome end=AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			GeneralLink newlink=new GeneralLink(begin,end,0,r.nextInt((int)begin.length()),0,r.nextInt((int)end.length()));
+			newlink.calculatePositions(geneCircle);
+			links.add(newlink);
 		}
 		return false;
 	}
