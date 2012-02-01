@@ -9,6 +9,7 @@ public class GenoTexID {
 	public static final TextureID SHRINK_BUTTON = new TextureID();
 	public static final TextureID OPENFILE_BUTTON = new TextureID();
 	public static final TextureID MAXIMIZE_BUTTON = new TextureID();
+	public static final TextureID CONNECTIONS_BUTTON = new TextureID();
 	public static final TextureID FONT = new TextureID();
 
 	public static void createTextures(SoulGL2 gl) {
@@ -16,6 +17,7 @@ public class GenoTexID {
 		TextureManager.loadTexture(gl, "shrink.png", SHRINK_BUTTON);
 		TextureManager.loadTexture(gl, "openfile.png", OPENFILE_BUTTON);
 		TextureManager.loadTexture(gl, "maximize.png", MAXIMIZE_BUTTON);
+		TextureManager.loadTexture(gl, "connections.png", CONNECTIONS_BUTTON);
 		TextureManager.loadTexture(gl, "font.png", FONT);
 	}
 }
