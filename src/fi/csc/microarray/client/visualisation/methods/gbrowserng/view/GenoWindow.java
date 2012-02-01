@@ -1,14 +1,14 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.Animator;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 
 public class GenoWindow {
 
 	public GLWindow window;
-	private FPSAnimator animator;
+	private Animator animator;
 
 	public GenoWindow(int width, int height)
 	{
@@ -21,7 +21,7 @@ public class GenoWindow {
 	public void open()
 	{
 		this.window.setVisible(true);
-		this.animator = new FPSAnimator(this.window, 60);
+		this.animator = new Animator(this.window);
 		this.animator.start();
 	}
 

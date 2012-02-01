@@ -47,6 +47,7 @@ public class GenoGLListener implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 
+		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
 		AssetManager.setInstance(new DesktopAssetManager());
