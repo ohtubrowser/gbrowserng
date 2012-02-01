@@ -3,7 +3,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
-import gles.primitives.PrimitiveBuffers;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import java.nio.FloatBuffer;
@@ -15,6 +14,7 @@ public class GeneralLink {
 
 	private AbstractChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
+	private float r = Math.max(0.5f, (float)Math.random()),g = (float) Math.random(), b=(float)Math.random();
 
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
@@ -35,6 +35,7 @@ public class GeneralLink {
 		//PrimitiveRenderer.drawLine(aXYPos.x, aXYPos.y, bXYPos.x, bXYPos.y, gl, Color.MAGENTA);
 		gl.glEnable(SoulGL2.GL_BLEND);
 
+
 		FloatBuffer smoothings = FloatBuffer.allocate(100);
 		for(float i = 1.0f; i < 100.0f; i+=1.0f)
 		    smoothings.put(i/100.0f);
@@ -47,8 +48,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
-		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", 1.0f);
-		ShaderMemory.setUniformVec1(gl, shader, "lifetime", 5.0f);
+		ShaderMemory.setUniformVec3(gl, shader, "color", r,g,b);
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 
@@ -70,10 +70,13 @@ public class GeneralLink {
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
 		smoothings.rewind();
+		gl.glLineWidth(3.0f);
+		
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
 		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, smoothings);
 		gl.glDrawArrays(SoulGL2.GL_LINE_STRIP, 0, smoothings.capacity()/2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
+		gl.glLineWidth(1.0f);
 
 		shader.stop(gl);
 
