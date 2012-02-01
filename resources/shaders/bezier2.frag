@@ -1,4 +1,6 @@
-
+#if __VERSION__ != 110
+precision mediump float;
+#endif
 
 uniform vec3 color;
 
@@ -11,6 +13,7 @@ void main()
     float y_alpha = abs(asd.y);
 
     float alpha = max(0.3, (x_alpha + y_alpha) * x_alpha * y_alpha);
+
 
     gl_FragColor = vec4(color,alpha);
 }
