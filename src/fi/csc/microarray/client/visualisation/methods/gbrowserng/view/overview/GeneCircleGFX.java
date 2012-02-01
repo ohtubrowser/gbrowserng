@@ -61,12 +61,13 @@ public class GeneCircleGFX {
 		modelMatrix = new Matrix4();
 		float length = 0.10f;
 		for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
+		    //PrimitiveRenderer.drawLine(0, 0, vec.x, vec.y, gl, Color.MAGENTA);
 
-			float x = 0.49f*vec.x;
-			float y = 0.49f*vec.y;
+			float x = 0.95f*vec.x;
+			float y = 0.95f*vec.y;
 
-			float dy = 0.55f*vec.y-y;
-			float dx = 0.55f*vec.x-x;
+			float dy = 0.95f*vec.y;
+			float dx = 0.95f*vec.x;
 			
 			float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
 			
@@ -82,6 +83,7 @@ public class GeneCircleGFX {
 			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
 			gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
 			gl.glDisableVertexAttribArray(vertexPositionHandle);
+
 		}
 		gl.glBlendFunc(SoulGL2.GL_SRC_ALPHA, SoulGL2.GL_ONE_MINUS_SRC_ALPHA);
 		shader.stop(gl);
