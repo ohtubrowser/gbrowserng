@@ -50,6 +50,11 @@ public abstract class CascadingComponent {
 	public final Vector2 getDimensions() {
 		return relativeDimensions;
 	}
+	
+	public final Vector2 getTargetDimensions()
+	{
+		return targetDimensions;
+	}
 
 	private final void updatePosition() {
 		if(parent == null)
