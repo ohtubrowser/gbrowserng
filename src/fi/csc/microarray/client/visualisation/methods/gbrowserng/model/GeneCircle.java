@@ -8,6 +8,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 public class GeneCircle {
 	
 	private float minimumChromosomeSlice = 0.08f; // TODO should check that this is not too big
+	private float size;
 	
 	private AbstractChromosome chromosome = AbstractGenome.getChromosome(0);
 	private long chromosomePosition = 0;
@@ -21,10 +22,9 @@ public class GeneCircle {
 		assert(sliceSizeLeft >= 0);
 		
 		chromosomeBoundaries[0] = 0;
-		for(int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
+		for(int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i)
 			chromosomeBoundaries[i] = chromosomeBoundaries[i-1] + minimumChromosomeSlice + sliceSizeLeft * AbstractGenome.getChromosome(i-1).length()/AbstractGenome.getTotalLength();
-			chromosomeBoundariesPositions[i-1] = new Vector2((float)Math.cos(2*Math.PI*chromosomeBoundaries[i-1]), (float)Math.sin(2*Math.PI*chromosomeBoundaries[i-1]));
-		}
+		
 		}
 		
 	public void updatePosition(float pointerGenePosition) {
@@ -58,8 +58,20 @@ public class GeneCircle {
 	}
 
     Vector2 getXYPosition(float relativeCirclePos) {
-	Vector2 ret = new Vector2(0.485f, 0.0f);
+	Vector2 ret = new Vector2(size, 0.0f);
 	ret.rotate(2*(float)Math.PI*relativeCirclePos);
 	return ret;
+    }
+
+    public float getSize() {
+	return size;
+    }
+
+    public void setSize(float size) {
+	this.size = size;
+	for(int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
+		chromosomeBoundariesPositions[i-1] = getXYPosition(chromosomeBoundaries[i-1]);
+	}
+
     }
  }
