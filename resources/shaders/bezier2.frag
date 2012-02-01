@@ -2,21 +2,19 @@
 precision mediump float;
 #endif
 
-uniform float lifetime;
-uniform float uniAlpha;
+uniform vec3 color;
+
 varying vec2 positionGradient;
 
 void main()
 {
-    float x_alpha = 1.0;// - positionGradient.x * positionGradient.x;
-    float y_alpha = 1.0;// - positionGradient.y * positionGradient.y;
+    vec2 asd = normalize(positionGradient);
+    float x_alpha = abs(asd.x);
+    float y_alpha = abs(asd.y);
 
-    // float val = (positionGradient.y - lifetime);
-    // float height_val = max(0.0, 1.0 - 10.0 * val * val);
-    // float alpha = x_alpha * y_alpha * height_val;
+    float alpha = max(0.3, (x_alpha + y_alpha) * x_alpha * y_alpha);
 
-    float alpha = x_alpha * y_alpha;
 
-    gl_FragColor = vec4(lifetime * lifetime * 0.2, 0.3, 0.4, alpha * uniAlpha);
+    gl_FragColor = vec4(color,alpha);
 }
 
