@@ -2,11 +2,13 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import gles.Color;
 import gles.SoulGL2;
 import gles.TextureID;
 import gles.renderer.PrimitiveRenderer;
+import math.Vector2;
 
 public class GenoButton extends GenosideComponent {
 
@@ -44,19 +46,20 @@ public class GenoButton extends GenosideComponent {
 		if(buttonLock > 0.01f)
 			return false;
 
-		float dx = screen_x - this.getParent().glx(xpos) - x_offset + 0.01f;
-		float dy = screen_y - this.getParent().gly(ypos) - y_offset + 0.01f;
-
-		if(dx * dx + dy * dy < 0.02f * 0.02f) {
-			if(event.getEventType() == MouseEvent.EVENT_MOUSE_CLICKED) {
-				this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
-				this.getParent().childComponentCall(buttonName, "PRESSED");
-				buttonLock = 0.5f;
-				return true;
+		Vector2 position=new Vector2(xpos+x_offset,ypos+y_offset);
+		Vector2 dimensions=getTargetDimensions();
+		
+		if(screen_x > position.x - dimensions.x * 0.5f && screen_x < position.x + dimensions.x * 0.5f) {
+			if(screen_y > position.y - dimensions.y - (y_offset/GlobalVariables.aspectRatio) * 0.5f && screen_y < position.y + dimensions.y + (y_offset/GlobalVariables.aspectRatio) * 0.5f) {
+				if(event.getEventType() == MouseEvent.EVENT_MOUSE_CLICKED) {
+					this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
+					this.getParent().childComponentCall(buttonName, "PRESSED");
+					buttonLock = 0.5f;
+					return true;
+				}
+				this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 1);
+				return false;
 			}
-
-			this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 1);
-			return false;
 		}
 
 		this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
@@ -70,11 +73,13 @@ public class GenoButton extends GenosideComponent {
 
 	@Override
 	public void draw(SoulGL2 gl) {
+		Vector2 position=new Vector2(xpos+x_offset, ypos+y_offset);
+		Vector2 dimensions=getTargetDimensions();
 		gl.glEnable(SoulGL2.GL_BLEND);
 		myColor.g = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		myColor.b = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float myScale = 0.02f + this.getAnimatedValues().getAnimatedValue("MOUSEHOVER") * 0.01f;
-		PrimitiveRenderer.drawTexturedSquare(this.getParent().glx(xpos) - myScale * 0.5f + x_offset, this.getParent().gly(ypos) - myScale * 0.5f + y_offset, myScale, gl, myColor, myTexture);
+		PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x*0.5f, gl, myColor, myTexture);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 
