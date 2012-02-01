@@ -35,6 +35,8 @@ public class OverView extends GenosideComponent {
 		super(null);
 		links.add(new GeneralLink(AbstractGenome.getChromosome(0), AbstractGenome.getChromosome(3), 0, 1, 0, 1));
 		links.peek().calculatePositions(geneCircle);
+		geneCircle.setSize(0.485f);
+		updateCircleSize();
 	}
 
 	@Override
@@ -139,7 +141,7 @@ public class OverView extends GenosideComponent {
 	
 	private void restoreCapsule(SessionViewRecentCapsule capsule)
 	{
-		SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition());
+		SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition(), geneCircle);
 		restorecapsule.getSession().setDimensions(0.4f, 0.2f);
 		Vector2 oldpos = capsule.getOldPosition();
 		restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
@@ -194,7 +196,7 @@ public class OverView extends GenosideComponent {
 				}
 				// respond to mouse click
 				System.out.println("Adding capsule with " + x + " " + y);
-				SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition);
+				SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
 				capsule.getSession().setDimensions(0.4f, 0.2f);
 				capsule.getSession().setPosition(x, y);
 				sessions.add(capsule);
@@ -213,6 +215,7 @@ public class OverView extends GenosideComponent {
 				return true;
 			}
 		}
+		
 		mousePosition.x = x;
 		mousePosition.y = y;
 		return false;
@@ -226,6 +229,15 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
+		if(event.VK_Z == event.getKeyCode())
+		{
+		  geneCircle.setSize(Math.max(0.0f, geneCircle.getSize()-0.01f));
+		  updateCircleSize();
+		}
+		else if(event.VK_A == event.getKeyCode()) {
+		    	geneCircle.setSize(geneCircle.getSize()+0.01f);
+			updateCircleSize();
+		}
 		return false;
 	}
 
@@ -233,7 +245,7 @@ public class OverView extends GenosideComponent {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
-		geneCircleModelMatrix.scale(0.5f, 0.5f, 0.5f);
+		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 
 		for (SessionViewCapsule capsule : sessions) {
@@ -331,4 +343,11 @@ public class OverView extends GenosideComponent {
 			sessions.remove(killCapsule);
 		}
 	}
+
+    private void updateCircleSize() {
+	for(SessionViewCapsule capsule : sessions)
+	    capsule.updateGeneCirclePosition();
+	for(GeneralLink link : links)
+	    link.calculatePositions(geneCircle);
+    }
 }

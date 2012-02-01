@@ -4,6 +4,7 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.Color;
 import gles.SoulGL2;
@@ -13,11 +14,13 @@ import math.Vector2;
 public class SessionViewCapsule extends GenosideComponent {
 
 	private final SessionView sessionView;
+	private final GeneCircle geneCircle;
 
 	// TODO: SessionViewCapsuleData class could contain this.
 	private boolean isActive = false;
 	private boolean dying = false;
 	private float death = 0;
+	private float relativePos;
 	private Color backGroundColor = new Color(0, 0, 0, 255);
 
 	private Vector2 genecirclePosition = new Vector2(1, 0);
@@ -25,16 +28,19 @@ public class SessionViewCapsule extends GenosideComponent {
 
 	private final LinkGFX link;
 
-	public SessionViewCapsule(SessionView sessionView, float relativePos) {
+	public SessionViewCapsule(SessionView sessionView, float relativePos, GeneCircle geneCircle) {
 		super(null); // should be ok
 		this.sessionView = sessionView;
+		this.geneCircle = geneCircle;
+		this.relativePos = relativePos;
 		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
-		setGeneCirclePosition(0.485f, relativePos);
+		setGeneCirclePosition(relativePos);
 		link = new LinkGFX(sessionView, this);
 	}
-	public SessionViewCapsule(SessionView sessionView, Vector2 relativePosVector) {
+	public SessionViewCapsule(SessionView sessionView, Vector2 relativePosVector, GeneCircle geneCircle) {
 		super(null); // should be ok
 		this.sessionView = sessionView;
+		this.geneCircle = geneCircle;
 		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
 		this.genecirclePosition=relativePosVector;
 		link = new LinkGFX(sessionView, this);
@@ -44,14 +50,20 @@ public class SessionViewCapsule extends GenosideComponent {
 		return genecirclePosition;
 	}
 	
-	private void setGeneCirclePosition(float circleSize, float relativePos) {
-		genecirclePosition.x = circleSize;
+	private void setGeneCirclePosition(float relativePos) {
+		this.relativePos = relativePos;
+		updateGeneCirclePosition();
+		
+	}
+
+	public void updateGeneCirclePosition(float relativePos){
+		setGeneCirclePosition(relativePos);
+	}
+
+	public void updateGeneCirclePosition(){
+		genecirclePosition.x = geneCircle.getSize();
 		genecirclePosition.y = 0;
 		genecirclePosition.rotate(2 * (float)Math.PI * relativePos);
-	}
-	
-	public void updateGeneCirclePosition(float relativePos){
-		setGeneCirclePosition(0.485f, relativePos);
 	}
 
 	public boolean isAlive() {
