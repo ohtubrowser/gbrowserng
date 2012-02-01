@@ -50,7 +50,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
-		ShaderMemory.setUniformVec3(gl, shader, "color", r,g,b);
+		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 
@@ -77,7 +77,7 @@ public class GeneralLink {
 		gl.glEnable(GL2.GL_LINE_SMOOTH);
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
 		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, smoothings);
-		gl.glDrawArrays(SoulGL2.GL_LINE_STRIP, 0, smoothings.capacity()/2);
+		gl.glDrawArrays(SoulGL2.GL_LINE_STRIP, 0, smoothings.capacity() / 2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		gl.glDisable(GL2.GL_LINE_SMOOTH);
 
