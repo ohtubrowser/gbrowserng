@@ -29,16 +29,21 @@ public class GenoGLListener implements GLEventListener {
 	
 	public GenoGLListener(OverView overView) {
 		this.overView = overView;
-  }
+	}
 
 	public void display(GLAutoDrawable drawable) {
+		timer.start();
+
 		SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
 		float dt = timer.getDT();
 
 		overView.tick(dt);
+
 		overView.draw(gl);
+
+		overView.getFpsCounter().addNano(timer.end());
 	}
 
 	public void dispose(GLAutoDrawable drawable) {
