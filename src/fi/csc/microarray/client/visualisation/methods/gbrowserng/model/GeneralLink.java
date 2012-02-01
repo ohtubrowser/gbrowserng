@@ -38,8 +38,8 @@ public class GeneralLink {
 		gl.glEnable(SoulGL2.GL_BLEND);
 
 
-		FloatBuffer smoothings = FloatBuffer.allocate(100);
-		for(float i = 1.0f; i < 100.0f; i+=1.0f)
+		FloatBuffer smoothings = FloatBuffer.allocate(101);
+		for(float i = 1.0f; i <= 100.0f; i+=1.0f)
 		    smoothings.put(i/100.0f);
 		smoothings.rewind();
 
