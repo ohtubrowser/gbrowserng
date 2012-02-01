@@ -34,6 +34,8 @@ public class OverView extends GenosideComponent {
 	public OverView() {
 		super(null);
 		links.add(new GeneralLink(AbstractGenome.getChromosome(0), AbstractGenome.getChromosome(3), 0, 1, 0, 1));
+		links.add(new GeneralLink(AbstractGenome.getChromosome(1), AbstractGenome.getChromosome(1), 0, 1, 100, 101));
+
 		links.peek().calculatePositions(geneCircle);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
