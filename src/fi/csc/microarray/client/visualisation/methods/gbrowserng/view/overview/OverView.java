@@ -9,9 +9,12 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoButton;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 import gles.renderer.TextRenderer;
+import managers.TextureManager;
 import math.Matrix4;
 import math.Vector2;
 
@@ -25,6 +28,7 @@ public class OverView extends GenosideComponent {
 	GenoFPSCounter fpsCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
+	private final GenoButton ConnectionsButton = new GenoButton(this, "CONNECTIONS_BUTTON", 1.0f, 1.0f, -0.055f, -0.075f, GenoTexID.CONNECTIONS_BUTTON);
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
@@ -39,6 +43,7 @@ public class OverView extends GenosideComponent {
 		links.peek().calculatePositions(geneCircle);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
+		ConnectionsButton.setDimensions(0.1f, 0.1f);
 	}
 
 	@Override
@@ -116,7 +121,7 @@ public class OverView extends GenosideComponent {
 		activeSessions.clear();
 	}
 	
-	private void openCapsule(SessionViewCapsule capsule)
+	private void openSession(SessionViewCapsule capsule)
 	{
 		capsule.activate();
 		activeSessions.add(capsule);
@@ -178,6 +183,8 @@ public class OverView extends GenosideComponent {
 			capsule.handle(event, x, y);
 		}
 
+		ConnectionsButton.handle(event,x,y);
+
 		// then see if they actually want the event
 		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
 			if (event.getButton() == 1) {
@@ -186,7 +193,7 @@ public class OverView extends GenosideComponent {
 						continue;
 					}
 					if (capsule.handle(event, x, y)) {
-						openCapsule(capsule);
+						openSession(capsule);
 						return true;
 					}
 				}
@@ -261,10 +268,10 @@ public class OverView extends GenosideComponent {
 		for (GeneralLink link : links) {
 		    link.draw(gl);
 		}
-
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
+			ConnectionsButton.draw(gl);
 			// Mouse hover information
 			// TODO: Show the info of a session view, when hovering mouse over session view.
 			long position; int chromosome;
@@ -275,6 +282,7 @@ public class OverView extends GenosideComponent {
 				position = (long)this.hoverCapsule.getSession().getSession().position;
 				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
 			}
+			TextureManager.bindTexture(gl, GenoTexID.FONT);
 			TextRenderer.getInstance().drawText(gl, "Chromosome " + chromosome, 0, -0.86f, 0.8f);
 			TextRenderer.getInstance().drawText(gl, "Position: " + position, 0, -0.95f, 0.8f);
 		}
@@ -344,6 +352,8 @@ public class OverView extends GenosideComponent {
 		if (killCapsule != null) {
 			sessions.remove(killCapsule);
 		}
+		
+		ConnectionsButton.tick(dt);
 	}
 
     private void updateCircleSize() {
