@@ -111,16 +111,51 @@ public class OverView extends GenosideComponent {
 
 		activeSessions.clear();
 	}
+	
+	private void openCapsule(SessionViewCapsule capsule)
+	{
+		capsule.activate();
+		activeSessions.add(capsule);
+
+		showActiveSessions();
+		state = OverViewState.SESSIONVIEW_ACTIVE;
+
+		for (SessionViewCapsule otherCapsule : sessions) {
+			boolean found = false;
+			for (SessionViewCapsule activeCapsule : activeSessions) {
+				if (otherCapsule.getId() == activeCapsule.getId()) {
+					found = true;
+				}
+			}
+
+			if (!found) {
+				otherCapsule.hide();
+			}
+		}
+		for (SessionViewRecentCapsule recentCapsule : recentSessions) {
+			recentCapsule.hide();
+		}
+	}
+	
+	private void restoreCapsule(SessionViewRecentCapsule capsule)
+	{
+		SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition());
+		restorecapsule.getSession().setDimensions(0.4f, 0.2f);
+		Vector2 oldpos = capsule.getOldPosition();
+		restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
+		sessions.add(restorecapsule);
+		recentSessions.Remove(capsule);
+	}
 
 	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
 	public boolean handle(MouseEvent event, float x, float y) {
 		this.hoverCapsule = null;
-		for (SessionViewCapsule capsule : sessions) // TODO : hoverCapsule is calculated many times in this function
+		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
 			if (capsule.getSession().inComponent(x, y)) {
 				this.hoverCapsule = capsule;
 				break;
 			}
-
+		}
 		// if there is an active session, let it handle input.
 		if (!activeSessions.isEmpty() && hoverCapsule != null) {
 			return hoverCapsule.getSession().handle(event, x, y);
@@ -147,39 +182,13 @@ public class OverView extends GenosideComponent {
 						continue;
 					}
 					if (capsule.handle(event, x, y)) {
-						capsule.activate();
-						activeSessions.add(capsule);
-
-						showActiveSessions();
-						state = OverViewState.SESSIONVIEW_ACTIVE;
-
-						for (SessionViewCapsule otherCapsule : sessions) {
-							boolean found = false;
-							for (SessionViewCapsule activeCapsule : activeSessions) {
-								if (otherCapsule.getId() == activeCapsule.getId()) {
-									found = true;
-								}
-							}
-
-							if (!found) {
-								otherCapsule.hide();
-							}
-						}
-						for (SessionViewRecentCapsule recentCapsule : recentSessions) {
-							recentCapsule.hide();
-						}
-
+						openCapsule(capsule);
 						return true;
 					}
 				}
 				for (SessionViewRecentCapsule capsule : recentSessions) {
 					if (capsule.handle(event, x, y)) {
-						SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition());
-						restorecapsule.getSession().setDimensions(0.4f, 0.2f);
-						Vector2 oldpos = capsule.getOldPosition();
-						restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
-						sessions.add(restorecapsule);
-						recentSessions.Remove(capsule);
+						restoreCapsule(capsule);
 						return true;
 					}
 				}
@@ -189,7 +198,8 @@ public class OverView extends GenosideComponent {
 				capsule.getSession().setDimensions(0.4f, 0.2f);
 				capsule.getSession().setPosition(x, y);
 				sessions.add(capsule);
-			} else if (event.getButton() == 3) {
+			}
+			else if (event.getButton() == 3) {
 				for (SessionViewCapsule capsule : sessions) {
 					if (capsule.isDying()) {
 						continue;
@@ -203,7 +213,6 @@ public class OverView extends GenosideComponent {
 				return true;
 			}
 		}
-
 		mousePosition.x = x;
 		mousePosition.y = y;
 		return false;
