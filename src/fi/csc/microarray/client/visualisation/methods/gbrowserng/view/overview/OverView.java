@@ -361,6 +361,8 @@ public class OverView extends GenosideComponent {
 		if (killCapsule != null) {
 			sessions.remove(killCapsule);
 		}
+		
+		ConnectionsButton.tick(dt);
 	}
 
 	public GenoFPSCounter getFpsCounter() {
