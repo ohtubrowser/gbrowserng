@@ -98,7 +98,6 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 
 	@Override
 	public void draw(SoulGL2 gl) {
-				// test comment
 		float r=this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		Color c=new Color(r,r,r);
 		gl.glEnable(SoulGL2.GL_BLEND);
