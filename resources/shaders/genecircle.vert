@@ -13,11 +13,21 @@ varying float dist;
 varying float power;
 varying float dotproduct;
 
+float own_pow(float base, int exp)
+{
+    float ret = base;
+    for(int i = 1; i < exp; ++i)
+        ret *= base;
+    return ret;
+}
+
 void main()
 {
     power = sin( 4.0 * time + (vertexPosition.x * 3.0 + vertexPosition.y * 3.0) ) * 0.5 + 0.5;
     float dot = mouse.x * vertexPosition.x + mouse.y * vertexPosition.y;
-    dot = pow(dot, 30.0);
+
+    dot = own_pow(dot, 31);
+
     dotproduct = max(0.0, dot);
 
     vec4 vertexPos = modelMatrix * vec4(vertexPosition, 0.0, 1.0);
