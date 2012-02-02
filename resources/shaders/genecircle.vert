@@ -15,8 +15,8 @@ varying float dotproduct;
 
 float own_pow(float base, int exp)
 {
-    float ret = base;
-    for(int i = 1; i < exp; ++i)
+    float ret = 1.0;
+    for(int i = 0; i < exp; ++i)
         ret *= base;
     return ret;
 }
@@ -39,4 +39,3 @@ void main()
 
     gl_Position = vertexPos;
 }
-

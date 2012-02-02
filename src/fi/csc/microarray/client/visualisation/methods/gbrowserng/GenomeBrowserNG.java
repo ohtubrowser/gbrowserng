@@ -7,6 +7,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyb
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
@@ -33,6 +34,8 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
 		AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
 		AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+
+                GeneralLink.initBezierPoints(); // TODO : move this somewhere nice
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 

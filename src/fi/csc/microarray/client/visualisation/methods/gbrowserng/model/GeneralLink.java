@@ -17,14 +17,23 @@ public class GeneralLink {
 	private AbstractChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
 	private float r = Math.max(0.5f, (float)Math.random()),g = (float) Math.random(), b=(float)Math.random();
+        private final int drawMethod;
+        private static FloatBuffer bezierPoints;
 
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
+
+    public static void initBezierPoints() {
+        	bezierPoints = FloatBuffer.allocate(32);
+		for(float i = 3.0f; i <= 96.0f; i+=3.0f)
+		    bezierPoints.put(i/100.0f);
+    }
 
     public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
 		this.aChromosome = aChromosome;	this.bChromosome = bChromosome;
 		this.aStart = aStart; this.bStart = bStart;
 		this.aStart = aEnd; this.bStart = bEnd;
+                drawMethod = Math.random() < 0.5f ? SoulGL2.GL_LINES : SoulGL2.GL_LINE_STRIP;
     }
 
     public void calculatePositions(GeneCircle geneCircle) {
@@ -37,12 +46,7 @@ public class GeneralLink {
 		//PrimitiveRenderer.drawLine(aXYPos.x, aXYPos.y, bXYPos.x, bXYPos.y, gl, Color.MAGENTA);
 		gl.glEnable(SoulGL2.GL_BLEND);
 
-
-		FloatBuffer smoothings = FloatBuffer.allocate(101);
-		for(float i = 1.0f; i <= 100.0f; i+=1.0f)
-		    smoothings.put(i/100.0f);
-		smoothings.rewind();
-
+	
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		shader.start(gl);
 
@@ -71,13 +75,14 @@ public class GeneralLink {
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
-		smoothings.rewind();
+		bezierPoints.rewind();
 
 		gl.glLineWidth(3.0f);
 		gl.glEnable(GL2.GL_LINE_SMOOTH);
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, smoothings);
-		gl.glDrawArrays(SoulGL2.GL_LINE_STRIP, 0, smoothings.capacity() / 2);
+		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, bezierPoints);
+		gl.glDrawArrays(drawMethod, 0, bezierPoints.capacity());
+
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		gl.glDisable(GL2.GL_LINE_SMOOTH);
 
