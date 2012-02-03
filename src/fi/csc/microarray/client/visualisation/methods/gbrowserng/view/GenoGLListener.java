@@ -68,7 +68,7 @@ public class GenoGLListener implements GLEventListener {
 
 		gl.glDisable(GL2.GL_DEPTH_TEST);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {

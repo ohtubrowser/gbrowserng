@@ -16,11 +16,13 @@ public class GeneCircle {
 	private Vector2[] chromosomeBoundariesPositions;
 	
 	public GeneCircle(){
+                // 60% of the circle's circumference is divided evenly between chromosomes
+                // Remaining 40% according to relative chromosome sizes
                 minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
 		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes()+1];
 		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		float sliceSizeLeft = 1.0f - AbstractGenome.getNumChromosomes() * minimumChromosomeSlice;
-		assert(sliceSizeLeft >= 0);
+		assert(sliceSizeLeft >= 0.0f);
 		
 		chromosomeBoundaries[0] = 0;
 		for(int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i)
@@ -29,7 +31,7 @@ public class GeneCircle {
 		}
 		
 	public void updatePosition(float pointerGenePosition) {
-		// TODO : fix this for something better than linear?
+		// TODO : fix this for something better than linear? maybe not necessary since so few chromosomes
 		for(int i=1; i<chromosomeBoundaries.length; ++i)
 			if(chromosomeBoundaries[i] >= pointerGenePosition) {
 				chromosome = AbstractGenome.getChromosome(i-1);
