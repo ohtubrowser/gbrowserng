@@ -22,11 +22,22 @@ public class GenomeBrowserNG {
 	GenoGLListener glListener;
 	GenoWindow genoWindow;
 	EventHandler eventHandler;
-	
-	public GenomeBrowserNG(int width, int height) {
 
-		// fill with bogus data
-		AbstractGenome.setName("Bogus Genome");
+        public static void useSmallData()
+        {
+            AbstractGenome.setName("Bogus Genome");
+            AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
+            AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
+            AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
+            AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
+            AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
+            AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
+            AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+        }
+        
+        public static void useBigData()
+        {
+        	AbstractGenome.setName("Bogus Genome");
 		AbstractGenome.addChromosome(new AbstractChromosome(1, 24500000));
 		AbstractGenome.addChromosome(new AbstractChromosome(2, 24300000));
 		AbstractGenome.addChromosome(new AbstractChromosome(3, 19900000));
@@ -50,7 +61,13 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new AbstractChromosome(21, 4600000));
 		AbstractGenome.addChromosome(new AbstractChromosome(22, 4900000));
 		AbstractGenome.addChromosome(new AbstractChromosome(23, 5000000));
+        }
+	
+	public GenomeBrowserNG(int width, int height) {
 
+		// fill with bogus data
+                useSmallData();
+                //useBigData();
                 GeneralLink.initBezierPoints(); // TODO : move this somewhere nice
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
