@@ -274,7 +274,6 @@ public class OverView extends GenosideComponent {
 		for (SessionViewRecentCapsule capsule : recentSessions) {
 			capsule.draw(gl);
 		}
-
 		
 		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
 		TextRenderer.getInstance().drawText(gl, "Draw: " + fpsCounter.getMillis() + "ms", 0, 0.84f, 0.9f);
