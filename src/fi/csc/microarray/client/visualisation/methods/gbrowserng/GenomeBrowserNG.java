@@ -27,13 +27,29 @@ public class GenomeBrowserNG {
 
 		// fill with bogus data
 		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
-		AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
-		AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
-		AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
-		AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
-		AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
-		AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+		AbstractGenome.addChromosome(new AbstractChromosome(1, 24500000));
+		AbstractGenome.addChromosome(new AbstractChromosome(2, 24300000));
+		AbstractGenome.addChromosome(new AbstractChromosome(3, 19900000));
+		AbstractGenome.addChromosome(new AbstractChromosome(4, 19100000));
+		AbstractGenome.addChromosome(new AbstractChromosome(5, 18000000));
+		AbstractGenome.addChromosome(new AbstractChromosome(6, 17000000));
+		AbstractGenome.addChromosome(new AbstractChromosome(7, 15800000));
+		AbstractGenome.addChromosome(new AbstractChromosome(8, 14500000));
+		AbstractGenome.addChromosome(new AbstractChromosome(9, 13400000));
+		AbstractGenome.addChromosome(new AbstractChromosome(10, 13500000));
+		AbstractGenome.addChromosome(new AbstractChromosome(11, 13400000));
+		AbstractGenome.addChromosome(new AbstractChromosome(12, 13300000));
+		AbstractGenome.addChromosome(new AbstractChromosome(13, 11400000));
+		AbstractGenome.addChromosome(new AbstractChromosome(14, 10500000));
+		AbstractGenome.addChromosome(new AbstractChromosome(15, 10000000));
+		AbstractGenome.addChromosome(new AbstractChromosome(16, 8900000));
+		AbstractGenome.addChromosome(new AbstractChromosome(17, 8100000));
+		AbstractGenome.addChromosome(new AbstractChromosome(18, 7700000));
+		AbstractGenome.addChromosome(new AbstractChromosome(19, 6300000));
+		AbstractGenome.addChromosome(new AbstractChromosome(20, 63000000));
+		AbstractGenome.addChromosome(new AbstractChromosome(21, 4600000));
+		AbstractGenome.addChromosome(new AbstractChromosome(22, 4900000));
+		AbstractGenome.addChromosome(new AbstractChromosome(23, 5000000));
 
                 GeneralLink.initBezierPoints(); // TODO : move this somewhere nice
 
