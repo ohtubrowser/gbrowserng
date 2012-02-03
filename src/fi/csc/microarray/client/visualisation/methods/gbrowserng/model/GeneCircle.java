@@ -7,7 +7,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 
 public class GeneCircle {
 	
-	private float minimumChromosomeSlice = 0.08f; // TODO should check that this is not too big
+	private float minimumChromosomeSlice;
 	private float size;
 	
 	private AbstractChromosome chromosome = AbstractGenome.getChromosome(0);
@@ -16,6 +16,7 @@ public class GeneCircle {
 	private Vector2[] chromosomeBoundariesPositions;
 	
 	public GeneCircle(){
+                minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
 		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes()+1];
 		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		float sliceSizeLeft = 1.0f - AbstractGenome.getNumChromosomes() * minimumChromosomeSlice;
