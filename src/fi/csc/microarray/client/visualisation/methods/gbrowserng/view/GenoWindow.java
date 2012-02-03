@@ -9,6 +9,7 @@ public class GenoWindow {
 
 	public GLWindow window;
 	private Animator animator;
+	private boolean isFullscreen = false;
 
 	public GenoWindow(int width, int height)
 	{
@@ -29,5 +30,14 @@ public class GenoWindow {
 	{
 		this.animator.stop();
 		this.window.destroy();
+	}
+
+	public void toggleFullscreen() {
+		if (isFullscreen = !isFullscreen) {
+			this.window.setFullscreen(true);
+		}
+		else {
+			this.window.setFullscreen(false);
+		}
 	}
 }
