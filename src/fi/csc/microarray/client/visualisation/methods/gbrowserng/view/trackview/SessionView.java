@@ -12,6 +12,7 @@ import gles.SoulGL2;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import managers.TextureManager;
 
 public class SessionView extends GenosideComponent {
 
@@ -239,21 +240,25 @@ public class SessionView extends GenosideComponent {
 		if(!inScreen())
 			return;
 
-		if(active)
+		//if(active)
 		// first draw all the internal views
 		for (TrackView t : trackViews) {
+                        t.setActive(active);
 			t.draw(gl);
 		}
 
 		// then draw whatever this session view wants to draw.
 		if(active) {
-		quitButton.draw(gl);
-		shrinkButton.draw(gl);
-		openReadFileButton.draw(gl);
-		openAnotherSessionButton.draw(gl);
-		coordinateView.draw(gl);
+                    quitButton.draw(gl);
+                    shrinkButton.draw(gl);
+                    openReadFileButton.draw(gl);
+                    openAnotherSessionButton.draw(gl);
+                    coordinateView.draw(gl);
 		}
+                TextureManager.bindTexture(gl, GenoTexID.FONT);
 		border.draw(gl);
+                
+                
 	}
 
 	@Override
