@@ -30,6 +30,7 @@ public class TrackView extends GenosideComponent {
 	private final GenoVisualBorder borderComponent = new GenoVisualBorder(this);
 
 	private Session session;
+        private boolean active = false;
 
 	public TrackView(GenosideComponent parent, Session session) {
 		super(parent);
@@ -81,8 +82,10 @@ public class TrackView extends GenosideComponent {
 			case TrackView.READ:
 				this.referenceRenderer.draw(gl);
 				this.readRenderer.draw(gl);
-				this.minimizeButton.draw(gl);
-				this.deleteButton.draw(gl);
+                                if(active) {
+                                    this.minimizeButton.draw(gl);
+                                    this.deleteButton.draw(gl);
+                                }
 				break;
 		}
 		
@@ -206,4 +209,8 @@ public class TrackView extends GenosideComponent {
 	{
 		return this.trackViewMode;
 	}
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
