@@ -23,6 +23,7 @@ public class EventHandler {
 	}
 
 	public void toggleFullscreen() {
+		this.window.toggleFullscreen();
 	}
 
 	public void handleEvents() throws InterruptedException {
