@@ -68,7 +68,6 @@ public class GenomeBrowserNG {
 		// fill with bogus data
                 useSmallData();
                 //useBigData();
-                GeneralLink.initBezierPoints(); // TODO : move this somewhere nice
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 

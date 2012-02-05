@@ -2,25 +2,25 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoSideTimer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 import gles.primitives.PrimitiveBuffers;
 import gles.renderer.PrimitiveRenderer;
 import gles.renderer.TextRenderer;
 import gles.shaders.DefaultShaders;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 import managers.AssetManager;
-import managers.ShaderManager;
 import managers.TextureManager;
 import soulaim.DesktopAssetManager;
 import soulaim.DesktopGL2;
 import soulaim.DesktopTextureManager;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
 
 public class GenoGLListener implements GLEventListener {
 
@@ -55,6 +55,9 @@ public class GenoGLListener implements GLEventListener {
 		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
+                GeneralLink.initBezierPoints();
+		SessionView.initFrameBuffer(gl);
+
 		AssetManager.setInstance(new DesktopAssetManager());
 
 		DesktopTextureManager textureManager = new DesktopTextureManager();
