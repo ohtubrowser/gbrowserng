@@ -24,70 +24,70 @@ import soulaim.DesktopTextureManager;
 
 public class GenoGLListener implements GLEventListener {
 
-	private GenoSideTimer timer = new GenoSideTimer();
-	private OverView overView;
-	
-	public GenoGLListener(OverView overView) {
-		this.overView = overView;
-	}
+    private GenoSideTimer timer = new GenoSideTimer();
+    private OverView overView;
 
-	public void display(GLAutoDrawable drawable) {
-		timer.start();
+    public GenoGLListener(OverView overView) {
+	this.overView = overView;
+    }
 
-		SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+    public void display(GLAutoDrawable drawable) {
+	timer.start();
 
-		float dt = timer.getDT();
+	SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
+	gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
-		overView.tick(dt);
+	float dt = timer.getDT();
 
-		overView.draw(gl);
+	overView.tick(dt);
 
-		overView.getFpsCounter().addNano(timer.end());
-	}
+	overView.draw(gl);
 
-	public void dispose(GLAutoDrawable drawable) {
-	}
+	overView.getFpsCounter().addNano(timer.end());
+    }
 
-	public void init(GLAutoDrawable drawable) {
-		GL2 gl = drawable.getGL().getGL2();
+    public void dispose(GLAutoDrawable drawable) {
+    }
 
-		gl.setSwapInterval(1);
-		TextRenderer.createInstance();
-		PrimitiveBuffers.createBuffers();
-                GeneralLink.initBezierPoints();
-		SessionView.initFrameBuffer(gl);
+    public void init(GLAutoDrawable drawable) {
+	GL2 gl = drawable.getGL().getGL2();
 
-		AssetManager.setInstance(new DesktopAssetManager());
+	gl.setSwapInterval(1);
+	TextRenderer.createInstance();
+	PrimitiveBuffers.createBuffers();
+	GeneralLink.initBezierPoints();
+	SessionView.initFrameBuffer(gl);
 
-		DesktopTextureManager textureManager = new DesktopTextureManager();
-		textureManager.setGL2(drawable.getGL().getGL2());
-		TextureManager.setInstance(textureManager);
-		TextureManager.init(new DesktopGL2(gl));
-		
-		DefaultShaders.createDefaultShaders(new DesktopGL2(gl));
-		GenoShaders.createShaders(new DesktopGL2(gl));
-		GenoTexID.createTextures(new DesktopGL2(gl));
+	AssetManager.setInstance(new DesktopAssetManager());
 
-		gl.glDisable(GL2.GL_DEPTH_TEST);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-	}
+	DesktopTextureManager textureManager = new DesktopTextureManager();
+	textureManager.setGL2(drawable.getGL().getGL2());
+	TextureManager.setInstance(textureManager);
+	TextureManager.init(new DesktopGL2(gl));
 
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
-		gl.glViewport(0, 0, width, height);
+	DefaultShaders.createDefaultShaders(new DesktopGL2(gl));
+	GenoShaders.createShaders(new DesktopGL2(gl));
+	GenoTexID.createTextures(new DesktopGL2(gl));
 
-		gl.glEnable(SoulGL2.GL_CULL_FACE);
-		gl.glDisable(SoulGL2.GL_DEPTH_TEST);
+	gl.glDisable(GL2.GL_DEPTH_TEST);
+	gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+	gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    }
 
-		PrimitiveRenderer.onSurfaceChanged(width, height);
-		TextRenderer.getInstance().onSurfaceChanged(width, height);
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
+	gl.glViewport(0, 0, width, height);
 
-		GlobalVariables.aspectRatio = width * 1.0f / height;
-	}
+	gl.glEnable(SoulGL2.GL_CULL_FACE);
+	gl.glDisable(SoulGL2.GL_DEPTH_TEST);
 
-	public GenosideComponent getRoot() {
-		return overView;
-	}
+	PrimitiveRenderer.onSurfaceChanged(width, height);
+	TextRenderer.getInstance().onSurfaceChanged(width, height);
+
+	GlobalVariables.aspectRatio = width * 1.0f / height;
+    }
+
+    public GenosideComponent getRoot() {
+	return overView;
+    }
 }
