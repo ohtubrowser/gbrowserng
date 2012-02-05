@@ -2,17 +2,26 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.MouseTracker;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoButton;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import gles.SoulGL2;
+import gles.primitives.PrimitiveBuffers;
+import gles.shaders.Shader;
+import gles.shaders.ShaderMemory;
+import java.nio.IntBuffer;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.media.opengl.GL2;
+import managers.ShaderManager;
 import managers.TextureManager;
+import math.Matrix4;
 
 public class SessionView extends GenosideComponent {
 
@@ -26,9 +35,14 @@ public class SessionView extends GenosideComponent {
 	private final ConcurrentLinkedQueue<TrackView> trackViews = new ConcurrentLinkedQueue<TrackView>();
 	private CoordinateRenderer coordinateView;
 	private final Session session;
+	private static IntBuffer frameBufferHandle = IntBuffer.allocate(1); 
+	private IntBuffer textureHandle = IntBuffer.allocate(1);
+	
+	private boolean textureCreated = false;
 
 	private final MouseTracker mouseTracker = new MouseTracker();
 
+	// TODO : maybe split into sessionview and sessionviewGFX?
 	public SessionView(Session session, GenosideComponent parent) {
 		super(parent);
 		this.session = session;
@@ -239,26 +253,12 @@ public class SessionView extends GenosideComponent {
 	public void draw(SoulGL2 gl) {
 		if(!inScreen())
 			return;
-
-		//if(active)
-		// first draw all the internal views
-		for (TrackView t : trackViews) {
-                        t.setActive(active);
-			t.draw(gl);
-		}
-
-		// then draw whatever this session view wants to draw.
 		if(active) {
-                    quitButton.draw(gl);
-                    shrinkButton.draw(gl);
-                    openReadFileButton.draw(gl);
-                    openAnotherSessionButton.draw(gl);
-                    coordinateView.draw(gl);
+		    drawActive(gl);
+		} else {
+		    drawFromTexture(gl);
 		}
-                TextureManager.bindTexture(gl, GenoTexID.FONT);
 		border.draw(gl);
-                
-                
 	}
 
 	@Override
@@ -283,4 +283,86 @@ public class SessionView extends GenosideComponent {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+    public static void initFrameBuffer(GL2 gl) {
+	gl.glGenFramebuffers(1, frameBufferHandle);
+    }
+    
+    private void genTexture(SoulGL2 gl) {
+	gl.glGenTextures(1, textureHandle);
+	gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+	gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, 160, 120, 0, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, null);
+	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
+	updateTexture(gl);
+    }
+    
+    public void updateTexture(SoulGL2 gl) {
+	if(!textureCreated) {
+	    textureCreated = true;
+	    genTexture(gl);
+	}
+	gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+	
+	gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, frameBufferHandle.get(0));
+	gl.glFramebufferTexture2D(SoulGL2.GL_FRAMEBUFFER, SoulGL2.GL_COLOR_ATTACHMENT0, SoulGL2.GL_TEXTURE_2D, textureHandle.get(0), 0);
+
+	if(gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER) != GL2.GL_FRAMEBUFFER_COMPLETE)
+	    System.out.println("FRAMEBUFFER ERROR --- ABANDON SHIP!\n");
+	
+	IntBuffer oldViewPort = IntBuffer.allocate(4);
+	
+	gl.glGetIntegerv(SoulGL2.GL_VIEWPORT, oldViewPort);
+	gl.glViewport(0,0,160,120);
+	gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+	// render
+	drawActive(gl);
+	gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
+	gl.glViewport(oldViewPort.get(0), oldViewPort.get(1), oldViewPort.get(2), oldViewPort.get(3));
+    }
+    
+    private void drawActive(SoulGL2 gl) {
+	for (TrackView t : trackViews) {
+	    t.draw(gl);
+	}
+	quitButton.draw(gl);
+	shrinkButton.draw(gl);
+	openReadFileButton.draw(gl);
+	openAnotherSessionButton.draw(gl);
+	coordinateView.draw(gl);
+    }
+
+    private void drawFromTexture(SoulGL2 gl) {
+	
+	Matrix4 modelViewMatrix = new Matrix4();
+	
+	modelViewMatrix.makeTranslationMatrix(glx(0), gly(0), 0);
+	modelViewMatrix.scale(getDimensions().x*0.5f, getDimensions().y*0.5f / GlobalVariables.aspectRatio, 1.0f);
+	
+	Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.TEXRECTANGLE);
+	shader.start(gl);
+	ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
+	
+	gl.glBindTexture(SoulGL2.GL_TEXTURE_2D, textureHandle.get(0));
+	
+	PrimitiveBuffers.squareBuffer.rewind();
+	PrimitiveBuffers.squareTextureBuffer.rewind();
+	
+	int vertexPositionHandle = shader.getAttribLocation(gl, "vertexCoord");
+	int texPositionHandle = shader.getAttribLocation(gl, "texCoord");
+	gl.glEnableVertexAttribArray(vertexPositionHandle);
+	gl.glEnableVertexAttribArray(texPositionHandle);
+	gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
+	gl.glVertexAttribPointer(texPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareTextureBuffer);
+	gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity()/2);
+
+	gl.glDisableVertexAttribArray(vertexPositionHandle);
+	gl.glDisableVertexAttribArray(texPositionHandle);
+	shader.stop(gl);
+	TextureManager.bindTexture(gl, GenoTexID.FONT); // TODO : this really shouldn't be necessary here
+    }
+
+    
 }

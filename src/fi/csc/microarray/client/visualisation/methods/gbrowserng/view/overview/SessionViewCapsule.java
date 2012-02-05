@@ -130,7 +130,7 @@ public class SessionViewCapsule extends GenosideComponent {
 		link.draw(gl);
 
 		// this is just for debug
-		float v = this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
+		float v = 1.0f - this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float alpha = this.getAnimatedValues().getAnimatedValue("ALPHA");
 
 		if(alpha > 0) {
@@ -206,5 +206,9 @@ public class SessionViewCapsule extends GenosideComponent {
 		this.positionAdjustment.x = 0;
 		this.positionAdjustment.y = 0;
 	}
+
+    void drawToTexture(SoulGL2 gl) {
+	sessionView.updateTexture(gl);
+    }
 }
 

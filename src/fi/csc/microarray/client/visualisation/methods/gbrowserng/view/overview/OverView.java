@@ -15,6 +15,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 import gles.renderer.TextRenderer;
+import java.util.LinkedList;
 import managers.TextureManager;
 import math.Matrix4;
 import math.Vector2;
@@ -29,13 +30,20 @@ public class OverView extends GenosideComponent {
 	GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
 	GenoFPSCounter fpsCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
+	
 	private SessionViewCapsule hoverCapsule = null;
+	
 	private final GenoButton ConnectionsButton = new GenoButton(this, "CONNECTIONS_BUTTON", 1.0f, 1.0f, -0.055f, -0.075f, GenoTexID.CONNECTIONS_BUTTON);
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
+	
+	LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
+	private final Object textureUpdateListLock = new Object();
+	
 	RecentSessionManager recentSessions = new RecentSessionManager();
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
+        
 
 	public OverView() {
 		super(null);
@@ -101,13 +109,16 @@ public class OverView extends GenosideComponent {
 		if (activeSessions.isEmpty()) {
 			return;
 		}
-
+		
 		for (SessionViewCapsule otherCapsule : sessions) {
 			otherCapsule.show();
 		}
 		for(SessionViewRecentCapsule recentCapsule : recentSessions) recentCapsule.show();
 
 		for (SessionViewCapsule capsule : activeSessions) {
+			synchronized(textureUpdateListLock) {
+			    textureUpdateList.add(capsule);
+			}
 			int chromosome = capsule.getSession().getSession().referenceSequence.chromosome;
 			float position = capsule.getSession().getSession().position;
 			float relativePosition = position / capsule.getSession().getSession().referenceSequence.sequence.length;
@@ -207,6 +218,9 @@ public class OverView extends GenosideComponent {
 				capsule.getSession().setDimensions(0.4f, 0.2f);
 				capsule.getSession().setPosition(x, y);
 				sessions.add(capsule);
+				synchronized(textureUpdateListLock) {
+				    textureUpdateList.add(capsule);
+				}
 			}
 			else if (event.getButton() == 3) {
 				for (SessionViewCapsule capsule : sessions) {
@@ -266,6 +280,15 @@ public class OverView extends GenosideComponent {
 		    link.draw(gl);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
+		
+		synchronized(textureUpdateListLock) {
+		    for(SessionViewCapsule capsule : textureUpdateList) {
+			capsule.drawToTexture(gl);
+		    }
+		    textureUpdateList.clear();
+		}
+		for(SessionViewCapsule capsule : activeSessions)
+		    capsule.drawToTexture(gl);
 
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.draw(gl);
@@ -281,7 +304,6 @@ public class OverView extends GenosideComponent {
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			ConnectionsButton.draw(gl);
 			// Mouse hover information
-			// TODO: Show the info of a session view, when hovering mouse over session view.
 			long position; int chromosome;
 			if (hoverCapsule == null) {
 				position = this.geneCircle.getChromosomePosition();

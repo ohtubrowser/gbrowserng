@@ -10,13 +10,14 @@ public class GenoShaders {
 		GENE_CIRCLE,
 		TORRENT,
 		CIRCLESEPARATOR,
-		BEZIER
-	}
+		BEZIER,
+		TEXRECTANGLE}
 
 	public static void createShaders(SoulGL2 gl) {
 		ShaderManager.createProgram(gl, GenoShaderID.CIRCLESEPARATOR, "genecircleseparator.vert", "genecircleseparator.frag");
 		ShaderManager.createProgram(gl, GenoShaderID.TORRENT, "torrent.vert", "torrent.frag");
 		ShaderManager.createProgram(gl, GenoShaderID.BEZIER, "bezier2.vert", "bezier2.frag");
+		ShaderManager.createProgram(gl, GenoShaderID.TEXRECTANGLE, "texrectangle.vert", "texrectangle.frag");
 		ShaderManager.createProgram(gl, GenoShaderID.GENE_CIRCLE, "genecircle.vert", "genecircle.frag");
 	}
 }
