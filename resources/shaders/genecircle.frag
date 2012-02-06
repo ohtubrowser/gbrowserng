@@ -16,7 +16,7 @@ void main() {
     d = 1.0 - d * d;
 
     float v = hilight;
-    vec4 color1 = vec4(d, 0.0, 0.0, 0.8);
-    vec4 color2 = vec4(0.1, v, 0.3 + 0.5 * d * power, 1.0);
+    vec4 color1 = vec4(d, 0.0, 0.0, d);
+    vec4 color2 = vec4(0.1, v, 0.3 + 0.5 * d * power, d);
     gl_FragColor = dotproduct * color1 + (1.0 - dotproduct) * color2;
 }
