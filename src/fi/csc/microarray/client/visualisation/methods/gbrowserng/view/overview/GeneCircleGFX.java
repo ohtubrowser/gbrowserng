@@ -25,6 +25,7 @@ public class GeneCircleGFX {
 	}
 
 	public void draw(SoulGL2 gl, Matrix4 modelMatrix, Vector2 mousePosition) {
+		gl.glEnable(SoulGL2.GL_BLEND);
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.GENE_CIRCLE);
 		shader.start(gl);
 
@@ -50,8 +51,7 @@ public class GeneCircleGFX {
 		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_FAN, 0, PrimitiveBuffers.circleBuffer.capacity() / 2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
-		
-		gl.glEnable(SoulGL2.GL_BLEND);
+
 		gl.glBlendFunc(SoulGL2.GL_DST_COLOR, SoulGL2.GL_SRC_ALPHA);
 		shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
 		shader.start(gl);
