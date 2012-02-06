@@ -30,10 +30,10 @@ public class GenoVisualBorder extends GenosideComponent {
 
 	@Override
 	public void draw(SoulGL2 gl) {
-		PrimitiveRenderer.drawRectangle(this.getParent().glx(0), this.getParent().gly(-1), this.getParent().glxSize(1.0f), 0.003f, gl, Color.WHITE);
-		PrimitiveRenderer.drawRectangle(this.getParent().glx(0), this.getParent().gly(+1), this.getParent().glxSize(1.0f), 0.003f, gl, Color.WHITE);
-		PrimitiveRenderer.drawRectangle(this.getParent().glx(+1), this.getParent().gly(0), 0.003f, this.getParent().glySize(1.0f / GlobalVariables.aspectRatio), gl, Color.WHITE);
-		PrimitiveRenderer.drawRectangle(this.getParent().glx(-1), this.getParent().gly(0), 0.003f, this.getParent().glySize(1.0f / GlobalVariables.aspectRatio), gl, Color.WHITE);
+		PrimitiveRenderer.drawRectangle(this.getParent().glx(0), this.getParent().gly(-1), this.getParent().glxSize(1.0f), 0.003f, gl, Color.BLACK);
+		PrimitiveRenderer.drawRectangle(this.getParent().glx(0), this.getParent().gly(+1), this.getParent().glxSize(1.0f), 0.003f, gl, Color.BLACK);
+		PrimitiveRenderer.drawRectangle(this.getParent().glx(+1), this.getParent().gly(0), 0.003f, this.getParent().glySize(1.0f / GlobalVariables.aspectRatio), gl, Color.BLACK);
+		PrimitiveRenderer.drawRectangle(this.getParent().glx(-1), this.getParent().gly(0), 0.003f, this.getParent().glySize(1.0f / GlobalVariables.aspectRatio), gl, Color.BLACK);
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class GeneCircleGFX {
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
 
-		gl.glBlendFunc(SoulGL2.GL_DST_COLOR, SoulGL2.GL_SRC_ALPHA);
+		gl.glBlendFunc(SoulGL2.GL_SRC_ALPHA, SoulGL2.GL_DST_ALPHA);
 		shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
 		shader.start(gl);
 		Matrix4 identityMatrix = new Matrix4();
