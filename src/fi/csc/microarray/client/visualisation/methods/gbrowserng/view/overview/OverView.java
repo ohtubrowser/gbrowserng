@@ -10,7 +10,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoButton;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
@@ -30,21 +29,18 @@ public class OverView extends GenosideComponent {
 	GenoFPSCounter fpsCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
-	private final GenoButton ConnectionsButton = new GenoButton(this, "CONNECTIONS_BUTTON", 1.0f, 1.0f, -0.055f, -0.075f, GenoTexID.CONNECTIONS_BUTTON);
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
 	LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false;
-	RecentSessionManager recentSessions = new RecentSessionManager();
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 
 	public OverView() {
 		super(null);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
-		ConnectionsButton.setDimensions(0.1f, 0.1f);
 	}
 
 	@Override
@@ -94,7 +90,6 @@ public class OverView extends GenosideComponent {
 		for (SessionViewCapsule capsule : activeSessions) {
 			if (capsule.isActive()) {
 				capsule.die();
-				recentSessions.Add(capsule);
 			}
 		}
 	}
@@ -107,9 +102,6 @@ public class OverView extends GenosideComponent {
 
 		for (SessionViewCapsule otherCapsule : sessions) {
 			otherCapsule.showBackround();
-		}
-		for (SessionViewRecentCapsule recentCapsule : recentSessions) {
-			recentCapsule.show();
 		}
 
 		for (SessionViewCapsule capsule : activeSessions) {
@@ -124,7 +116,6 @@ public class OverView extends GenosideComponent {
 			capsule.updateGeneCirclePosition(geneCircle.getRelativePosition(chromosome-1, relativePosition));
 			capsule.deactivate();
 		}
-
 		activeSessions.clear();
 	}
 
@@ -147,21 +138,10 @@ public class OverView extends GenosideComponent {
 				otherCapsule.hideBackground();
 			}
 		}
-		for (SessionViewRecentCapsule recentCapsule : recentSessions) {
-			recentCapsule.hide();
-		}
-	}
-
-	private void restoreCapsule(SessionViewRecentCapsule capsule) {
-		SessionViewCapsule restorecapsule = new SessionViewCapsule(new SessionView(capsule.getSession(), this), capsule.getOldGeneCirclePosition(), geneCircle);
-		restorecapsule.getSession().setDimensions(0.4f, 0.2f);
-		Vector2 oldpos = capsule.getOldPosition();
-		restorecapsule.getSession().setPosition(oldpos.x, oldpos.y);
-		sessions.add(restorecapsule);
-		recentSessions.Remove(capsule);
 	}
 
 	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
+	@Override
 	public boolean handle(MouseEvent event, float x, float y) {
 		this.hoverCapsule = null;
 		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
@@ -183,13 +163,6 @@ public class OverView extends GenosideComponent {
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.handle(event, x, y);
 		}
-
-		for (SessionViewRecentCapsule capsule : recentSessions) {
-			capsule.handle(event, x, y);
-		}
-
-		ConnectionsButton.handle(event, x, y);
-
 		// then see if they actually want the event
 		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
 			if (event.getButton() == 1) {
@@ -199,12 +172,6 @@ public class OverView extends GenosideComponent {
 					}
 					if (capsule.handle(event, x, y)) {
 						openSession(capsule);
-						return true;
-					}
-				}
-				for (SessionViewRecentCapsule capsule : recentSessions) {
-					if (capsule.handle(event, x, y)) {
-						restoreCapsule(capsule);
 						return true;
 					}
 				}
@@ -227,7 +194,6 @@ public class OverView extends GenosideComponent {
 					if (capsule.handle(event, x, y)) {
 						capsule.die();
 						capsule.deactivate();
-						recentSessions.Add(capsule);
 					}
 				}
 				return true;
@@ -239,6 +205,7 @@ public class OverView extends GenosideComponent {
 		return false;
 	}
 
+	@Override
 	public boolean handle(KeyEvent event) {
 		if (!activeSessions.isEmpty()) {
 			for (SessionViewCapsule capsule : activeSessions) {
@@ -247,13 +214,13 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
-		if (event.VK_Z == event.getKeyCode()) {
+		if (KeyEvent.VK_Z == event.getKeyCode()) {
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
 			updateCircleSize();
-		} else if (event.VK_A == event.getKeyCode()) {
+		} else if (KeyEvent.VK_A == event.getKeyCode()) {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
-		} else if (event.VK_SPACE == event.getKeyCode()) {
+		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
 			Random r = new Random();
 			AbstractChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 			AbstractChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
@@ -265,6 +232,7 @@ public class OverView extends GenosideComponent {
 		return false;
 	}
 
+	@Override
 	public void draw(SoulGL2 gl) {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
@@ -289,12 +257,6 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewCapsule capsule : sessions) {
-			synchronized (capsule.tickdrawLock) {
-				capsule.draw(gl);
-			}
-		}
-
-		for (SessionViewRecentCapsule capsule : recentSessions) {
 			synchronized (capsule.tickdrawLock) {
 				capsule.draw(gl);
 			}
@@ -332,10 +294,6 @@ public class OverView extends GenosideComponent {
 			}
 			capsule.tick(dt);
 			capsule.clearPositionAdjustment();
-		}
-
-		for (SessionViewRecentCapsule capsule : recentSessions) {
-			capsule.tick(dt);
 		}
 
 		// if no active session, try to place session views in a good way.
@@ -384,8 +342,6 @@ public class OverView extends GenosideComponent {
 		if (killCapsule != null) {
 			sessions.remove(killCapsule);
 		}
-
-		ConnectionsButton.tick(dt);
 	}
 
 	public GenoFPSCounter getFpsCounter() {
