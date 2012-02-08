@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import math.Vector2;
 
 public abstract class CascadingComponent {
@@ -37,8 +38,15 @@ public abstract class CascadingComponent {
 	}
 
 	public final void cascadingTick(float dt) {
-		currentPosition.approach(targetPosition, dt, 0.005f);
-		currentDimensions.approach(targetDimensions, dt, 0.005f);
+
+		currentPosition.x += (targetPosition.x - currentPosition.x) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
+		currentPosition.y += (targetPosition.y - currentPosition.y) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
+
+		currentDimensions.x += (targetDimensions.x - currentDimensions.x) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
+		currentDimensions.y += (targetDimensions.y - currentDimensions.y) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
+
+		/*currentPosition.approach(targetPosition, 0.005f, dt);
+		currentDimensions.approach(targetDimensions, 0.005f, dt);*/
 		updateDimensions();
 		updatePosition();
 	}

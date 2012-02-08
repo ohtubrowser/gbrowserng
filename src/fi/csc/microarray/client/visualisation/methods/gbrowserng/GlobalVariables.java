@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class GlobalVariables {
 	public static float aspectRatio = 1.0f;
+	public static final float animationConstant = 20f;
 	public static final Map<Character, Color> genomeColors = initializeGenomeColors();
 	
 	private static Map<Character, Color>initializeGenomeColors() {

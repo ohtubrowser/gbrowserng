@@ -7,7 +7,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyb
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
@@ -16,28 +15,26 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GenomeBrowserNG {
-	
+
 	BlockingQueue<NEWTEvent> eventQueue;
 	GenoWindowListener windowListener;
 	GenoGLListener glListener;
 	GenoWindow genoWindow;
 	EventHandler eventHandler;
 
-        public static void useSmallData()
-        {
-            AbstractGenome.setName("Bogus Genome");
-            AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
-            AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
-            AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
-            AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
-            AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
-            AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
-            AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
-        }
-        
-        public static void useBigData()
-        {
-        	AbstractGenome.setName("Bogus Genome");
+	public static void useSmallData() {
+		AbstractGenome.setName("Bogus Genome");
+		AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
+		AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
+		AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
+		AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
+		AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
+		AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
+		AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+	}
+
+	public static void useBigData() {
+		AbstractGenome.setName("Bogus Genome");
 		AbstractGenome.addChromosome(new AbstractChromosome(1, 24500000));
 		AbstractGenome.addChromosome(new AbstractChromosome(2, 24300000));
 		AbstractGenome.addChromosome(new AbstractChromosome(3, 19900000));
@@ -61,13 +58,13 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new AbstractChromosome(21, 4600000));
 		AbstractGenome.addChromosome(new AbstractChromosome(22, 4900000));
 		AbstractGenome.addChromosome(new AbstractChromosome(23, 5000000));
-        }
-	
+	}
+
 	public GenomeBrowserNG(int width, int height) {
 
 		// fill with bogus data
-                useSmallData();
-                //useBigData();
+		useSmallData();
+		//useBigData();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
@@ -81,15 +78,18 @@ public class GenomeBrowserNG {
 		this.genoWindow.window.addWindowListener(windowListener);
 		this.genoWindow.window.addGLEventListener(glListener);
 	}
-	
+
 	public void run() throws InterruptedException {
 		this.genoWindow.open();
+		Thread t = new Thread(glListener);
+		t.start();
 
 		this.eventHandler.handleEvents();
-
+		glListener.die();
+		t.join();
 		this.genoWindow.close();
 	}
-	
+
 	public static void main(String[] s) throws InterruptedException {
 		new GenomeBrowserNG(1024, 768).run();
 	}

@@ -9,7 +9,7 @@ public abstract class GenosideComponent extends CascadingComponent implements Vi
 
 	private static int idCounter = 0;
 	private final int id;
-
+	public final Object tickdrawLock = new Object();
 	private AnimatedValues animatedValues = new AnimatedValues();
 
 	public GenosideComponent(GenosideComponent parent) {
@@ -22,9 +22,13 @@ public abstract class GenosideComponent extends CascadingComponent implements Vi
 	}
 
 	public abstract void childComponentCall(String who, String what);
+
 	public abstract boolean handle(MouseEvent event, float screen_x, float screen_y);
+
 	public abstract boolean handle(KeyEvent event);
+
 	public abstract void draw(SoulGL2 gl);
+
 	public abstract void userTick(float dt);
 
 	public AnimatedValues getAnimatedValues() {
@@ -32,9 +36,11 @@ public abstract class GenosideComponent extends CascadingComponent implements Vi
 	}
 
 	public void tick(float dt) {
-		cascadingTick(dt);
-		animatedValues.tick(dt);
-		userTick(dt);
+		synchronized (tickdrawLock) {
+			cascadingTick(dt);
+			animatedValues.tick(dt);
+			userTick(dt);
+		}
 	}
 
 	public GenosideComponent getParent() {
