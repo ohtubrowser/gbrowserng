@@ -241,6 +241,7 @@ public class SessionView extends GenosideComponent {
 		if (!inScreen()) {
 			return;
 		}
+		// TODO : draw with some kind of alpha value
 		if (active) {
 			drawActive(gl);
 		} else {
