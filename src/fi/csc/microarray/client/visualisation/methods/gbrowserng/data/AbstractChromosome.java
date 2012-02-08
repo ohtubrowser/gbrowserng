@@ -5,12 +5,12 @@ public class AbstractChromosome {
 
 	private final long size;
 	private final int id;
-	private final ReferenceSequence sequence;
+	//private final ReferenceSequence sequence;
 
 	public AbstractChromosome(int id, long size) {
 		this.id = id;
 		this.size = size;
-		sequence = new ReferenceSequence(id, (int) size);
+		//sequence = new ReferenceSequence(id, (int) size);
 	}
 
 	public int getChromosomeNumber() {
@@ -20,12 +20,12 @@ public class AbstractChromosome {
 	public long length() {
 		return size;
 	}
-
+/*
 	ReferenceSequence getSequence() {
 		return sequence;
 	}
 
 	public ReferenceSequence getReferenceSequence() {
 		return sequence;
-	}
+	}*/
 }
