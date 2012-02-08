@@ -106,7 +106,7 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewCapsule otherCapsule : sessions) {
-			otherCapsule.show();
+			otherCapsule.showBackround();
 		}
 		for (SessionViewRecentCapsule recentCapsule : recentSessions) {
 			recentCapsule.show();
@@ -144,7 +144,7 @@ public class OverView extends GenosideComponent {
 			}
 
 			if (!found) {
-				otherCapsule.hide();
+				otherCapsule.hideBackground();
 			}
 		}
 		for (SessionViewRecentCapsule recentCapsule : recentSessions) {
@@ -214,7 +214,7 @@ public class OverView extends GenosideComponent {
 				capsule.getSession().setDimensions(0.4f, 0.2f);
 				capsule.getSession().setPosition(x, y);
 				sessions.add(capsule);
-				openSession(capsule);
+				//openSession(capsule);
 				synchronized (textureUpdateListLock) {
 					textureUpdateList.add(capsule);
 					capsule.setNeedsTextureUpdate();

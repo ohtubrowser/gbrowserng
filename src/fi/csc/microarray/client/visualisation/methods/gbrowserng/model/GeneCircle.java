@@ -26,18 +26,16 @@ public class GeneCircle {
 		chromosomeBoundaries[0] = 1.0f; chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
 			chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * AbstractGenome.getChromosome(i - 1).length() / AbstractGenome.getTotalLength());
-			System.out.println(chromosomeBoundaries[i]);
 		}
 
 
 	}
 
 	public void updatePosition(float pointerGenePosition) {
-		// TODO : fix this for something better than linear? maybe not necessary since so few chromosomes
+		// TODO : clean
 		pointerGenePosition -= 0.25f;
 		if(pointerGenePosition < 0.0f)
 			pointerGenePosition += 1.0f;
-		System.out.println(pointerGenePosition);
 		for (int i = 1; i < chromosomeBoundaries.length; ++i) {
 			if (chromosomeBoundaries[i] <= pointerGenePosition) {
 				chromosome = AbstractGenome.getChromosome(i - 1);
