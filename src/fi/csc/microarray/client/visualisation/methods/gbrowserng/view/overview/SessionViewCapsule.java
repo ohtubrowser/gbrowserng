@@ -13,6 +13,7 @@ import math.Vector2;
 
 public class SessionViewCapsule extends GenosideComponent {
 
+    private boolean needsTextureUpdate = true;
     private final SessionView sessionView;
     private final GeneCircle geneCircle;
     // TODO: SessionViewCapsuleData class could contain this.
@@ -143,8 +144,14 @@ public class SessionViewCapsule extends GenosideComponent {
 	sessionView.draw(gl);
     }
 
+    public void setNeedsTextureUpdate() {
+	needsTextureUpdate = true;
+    }
+
     @Override
     public void userTick(float dt) {
+	if(needsTextureUpdate)
+	    return;
 	if (dying) {
 	    death += dt;
 	}
@@ -207,5 +214,6 @@ public class SessionViewCapsule extends GenosideComponent {
 
     void drawToTexture(SoulGL2 gl) {
 	sessionView.updateTexture(gl);
+	needsTextureUpdate = false;
     }
 }
