@@ -93,7 +93,7 @@ public class SessionViewCapsule extends GenosideComponent {
 			this.show();
 		} else {
 			link.hide();
-			sessionView.setDimensions(0.1f, 0.1f);
+			sessionView.setDimensions(0.0f, 0.0f);
 		}
 		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
 	}
