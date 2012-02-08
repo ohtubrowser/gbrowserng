@@ -114,6 +114,7 @@ public class OverView extends GenosideComponent {
 	for (SessionViewCapsule capsule : activeSessions) {
 	    synchronized (textureUpdateListLock) {
 		textureUpdateList.add(capsule);
+		capsule.setNeedsTextureUpdate();
 	    }
 	    int chromosome = capsule.getSession().getSession().referenceSequence.chromosome;
 	    float position = capsule.getSession().getSession().position;
@@ -214,6 +215,7 @@ public class OverView extends GenosideComponent {
 		sessions.add(capsule);
 		synchronized (textureUpdateListLock) {
 		    textureUpdateList.add(capsule);
+		    capsule.setNeedsTextureUpdate();
 		}
 	    } else if (event.getButton() == 3) {
 		for (SessionViewCapsule capsule : sessions) {
