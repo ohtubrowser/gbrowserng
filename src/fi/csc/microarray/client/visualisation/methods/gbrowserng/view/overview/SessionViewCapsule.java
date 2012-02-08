@@ -5,10 +5,12 @@ import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
+import javax.media.opengl.GL2;
 import math.Vector2;
 
 public class SessionViewCapsule extends GenosideComponent {
@@ -123,7 +125,6 @@ public class SessionViewCapsule extends GenosideComponent {
 
 	@Override
 	public void draw(SoulGL2 gl) {
-
 		link.draw(gl);
 
 		// this is just for debug
@@ -139,7 +140,6 @@ public class SessionViewCapsule extends GenosideComponent {
 			PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
 			gl.glDisable(SoulGL2.GL_BLEND);
 		}
-
 		sessionView.setActive(isActive);
 		sessionView.draw(gl);
 	}
@@ -156,6 +156,7 @@ public class SessionViewCapsule extends GenosideComponent {
 		if (dying) {
 			death += dt;
 		}
+		
 		sessionView.tick(dt);
 
 		if (this.positionAdjustment.lengthSquared() > 0.00001f) {
@@ -173,6 +174,16 @@ public class SessionViewCapsule extends GenosideComponent {
 	public void die() {
 		dying = true;
 		link.hide();
+	}
+
+	public void hideBackground() {
+		sessionView.hide();
+		link.hide();
+	}
+
+	public void showBackround() {
+		sessionView.show();
+		link.show();
 	}
 
 	public boolean isDying() {

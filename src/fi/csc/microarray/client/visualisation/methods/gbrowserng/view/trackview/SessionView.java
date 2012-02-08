@@ -10,6 +10,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.Gen
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
+import gles.Color;
 import gles.SoulGL2;
 import gles.primitives.PrimitiveBuffers;
 import gles.shaders.Shader;
@@ -38,6 +39,7 @@ public class SessionView extends GenosideComponent {
 	private IntBuffer textureHandle = IntBuffer.allocate(1);
 	private boolean textureCreated = false;
 	private final MouseTracker mouseTracker = new MouseTracker();
+	private boolean hide = false;
 
 	// TODO : maybe split into sessionview and sessionviewGFX?
 	public SessionView(Session session, GenosideComponent parent) {
@@ -191,6 +193,7 @@ public class SessionView extends GenosideComponent {
 		this.getAnimatedValues().setAnimatedValue("ZOOM", this.session.targetZoomLevel);
 	}
 
+	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
 
 		if (quitButton.handle(event, screen_x, screen_y)) {
@@ -233,6 +236,7 @@ public class SessionView extends GenosideComponent {
 		return false;
 	}
 
+	@Override
 	public void draw(SoulGL2 gl) {
 		if (!inScreen()) {
 			return;
@@ -242,7 +246,10 @@ public class SessionView extends GenosideComponent {
 		} else {
 			drawFromTexture(gl);
 		}
-		border.draw(gl);
+		Color tempcolor = new Color(0, 0, 0, hide ? 0 : 255);
+		gl.glEnable(SoulGL2.GL_BLEND);
+		border.draw(gl, tempcolor);
+		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 
 	@Override
@@ -347,5 +354,13 @@ public class SessionView extends GenosideComponent {
 		gl.glDisableVertexAttribArray(texPositionHandle);
 		shader.stop(gl);
 		TextureManager.bindTexture(gl, GenoTexID.FONT); // TODO : this really shouldn't be necessary here
+	}
+
+	public void show() {
+		hide = false;
+	}
+
+	public void hide() {
+		hide = true;
 	}
 }
