@@ -260,6 +260,7 @@ public class OverView extends GenosideComponent {
 			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
+
 		}
 		return false;
 	}

@@ -1,4 +1,3 @@
-
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
 public class AbstractChromosome {
@@ -11,6 +10,7 @@ public class AbstractChromosome {
 		this.id = id;
 		this.size = size;
 		sequence = new ReferenceSequence(id, (int) 300);
+
 	}
 
 	public int getChromosomeNumber() {
