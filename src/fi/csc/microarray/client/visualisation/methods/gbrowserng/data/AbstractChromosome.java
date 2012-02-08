@@ -10,7 +10,7 @@ public class AbstractChromosome {
 	public AbstractChromosome(int id, long size) {
 		this.id = id;
 		this.size = size;
-		sequence = new ReferenceSequence(id, (int) size);
+		sequence = new ReferenceSequence(id, (int) 300);
 	}
 
 	public int getChromosomeNumber() {
