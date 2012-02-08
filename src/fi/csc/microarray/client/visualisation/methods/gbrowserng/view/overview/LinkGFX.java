@@ -81,6 +81,7 @@ public class LinkGFX {
 	}
 
 	public void hide() {
+		// TODO : better value for this
 		target_alpha = -0.1f;
 	}
 

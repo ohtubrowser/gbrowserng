@@ -27,6 +27,7 @@ public class SessionViewCapsule extends GenosideComponent {
 	private Vector2 genecirclePosition = new Vector2(1, 0);
 	private Vector2 positionAdjustment = new Vector2();
 	private final LinkGFX link;
+	private boolean hide;
 
 	public SessionViewCapsule(SessionView sessionView, float relativePos, GeneCircle geneCircle) {
 		super(null); // should be ok
@@ -137,7 +138,7 @@ public class SessionViewCapsule extends GenosideComponent {
 			this.backGroundColor.g = v;
 			this.backGroundColor.b = v;
 			this.backGroundColor.a = alpha * (1.0f - death);
-			PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
+			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
 			gl.glDisable(SoulGL2.GL_BLEND);
 		}
 		sessionView.setActive(isActive);
@@ -177,11 +178,13 @@ public class SessionViewCapsule extends GenosideComponent {
 	}
 
 	public void hideBackground() {
+		hide = true;
 		sessionView.hide();
 		link.hide();
 	}
 
 	public void showBackround() {
+		hide = false;
 		sessionView.show();
 		link.show();
 	}
