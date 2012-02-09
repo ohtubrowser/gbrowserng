@@ -37,8 +37,8 @@ public class GeneralLink {
     }
 
     public void calculatePositions(GeneCircle geneCircle) {
-		aCirclePos = geneCircle.getRelativePosition(aChromosome.getChromosomeNumber(), (float)aStart/aChromosome.length());
-		bCirclePos = geneCircle.getRelativePosition(bChromosome.getChromosomeNumber(), (float)bStart/bChromosome.length());
+		aCirclePos = geneCircle.getRelativePosition(aChromosome.getChromosomeNumber()-1, (float)aStart/aChromosome.length()); // Need -1 because of AbstractChromosome indexing
+		bCirclePos = geneCircle.getRelativePosition(bChromosome.getChromosomeNumber()-1, (float)bStart/bChromosome.length());
 		aXYPos = geneCircle.getXYPosition(aCirclePos); bXYPos = geneCircle.getXYPosition(bCirclePos);
     }
 
