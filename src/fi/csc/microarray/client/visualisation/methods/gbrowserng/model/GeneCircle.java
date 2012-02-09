@@ -8,6 +8,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 public class GeneCircle {
 
 	private float minimumChromosomeSlice;
+	private float minimizedChromosomeSize = 0.007f;
 	private float size;
 	private AbstractChromosome chromosome = AbstractGenome.getChromosome(0);
 	private long chromosomePosition = 0;
@@ -15,20 +16,30 @@ public class GeneCircle {
 	private Vector2[] chromosomeBoundariesPositions;
 
 	public GeneCircle() {
+		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
+		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
+		updateChromosomes();
+	}
+
+	public void updateChromosomes() {
 		// 60% of the circle's circumference is divided evenly between chromosomes
 		// Remaining 40% according to relative chromosome sizes
 		minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
-		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
-		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
-		float sliceSizeLeft = 1.0f - AbstractGenome.getNumChromosomes() * minimumChromosomeSlice;
+		float sliceSizeLeft = 1.0f;
+		for (int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
+			if (!AbstractGenome.getChromosome(i - 1).isMinimized()) sliceSizeLeft -= minimumChromosomeSlice;
+			else sliceSizeLeft -= minimizedChromosomeSize;
+		}
 		assert (sliceSizeLeft >= 0.0f);
 
 		chromosomeBoundaries[0] = 1.0f; chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
-			chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * AbstractGenome.getChromosome(i - 1).length() / AbstractGenome.getTotalLength());
+			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
+			if (chromosome.isMinimized())
+				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
+			else chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());
 		}
-
-
+		setSize(getSize());
 	}
 
 	public void updatePosition(float pointerGenePosition) {
