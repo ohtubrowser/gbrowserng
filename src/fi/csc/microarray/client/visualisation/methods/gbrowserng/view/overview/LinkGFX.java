@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
@@ -8,7 +9,6 @@ import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import managers.ShaderManager;
 import math.Matrix4;
-import math.MatrixUtils;
 
 public class LinkGFX {
 
@@ -77,11 +77,10 @@ public class LinkGFX {
 		if(time < -1.3f / velocity)
 			time += 2.6f / velocity;
 
-		alpha += (target_alpha - alpha) * (1.0f - Math.pow(0.1f, dt));
+		alpha += (target_alpha - alpha) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
 	}
 
 	public void hide() {
-		// TODO : better value for this
 		target_alpha = -0.1f;
 	}
 
