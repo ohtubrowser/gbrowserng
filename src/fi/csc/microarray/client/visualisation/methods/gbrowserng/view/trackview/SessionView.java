@@ -40,6 +40,7 @@ public class SessionView extends GenosideComponent {
 	private boolean textureCreated = false;
 	private final MouseTracker mouseTracker = new MouseTracker();
 	private boolean hide = false;
+	private float alpha = 1.0f;
 
 	// TODO : maybe split into sessionview and sessionviewGFX?
 	public SessionView(Session session, GenosideComponent parent) {
@@ -241,7 +242,6 @@ public class SessionView extends GenosideComponent {
 		if (!inScreen()) {
 			return;
 		}
-		// TODO : draw with some kind of alpha value
 		if (active) {
 			drawActive(gl);
 		} else {
@@ -296,6 +296,7 @@ public class SessionView extends GenosideComponent {
 			textureCreated = true;
 			genTexture(gl);
 		}
+		
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
 
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, frameBufferHandle.get(0));
@@ -333,10 +334,12 @@ public class SessionView extends GenosideComponent {
 
 		modelViewMatrix.makeTranslationMatrix(glx(0), gly(0), 0);
 		modelViewMatrix.scale(getDimensions().x * 0.5f, getDimensions().y * 0.5f / GlobalVariables.aspectRatio, 1.0f);
-
+		gl.glEnable(gl.GL_BLEND);
+		alpha = hide ? 0.0f : 1.0f;
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.TEXRECTANGLE);
 		shader.start(gl);
 		ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
+		ShaderMemory.setUniformVec1(gl, shader, "alpha", alpha);
 
 		gl.glBindTexture(SoulGL2.GL_TEXTURE_2D, textureHandle.get(0));
 
@@ -354,6 +357,8 @@ public class SessionView extends GenosideComponent {
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		gl.glDisableVertexAttribArray(texPositionHandle);
 		shader.stop(gl);
+		gl.glDisable(gl.GL_BLEND);
+
 		TextureManager.bindTexture(gl, GenoTexID.FONT); // TODO : this really shouldn't be necessary here
 	}
 

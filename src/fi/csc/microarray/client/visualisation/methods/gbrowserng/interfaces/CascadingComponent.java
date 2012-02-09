@@ -45,8 +45,6 @@ public abstract class CascadingComponent {
 		currentDimensions.x += (targetDimensions.x - currentDimensions.x) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
 		currentDimensions.y += (targetDimensions.y - currentDimensions.y) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
 
-		/*currentPosition.approach(targetPosition, 0.005f, dt);
-		currentDimensions.approach(targetDimensions, 0.005f, dt);*/
 		updateDimensions();
 		updatePosition();
 	}
