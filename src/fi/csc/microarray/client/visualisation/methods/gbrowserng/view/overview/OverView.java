@@ -200,11 +200,12 @@ public class OverView extends GenosideComponent {
 				AbstractChromosome chromosome = geneCircle.getChromosome();
 				if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
+					geneCircle.updateChromosomes();
 				}
 				else {
 					chromosome.setMinimized(true);
+					geneCircle.updateMinimizedChromosomes();
 				}
-				geneCircle.updateChromosomes();
 				return true;
 			}
 		}

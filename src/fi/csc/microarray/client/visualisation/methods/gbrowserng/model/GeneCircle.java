@@ -42,6 +42,16 @@ public class GeneCircle {
 		setSize(getSize());
 	}
 
+	public void updateMinimizedChromosomes() {
+		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
+			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
+			if (chromosome.isMinimized()) {
+				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
+			}
+		}
+		setSize(getSize());
+	}
+
 	public void updatePosition(float pointerGenePosition) {
 		// TODO : clean
 		pointerGenePosition -= 0.25f;
