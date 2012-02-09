@@ -9,7 +9,9 @@ public class GlobalVariables {
 	public static float aspectRatio = 1.0f;
 	public static final float animationConstant = 20f;
 	public static final Map<Character, Color> genomeColors = initializeGenomeColors();
-	
+	public static int width;
+	public static int height;
+
 	private static Map<Character, Color>initializeGenomeColors() {
 		Map<Character, Color> m = new HashMap<Character, Color>();
 		m.put('A', Color.BLUE); m.put('G', Color.CYAN); m.put('C', Color.ORANGE); m.put('T', Color.MAGENTA);
