@@ -2,6 +2,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.opengl.util.awt.TextRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
@@ -13,7 +15,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
-import gles.renderer.TextRenderer;
 import java.util.LinkedList;
 import managers.TextureManager;
 import math.Matrix4;
@@ -36,6 +37,7 @@ public class OverView extends GenosideComponent {
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false;
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
+	public TextRenderer textRenderer;
 
 	public OverView() {
 		super(null);
@@ -272,8 +274,14 @@ public class OverView extends GenosideComponent {
 			}
 		}
 
-		TextRenderer.getInstance().drawText(gl, "FPS: " + fpsCounter.getFps(), 0, 0.92f, 0.9f);
-		TextRenderer.getInstance().drawText(gl, "Draw: " + fpsCounter.getMillis() + "ms", 0, 0.84f, 0.9f);
+		int width = GlobalVariables.width, height = GlobalVariables.height;
+		textRenderer.beginRendering(width, height);
+		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
+		String fps = "FPS: " + fpsCounter.getFps();
+		int stringHeight = (int)textRenderer.getBounds(fps).getHeight();
+		textRenderer.draw(fps, (int)(width/2-textRenderer.getBounds(fps).getWidth()/2), height-stringHeight-7);
+		String draw = "Draw: " + fpsCounter.getMillis() + "ms";
+		textRenderer.draw(draw, (int)(width/2-textRenderer.getBounds(draw).getWidth()/2), height-stringHeight*2-15);
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
@@ -286,10 +294,12 @@ public class OverView extends GenosideComponent {
 				position = (long) this.hoverCapsule.getSession().getSession().position;
 				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
 			}
-			TextureManager.bindTexture(gl, GenoTexID.FONT);
-			TextRenderer.getInstance().drawText(gl, "Chromosome " + chromosome, 0, -0.86f, 0.8f);
-			TextRenderer.getInstance().drawText(gl, "Position: " + position, 0, -0.95f, 0.8f);
+			String chrom = "Chromosome " + chromosome;
+			String pos = "Position: " + position;
+			textRenderer.draw(chrom, (int)(width/2-textRenderer.getBounds(chrom).getWidth()/2), stringHeight+20);
+			textRenderer.draw(pos, (int)(width/2-textRenderer.getBounds(pos).getWidth()/2), 10);
 		}
+		textRenderer.endRendering();
 	}
 
 	@Override
