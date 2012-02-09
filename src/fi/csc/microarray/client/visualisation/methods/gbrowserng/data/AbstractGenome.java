@@ -18,7 +18,7 @@ public class AbstractGenome {
 	public static long getTotalLength() {
 		long ans = 0;
 		for (AbstractChromosome a : abstractGenomeData) {
-			ans += a.length();
+			ans += a.isMinimized() ? 0 : a.length();
 		}
 		return ans;
 	}

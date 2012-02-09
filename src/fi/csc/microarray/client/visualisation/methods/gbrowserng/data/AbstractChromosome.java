@@ -5,6 +5,7 @@ public class AbstractChromosome {
 	private final long size;
 	private final int id;
 	private final ReferenceSequence sequence;
+	private boolean minimized = false;
 
 	public AbstractChromosome(int id, long size) {
 		this.id = id;
@@ -27,5 +28,13 @@ public class AbstractChromosome {
 
 	public ReferenceSequence getReferenceSequence() {
 		return sequence;
+	}
+
+	public boolean isMinimized() {
+		return minimized;
+	}
+
+	public void setMinimized(boolean minimized) {
+		this.minimized = minimized;
 	}
 }

@@ -194,8 +194,17 @@ public class OverView extends GenosideComponent {
 					if (capsule.handle(event, x, y)) {
 						capsule.die();
 						capsule.deactivate();
+						return true;
 					}
 				}
+				AbstractChromosome chromosome = geneCircle.getChromosome();
+				if (chromosome.isMinimized()) {
+					chromosome.setMinimized(false);
+				}
+				else {
+					chromosome.setMinimized(true);
+				}
+				geneCircle.updateChromosomes();
 				return true;
 			}
 		}
