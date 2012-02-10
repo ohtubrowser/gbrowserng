@@ -26,9 +26,8 @@ public class GeneCircle {
 		// Remaining 40% according to relative chromosome sizes
 		minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
 		float sliceSizeLeft = 1.0f;
-		for (int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
-			if (!AbstractGenome.getChromosome(i - 1).isMinimized()) sliceSizeLeft -= minimumChromosomeSlice;
-			else sliceSizeLeft -= minimizedChromosomeSize;
+		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
+			sliceSizeLeft -= AbstractGenome.getChromosome(i - 1).isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
 		}
 		assert (sliceSizeLeft >= 0.0f);
 
