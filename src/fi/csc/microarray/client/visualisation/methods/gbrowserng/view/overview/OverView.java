@@ -202,11 +202,9 @@ public class OverView extends GenosideComponent {
 				AbstractChromosome chromosome = geneCircle.getChromosome();
 				if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
-					geneCircle.updateChromosomes();
 				}
 				else {
 					chromosome.setMinimized(true);
-					geneCircle.updateMinimizedChromosomes();
 				}
 				return true;
 			}
@@ -304,6 +302,10 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public void userTick(float dt) {
+		synchronized (geneCircle.tickdrawLock) {
+			geneCircle.tick(dt);
+			updateCircleSize();
+		}
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
 
