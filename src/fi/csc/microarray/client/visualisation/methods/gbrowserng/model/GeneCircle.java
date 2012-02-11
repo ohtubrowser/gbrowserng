@@ -14,31 +14,41 @@ public class GeneCircle {
 	private long chromosomePosition = 0;
 	private float[] chromosomeBoundaries;
 	private Vector2[] chromosomeBoundariesPositions;
+	public final Object tickdrawLock = new Object();
 
 	public GeneCircle() {
 		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
 		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
-		updateChromosomes();
+		tick(0f);
 	}
 
-	public void updateChromosomes() {
+	public void tick(float dt) { // TODO: Most of this logic should be pushed to individual AbstractChromosome instances.
 		// 60% of the circle's circumference is divided evenly between chromosomes
 		// Remaining 40% according to relative chromosome sizes
 		minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
 		float sliceSizeLeft = 1.0f;
 		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
-			sliceSizeLeft -= AbstractGenome.getChromosome(i - 1).isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
+			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
+			chromosome.tick(dt);
+			sliceSizeLeft -= chromosome.isAnimating() ? minimumChromosomeSlice*chromosome.getAnimationProgress() + minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) :
+					chromosome.isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
 		}
 		assert (sliceSizeLeft >= 0.0f);
 
 		chromosomeBoundaries[0] = 1.0f; chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
 			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
-			if (chromosome.isMinimized())
-				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
+			if (chromosome.isAnimating()) {
+				float chromosomesize = (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength())*chromosome.getAnimationProgress();
+				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) - chromosomesize;
+			}
+			else if (chromosome.isMinimized()) chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
 			else chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());
 		}
-		setSize(getSize());
+
+		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
+			chromosomeBoundariesPositions[i - 1] = getXYPosition(chromosomeBoundaries[i - 1]);
+		}
 	}
 
 	public void updateMinimizedChromosomes() {
@@ -98,9 +108,8 @@ public class GeneCircle {
 
 	public void setSize(float size) {
 		this.size = size;
-		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
-			chromosomeBoundariesPositions[i - 1] = getXYPosition(chromosomeBoundaries[i - 1]);
-		}
 
 	}
+
+
 }
