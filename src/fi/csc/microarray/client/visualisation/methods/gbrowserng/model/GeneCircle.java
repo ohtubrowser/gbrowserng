@@ -15,11 +15,13 @@ public class GeneCircle {
 	private float[] chromosomeBoundaries;
 	private Vector2[] chromosomeBoundariesPositions;
 	public final Object tickdrawLock = new Object();
+	public boolean animating = true;
 
 	public GeneCircle() {
 		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
 		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		tick(0f);
+		animating = true;
 	}
 
 	public void tick(float dt) { // TODO: Most of this logic should be pushed to individual AbstractChromosome instances.
@@ -36,11 +38,13 @@ public class GeneCircle {
 		assert (sliceSizeLeft >= 0.0f);
 
 		chromosomeBoundaries[0] = 1.0f; chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
+		animating = false;
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
 			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
 			if (chromosome.isAnimating()) {
 				float chromosomesize = (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength())*chromosome.getAnimationProgress();
 				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) - chromosomesize;
+				animating = true;
 			}
 			else if (chromosome.isMinimized()) chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
 			else chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());

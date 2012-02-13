@@ -206,6 +206,7 @@ public class OverView extends GenosideComponent {
 				else {
 					chromosome.setMinimized(true);
 				}
+				geneCircle.animating = true;
 				return true;
 			}
 		}
@@ -303,8 +304,10 @@ public class OverView extends GenosideComponent {
 	@Override
 	public void userTick(float dt) {
 		synchronized (geneCircle.tickdrawLock) {
-			geneCircle.tick(dt);
-			updateCircleSize();
+			if (geneCircle.animating) {
+				geneCircle.tick(dt);
+				updateCircleSize();
+			}
 		}
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
