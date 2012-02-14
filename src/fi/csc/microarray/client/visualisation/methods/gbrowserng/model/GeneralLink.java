@@ -106,7 +106,6 @@ public class GeneralLink {
 	}
 
 	private boolean inInterval(Vector2 showLinksInterval) {
-		System.out.println(showLinksInterval.x + " " + showLinksInterval.y);
 		if(showLinksInterval.x < showLinksInterval.y) {
 			return (aCirclePos >= showLinksInterval.x && aCirclePos <= showLinksInterval.y)
 					|| (bCirclePos >= showLinksInterval.x && bCirclePos <= showLinksInterval.y);
