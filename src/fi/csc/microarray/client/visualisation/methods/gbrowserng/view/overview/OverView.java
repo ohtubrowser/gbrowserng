@@ -38,6 +38,7 @@ public class OverView extends GenosideComponent {
 	public boolean die = false;
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 	public TextRenderer textRenderer;
+	private Vector2 showLinksInterval = new Vector2(0, 1);
 
 	public OverView() {
 		super(null);
@@ -160,6 +161,19 @@ public class OverView extends GenosideComponent {
 		// note, x axis is negated to make tracking begin from the mathematical zero angle.
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
 		geneCircle.updatePosition(pointerGenePosition);
+		if (Math.abs(mousePosition.lengthSquared() - (geneCircle.getSize() * geneCircle.getSize() * 0.95 * 0.95)) < 0.04f * geneCircle.getSize()) { // TODO : magic numbers
+			showLinksInterval.x = pointerGenePosition - 0.25f - 0.02f;
+			showLinksInterval.y = pointerGenePosition - 0.25f + 0.02f;
+			if(showLinksInterval.x < 0.0f)
+				showLinksInterval.x += 1.0f;
+			if(showLinksInterval.y < 0.0f)
+				showLinksInterval.y += 1.0f;
+			if(showLinksInterval.y > 1.0f)
+					showLinksInterval.y -= 1.0f;
+		} else {
+			showLinksInterval.x = 0.0f;
+			showLinksInterval.y = 1.0f;
+		}
 
 		// allow capsules to update their states
 		for (SessionViewCapsule capsule : sessions) {
@@ -250,7 +264,7 @@ public class OverView extends GenosideComponent {
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		for (GeneralLink link : links) {
-			link.draw(gl, geneCircle.getSize());
+			link.draw(gl, geneCircle.getSize(), showLinksInterval);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 
@@ -293,6 +307,7 @@ public class OverView extends GenosideComponent {
 				position = (long) this.hoverCapsule.getSession().getSession().position;
 				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
 			}
+
 			String chrom = "Chromosome " + chromosome;
 			String pos = "Position: " + position;
 			textRenderer.draw(chrom, (int)(width/2-textRenderer.getBounds(chrom).getWidth()/2), stringHeight+20);

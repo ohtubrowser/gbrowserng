@@ -24,7 +24,7 @@ public class GeneralLink {
 	private Vector2 aXYPos, bXYPos;
 
 	public static void initBezierPoints() {
-		final int points = 100; // Setting this too low will cause problems on sharp curves
+		final int points = 50; // Setting this too low will cause problems on sharp curves
 		final float step = 1.0f / points;
 		tstep = step;
 		bezierPoints = FloatBuffer.allocate(points+1);
@@ -52,7 +52,10 @@ public class GeneralLink {
 		bXYPos = geneCircle.getXYPosition(bCirclePos);
 	}
 
-	public void draw(SoulGL2 gl, float zoomLevel) {
+	public void draw(SoulGL2 gl, float zoomLevel, Vector2 showLinksInterval) {
+		float nonActive = 0.0f;
+		if(!inInterval(showLinksInterval))
+			nonActive = 0.9f;
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		shader.start(gl);
 
@@ -60,6 +63,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
+		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", 1.0f - nonActive);
 		ShaderMemory.setUniformVec1(gl, shader, "tstep", tstep);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
@@ -99,5 +103,18 @@ public class GeneralLink {
 		shader.stop(gl);
 
 		gl.glDisable(SoulGL2.GL_BLEND);
+	}
+
+	private boolean inInterval(Vector2 showLinksInterval) {
+		System.out.println(showLinksInterval.x + " " + showLinksInterval.y);
+		if(showLinksInterval.x < showLinksInterval.y) {
+			return (aCirclePos >= showLinksInterval.x && aCirclePos <= showLinksInterval.y)
+					|| (bCirclePos >= showLinksInterval.x && bCirclePos <= showLinksInterval.y);
+		}
+		else {
+			return (aCirclePos >= showLinksInterval.x || aCirclePos <= showLinksInterval.y)
+					|| (bCirclePos >= showLinksInterval.x || bCirclePos <= showLinksInterval.y);
+		}
+
 	}
 }
