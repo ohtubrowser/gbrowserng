@@ -250,7 +250,7 @@ public class OverView extends GenosideComponent {
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		for (GeneralLink link : links) {
-			link.draw(gl);
+			link.draw(gl, geneCircle.getSize());
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 

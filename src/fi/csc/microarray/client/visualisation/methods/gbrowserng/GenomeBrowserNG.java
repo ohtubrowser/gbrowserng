@@ -76,7 +76,7 @@ public class GenomeBrowserNG {
 	public GenomeBrowserNG(int width, int height) {
 
 		// fill with bogus data
-		useSmallData();
+		//useSmallData();
 		useBigData();
 		//useChipsterData();
 

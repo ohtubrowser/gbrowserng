@@ -2,6 +2,8 @@
 precision mediump float;
 #endif
 
+const float widthDiffFactor = 6.0;
+
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform mat4 projectionMatrix;
@@ -36,7 +38,7 @@ void main()
 	if(t < 0)
 		normVec = normVec * -1.0;
 
-	vertexPos = vertexPos + (( (abs(thisT-0.5)+0.1)* 6 * width ) * normVec);
+	vertexPos = vertexPos + (((abs(thisT-0.5)+0.1)* widthDiffFactor * width ) * normVec); // This makes the curve thinner in the center
 
     gl_Position = projectionMatrix * viewMatrix * vertexPos;
 }

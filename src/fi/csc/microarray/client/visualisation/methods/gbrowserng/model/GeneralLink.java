@@ -27,12 +27,12 @@ public class GeneralLink {
 		final int points = 100; // Setting this too low will cause problems on sharp curves
 		final float step = 1.0f / points;
 		tstep = step;
-		bezierPoints = FloatBuffer.allocate(points+2);
+		bezierPoints = FloatBuffer.allocate(points+1);
 		bezierPoints.put(step);
-		for (int i = 1; i <= points; ++i) {
+		for (int i = 1; i < points; ++i) {
 			bezierPoints.put( ((i % 2 == 0) ? i : -i)*step);
 		}
-		bezierPoints.put(-bezierPoints.get(points));
+		bezierPoints.put(-bezierPoints.get(points-1));
 	}
 
 	public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
@@ -52,14 +52,14 @@ public class GeneralLink {
 		bXYPos = geneCircle.getXYPosition(bCirclePos);
 	}
 
-	public void draw(SoulGL2 gl) {
+	public void draw(SoulGL2 gl, float zoomLevel) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		shader.start(gl);
 
 		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
-		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f);
+		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
 		ShaderMemory.setUniformVec1(gl, shader, "tstep", tstep);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
