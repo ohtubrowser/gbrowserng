@@ -7,11 +7,13 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyb
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GenomeBrowserNG {
@@ -60,11 +62,23 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new AbstractChromosome(23, 155000000));
 	}
 
+	public static void useChipsterData() {
+		int i=1;
+		ConcurrentLinkedQueue<Long> lengths = ChipsterInterface.getLengths("karyotype.txt", "seq_region.txt",
+				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+		for(long l : lengths) {
+			AbstractGenome.addChromosome(new AbstractChromosome(i,l));
+			++i;
+		}
+	}
+
 	public GenomeBrowserNG(int width, int height) {
 
 		// fill with bogus data
 		//useSmallData();
-		useBigData();
+		//useBigData();
+		useChipsterData();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 

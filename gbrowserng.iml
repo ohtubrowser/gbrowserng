@@ -63,6 +63,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="gbrowser_chipster" level="project" />
   </component>
 </module>
 
