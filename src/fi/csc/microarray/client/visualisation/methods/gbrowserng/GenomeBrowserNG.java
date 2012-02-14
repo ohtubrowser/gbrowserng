@@ -26,13 +26,13 @@ public class GenomeBrowserNG {
 
 	public static void useSmallData() {
 		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new AbstractChromosome(0, 600));
-		AbstractGenome.addChromosome(new AbstractChromosome(1, 300));
-		AbstractGenome.addChromosome(new AbstractChromosome(2, 900));
-		AbstractGenome.addChromosome(new AbstractChromosome(3, 1200));
-		AbstractGenome.addChromosome(new AbstractChromosome(4, 100));
-		AbstractGenome.addChromosome(new AbstractChromosome(5, 400));
-		AbstractGenome.addChromosome(new AbstractChromosome(6, 500));
+		AbstractGenome.addChromosome(new AbstractChromosome(1, 600));
+		AbstractGenome.addChromosome(new AbstractChromosome(2, 300));
+		AbstractGenome.addChromosome(new AbstractChromosome(3, 900));
+		AbstractGenome.addChromosome(new AbstractChromosome(4, 1200));
+		AbstractGenome.addChromosome(new AbstractChromosome(5, 100));
+		AbstractGenome.addChromosome(new AbstractChromosome(6, 400));
+		AbstractGenome.addChromosome(new AbstractChromosome(7, 500));
 	}
 
 	public static void useBigData() {
@@ -76,9 +76,9 @@ public class GenomeBrowserNG {
 	public GenomeBrowserNG(int width, int height) {
 
 		// fill with bogus data
-		//useSmallData();
-		//useBigData();
-		useChipsterData();
+		useSmallData();
+		useBigData();
+		//useChipsterData();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
