@@ -4,8 +4,11 @@ precision mediump float;
 
 uniform vec3 color;
 
+varying vec4 normVec;
+
 void main()
 {
-    gl_FragColor = vec4(color,0.6);
+	float dist = normVec.x*normVec.x + normVec.y*normVec.y; // This is not always 1 because it is interpolated
+    gl_FragColor = vec4(color,1.0-dist*dist*dist);
 }
 

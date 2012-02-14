@@ -16,43 +16,51 @@ public class GeneralLink {
 
 	private AbstractChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
-	private float r = Math.max(0.5f, (float)Math.random()),g = (float) Math.random(), b=(float)Math.random();
-        private final int drawMethod;
-        private static FloatBuffer bezierPoints;
-
+	private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
+	private final int drawMethod;
+	private static FloatBuffer bezierPoints;
+	private static float tstep;
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
 
-    public static void initBezierPoints() {
-        	bezierPoints = FloatBuffer.allocate(32);
-		for(float i = 3.0f; i <= 96.0f; i+=3.0f)
-		    bezierPoints.put(i/100.0f);
-    }
+	public static void initBezierPoints() {
+		final int points = 100; // Setting this too low will cause problems on sharp curves
+		final float step = 1.0f / points;
+		tstep = step;
+		bezierPoints = FloatBuffer.allocate(points+2);
+		bezierPoints.put(step);
+		for (int i = 1; i <= points; ++i) {
+			bezierPoints.put( ((i % 2 == 0) ? i : -i)*step);
+		}
+		bezierPoints.put(-bezierPoints.get(points));
+	}
 
-    public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
-		this.aChromosome = aChromosome;	this.bChromosome = bChromosome;
-		this.aStart = aStart; this.bStart = bStart;
-		this.aStart = aEnd; this.bStart = bEnd;
-                drawMethod = Math.random() < 0.5f ? SoulGL2.GL_LINES : SoulGL2.GL_LINE_STRIP;
-    }
+	public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
+		this.aChromosome = aChromosome;
+		this.bChromosome = bChromosome;
+		this.aStart = aStart;
+		this.bStart = bStart;
+		this.aStart = aEnd;
+		this.bStart = bEnd;
+		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+	}
 
-    public void calculatePositions(GeneCircle geneCircle) {
-		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber()-1, (float)aStart/aChromosome.length()); // Need -1 because of AbstractChromosome indexing
-		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber()-1, (float)bStart/bChromosome.length());
-		aXYPos = geneCircle.getXYPosition(aCirclePos); bXYPos = geneCircle.getXYPosition(bCirclePos);
-    }
+	public void calculatePositions(GeneCircle geneCircle) {
+		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
+		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
+		aXYPos = geneCircle.getXYPosition(aCirclePos);
+		bXYPos = geneCircle.getXYPosition(bCirclePos);
+	}
 
-    public void draw(SoulGL2 gl) {
-		//PrimitiveRenderer.drawLine(aXYPos.x, aXYPos.y, bXYPos.x, bXYPos.y, gl, Color.MAGENTA);
-		gl.glEnable(SoulGL2.GL_BLEND);
-
-	
+	public void draw(SoulGL2 gl) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		shader.start(gl);
 
 		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
+		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f);
+		ShaderMemory.setUniformVec1(gl, shader, "tstep", tstep);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
@@ -61,10 +69,10 @@ public class GeneralLink {
 		float x = (aXYPos.x + bXYPos.x) / 2.0f;
 		float y = (aXYPos.y + bXYPos.y) / 2.0f;
 
-		float dx = x-bXYPos.x;
-		float dy = y-bXYPos.y;
+		float dx = x - bXYPos.x;
+		float dy = y - bXYPos.y;
 
-		float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
+		float angle = 180f * (float) Math.atan2(dy, dx) / (float) Math.PI;
 		float length = aXYPos.distance(bXYPos) * 0.5f;
 
 		Matrix4 modelMatrix = new Matrix4();
@@ -78,19 +86,18 @@ public class GeneralLink {
 		bezierPoints.rewind();
 
 		gl.glLineWidth(3.0f);
-		gl.glEnable(GL2.GL_LINE_SMOOTH);
+		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
+		gl.glEnable(SoulGL2.GL_BLEND);
+
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
 		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, bezierPoints);
 		gl.glDrawArrays(drawMethod, 0, bezierPoints.capacity());
-
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
-		gl.glDisable(GL2.GL_LINE_SMOOTH);
 
-		gl.glLineWidth(1.0f);
+		gl.glEnable(gl.GL_CULL_FACE);
 
 		shader.stop(gl);
 
 		gl.glDisable(SoulGL2.GL_BLEND);
-    }
-
+	}
 }
