@@ -50,6 +50,7 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		modelMatrix = new Matrix4();
 		float length = geneCircle.getSize()*0.049f;
+		float width = geneCircle.getSize()*0.015f;
 		for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
 			float x = 0.95f*vec.x;
 			float y = 0.95f*vec.y;
@@ -61,7 +62,7 @@ public class GeneCircleGFX {
 			
 			modelMatrix.makeTranslationMatrix(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
-			modelMatrix.scale(0.01f, length, 0.2f);
+			modelMatrix.scale(width, length, 0.2f);
 
 			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
