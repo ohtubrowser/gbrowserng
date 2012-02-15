@@ -2,10 +2,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import gles.Color;
 import gles.SoulGL2;
 import gles.primitives.PrimitiveBuffers;
-import gles.renderer.PrimitiveRenderer;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import managers.ShaderManager;
@@ -32,13 +30,6 @@ public class GeneCircleGFX {
 		mousePos.copyFrom(mousePosition);
 		mousePos.normalize();
 
-		/*
-		mousePos.scale(1.2f);
-		if(mousePos.length() > 0.6f) {
-			mousePos.scale( Math.max(0.1f, 1.6f - mousePos.length()) );
-		}
-		*/
-
 		ShaderMemory.setUniformVec1(gl, shader, "time", time);
 		ShaderMemory.setUniformVec1(gl, shader, "hilight", hilight);
 		ShaderMemory.setUniformVec2(gl, shader, "mouse", mousePos.x, mousePos.y);
@@ -52,17 +43,14 @@ public class GeneCircleGFX {
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
 
-		gl.glBlendFunc(SoulGL2.GL_SRC_ALPHA, SoulGL2.GL_DST_ALPHA);
 		shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
 		shader.start(gl);
 		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		modelMatrix = new Matrix4();
-		float length = 0.10f;
+		float length = geneCircle.getSize()*0.049f;
 		for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
-		    //PrimitiveRenderer.drawLine(0, 0, vec.x, vec.y, gl, Color.MAGENTA);
-
 			float x = 0.95f*vec.x;
 			float y = 0.95f*vec.y;
 
@@ -85,7 +73,6 @@ public class GeneCircleGFX {
 			gl.glDisableVertexAttribArray(vertexPositionHandle);
 
 		}
-		gl.glBlendFunc(SoulGL2.GL_SRC_ALPHA, SoulGL2.GL_ONE_MINUS_SRC_ALPHA);
 		shader.stop(gl);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
