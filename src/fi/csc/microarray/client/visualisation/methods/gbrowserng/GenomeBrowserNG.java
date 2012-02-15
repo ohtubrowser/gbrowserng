@@ -12,6 +12,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLList
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
+import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -105,6 +106,8 @@ public class GenomeBrowserNG {
 	}
 
 	public static void main(String[] s) throws InterruptedException {
-		new GenomeBrowserNG(1024, 768).run();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		double fraction = 0.8d;
+		new GenomeBrowserNG((int)(dim.width*fraction), (int)(dim.height*fraction)).run();
 	}
 }
