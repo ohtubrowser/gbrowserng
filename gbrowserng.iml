@@ -63,7 +63,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="gbrowser_chipster" level="project" />
+    <orderEntry type="module-library">
+      <library name="gbrowser_chipster.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ext/lib/gbrowser_chipster.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
