@@ -112,6 +112,9 @@ public class GeneCircle {
 
 	public void setSize(float size) {
 		this.size = size;
+		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
+			chromosomeBoundariesPositions[i - 1] = getXYPosition(chromosomeBoundaries[i - 1]);
+		}
 
 	}
 
