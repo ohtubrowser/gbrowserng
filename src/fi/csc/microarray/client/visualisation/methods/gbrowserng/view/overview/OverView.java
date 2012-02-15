@@ -161,7 +161,7 @@ public class OverView extends GenosideComponent {
 		// note, x axis is negated to make tracking begin from the mathematical zero angle.
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
 		geneCircle.updatePosition(pointerGenePosition);
-		if (Math.abs(mousePosition.lengthSquared() - (geneCircle.getSize() * geneCircle.getSize() * 0.95 * 0.95)) < 0.04f * geneCircle.getSize()) { // TODO : magic numbers
+		if (Math.abs(mousePosition.lengthSquared() - (geneCircle.getSize() * geneCircle.getSize() * 0.95 * 0.95)) < 0.1f * geneCircle.getSize() * geneCircle.getSize()) { // TODO : magic numbers
 			showLinksInterval.x = pointerGenePosition - 0.25f - 0.02f;
 			showLinksInterval.y = pointerGenePosition - 0.25f + 0.02f;
 			if(showLinksInterval.x < 0.0f)
