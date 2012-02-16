@@ -15,6 +15,8 @@ import gles.renderer.TextRenderer;
 import gles.shaders.DefaultShaders;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL2;
@@ -82,7 +84,16 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		GenoShaders.createShaders(new DesktopGL2(gl));
 		GenoTexID.createTextures(new DesktopGL2(gl));
 
-		overView.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(new Font("SansSerif", Font.BOLD, 40), true, true);
+		Font font;
+		float fontSize = 40f;
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(fontSize);
+		} catch (IOException e) {
+			font = new Font("SansSerif", Font.BOLD, (int)fontSize);
+		} catch (FontFormatException e) {
+			font = new Font("SansSerif", Font.BOLD, (int)fontSize);
+		}
+		overView.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 
 		gl.glDisable(GL2.GL_DEPTH_TEST);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
