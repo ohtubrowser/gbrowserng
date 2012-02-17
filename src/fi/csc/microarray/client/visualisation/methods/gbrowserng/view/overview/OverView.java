@@ -295,6 +295,8 @@ public class OverView extends GenosideComponent {
 		textRenderer.draw(fps, (int)(width/2-textRenderer.getBounds(fps).getWidth()/2), height-stringHeight-7);
 		String draw = "Draw: " + fpsCounter.getMillis() + "ms";
 		textRenderer.draw(draw, (int)(width/2-textRenderer.getBounds(draw).getWidth()/2), height-stringHeight*2-15);
+		String arcs = "Arcs: " + links.size();
+		textRenderer.draw(arcs, (int)(width/2-textRenderer.getBounds(arcs).getWidth()/2), height-stringHeight*2-55);
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
