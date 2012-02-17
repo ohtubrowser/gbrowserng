@@ -9,7 +9,7 @@ varying vec4 normVec;
 
 void main()
 {
-	float dist = normVec.x*normVec.x + normVec.y*normVec.y; // This is not always 1 because it is interpolated
+    float dist = normVec.x*normVec.x + normVec.y*normVec.y; // This is not always 1 because it is interpolated
     gl_FragColor = vec4(color,(1.0-dist)*uniAlpha);
 }
 
