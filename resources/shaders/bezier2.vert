@@ -27,18 +27,18 @@ vec2 calcBezierPosition(float t)
 void main()
 {
 	float thisT = abs(t);
-    vec2 vertexPosition = calcBezierPosition(thisT);
+        vec2 vertexPosition = calcBezierPosition(thisT);
 	float prevT = abs(t) - tstep;
 	vec2 prevVertexPosition = calcBezierPosition(prevT);
 
-    vec4 vertexPos = modelMatrix * vec4(vertexPosition, 0.0, 1.0);
+        vec4 vertexPos = modelMatrix * vec4(vertexPosition, 0.0, 1.0);
 
 	normVec = vec4(vertexPosition - prevVertexPosition, 0, 0); normVec.xy = normVec.yx; normVec.y = -normVec.y;
 	normVec = normalize(normVec);
-	if(t < 0)
+	if(t < 0.0)
 		normVec = normVec * -1.0;
 
 	vertexPos = vertexPos + (((abs(thisT-0.5)+0.1)* widthDiffFactor * width ) * normVec); // This makes the curve thinner in the center
 
-    gl_Position = projectionMatrix * viewMatrix * vertexPos;
+        gl_Position = projectionMatrix * viewMatrix * vertexPos;
 }
