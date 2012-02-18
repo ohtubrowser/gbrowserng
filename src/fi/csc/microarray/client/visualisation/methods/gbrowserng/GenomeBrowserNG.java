@@ -83,8 +83,8 @@ public class GenomeBrowserNG {
 
 		// fill with bogus data
 		//useSmallData();
-		//useBigData();
-		useChipsterData();
+		useBigData();
+		//useChipsterData();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
