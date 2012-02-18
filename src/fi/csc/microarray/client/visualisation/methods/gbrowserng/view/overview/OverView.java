@@ -3,6 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
@@ -12,6 +13,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.SimpleMouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
@@ -44,6 +46,7 @@ public class OverView extends GenosideComponent {
 	public TextRenderer chromosomeNameRenderer;
 	public TextRenderer textRenderer;
 	private Vector2 showLinksInterval = new Vector2(0, 1);
+	private SimpleMouseEvent lastMouseClick;
 
 	public OverView() {
 		super(null);
@@ -173,9 +176,18 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	private void minimizeAllButOne(AbstractChromosome chromosome) {
+		int chromosomes=AbstractGenome.getNumChromosomes();
+		for(int i=0; i<chromosomes; ++i) {
+			AbstractChromosome c = AbstractGenome.getChromosome(i);
+			if(c!=chromosome) c.setMinimized(true);
+		}
+	}
+
 	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
 	@Override
 	public boolean handle(MouseEvent event, float x, float y) {
+		if(lastMouseClick==null) lastMouseClick=new SimpleMouseEvent(x,y,event.getWhen());
 		this.hoverCapsule = null;
 		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
 			if (capsule.getSession().inComponent(x, y)) {
@@ -250,7 +262,19 @@ public class OverView extends GenosideComponent {
 				else {
 					chromosome.setMinimized(true);
 				}
+				if((chromosome.isAnimating() && !chromosome.isMinimized()) &&
+						lastMouseClick.getX()==x && lastMouseClick.getY()==y &&
+						lastMouseClick.getWhen()+250>event.getWhen()) {
+					minimizeAllButOne(chromosome);
+				}
+				else if((chromosome.isAnimating() && chromosome.isMinimized()) &&
+						lastMouseClick.getX()==x && lastMouseClick.getY()==y &&
+						lastMouseClick.getWhen()+250>event.getWhen()) {
+					for(int i=0; i<AbstractGenome.getNumChromosomes(); ++i) AbstractGenome.getChromosome(i).setMinimized(false);
+				}
+				System.out.println(event.getWhen()-lastMouseClick.getWhen());
 				geneCircle.animating = true;
+				lastMouseClick = new SimpleMouseEvent(x,y,event.getWhen());
 				return true;
 			}
 		}
@@ -352,12 +376,11 @@ public class OverView extends GenosideComponent {
 		for (Vector2 v : chromobounds)
 		{
 			Vector2 vv=new Vector2(v);
-			AbstractChromosome c = AbstractGenome.getChromosome(i-1);
 			float angle=v.relativeAngle(chromobounds[i % 23])/2; // Rotate the numbers to the center of the chromosome.
 			vv.rotate((angle<0)?angle:(-((float)Math.PI-angle))); // Fix the >180 angle.
 			String chromoname=String.valueOf(i);
 
-			// Magic constant 1.75 is for positioning the numbers a little bit out from the circle.
+			// Magic constant 1.90 is for positioning the numbers a little bit out from the circle.
 			chromosomeNameRenderer.draw(
 					chromoname,
 					(width/2)+(int)((width*(vv.x)-chromosomeNameRenderer.getBounds(chromoname).getWidth())/1.90),
