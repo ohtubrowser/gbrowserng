@@ -221,7 +221,7 @@ public class OverView extends GenosideComponent {
 						return true;
 					}
 				}
-				// respond to mouse click
+//				 respond to mouse click
 				System.out.println("Adding capsule with " + x + " " + y);
 				SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
 				capsule.getSession().setDimensions(0.4f, 0.2f);
