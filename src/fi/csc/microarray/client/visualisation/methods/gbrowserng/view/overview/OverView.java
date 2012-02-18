@@ -15,6 +15,10 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import managers.TextureManager;
 import math.Matrix4;
@@ -37,13 +41,39 @@ public class OverView extends GenosideComponent {
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false;
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
+	public TextRenderer chromosomeNameRenderer;
 	public TextRenderer textRenderer;
 	private Vector2 showLinksInterval = new Vector2(0, 1);
 
 	public OverView() {
 		super(null);
+		initTextRenderers();
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
+	}
+
+	private void initTextRenderers() {
+		Font font;
+		float fontSize = 40f;
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(fontSize);
+		} catch (IOException e) {
+			font = new Font("SansSerif", Font.BOLD, (int)fontSize);
+		} catch (FontFormatException e) {
+			font = new Font("SansSerif", Font.BOLD, (int)fontSize);
+		}
+		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
+
+		Font smallFont;
+		float smallfontSize = 10f;
+		try {
+			smallFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(smallfontSize);
+		} catch (IOException e) {
+			smallFont = new Font("SansSerif", Font.BOLD, (int)smallfontSize);
+		} catch (FontFormatException e) {
+			smallFont = new Font("SansSerif", Font.BOLD, (int)smallfontSize);
+		}
+		this.chromosomeNameRenderer = new com.jogamp.opengl.util.awt.TextRenderer(smallFont, true, true);
 	}
 
 	@Override
@@ -252,7 +282,6 @@ public class OverView extends GenosideComponent {
 			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
-
 		}
 		return false;
 	}
@@ -286,7 +315,6 @@ public class OverView extends GenosideComponent {
 				capsule.draw(gl);
 			}
 		}
-
 		int width = GlobalVariables.width, height = GlobalVariables.height;
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
@@ -296,7 +324,7 @@ public class OverView extends GenosideComponent {
 		String draw = "Draw: " + fpsCounter.getMillis() + "ms";
 		textRenderer.draw(draw, (int)(width/2-textRenderer.getBounds(draw).getWidth()/2), height-stringHeight*2-15);
 		String arcs = "Arcs: " + links.size();
-		textRenderer.draw(arcs, (int)(width/2-textRenderer.getBounds(arcs).getWidth()/2), height-stringHeight*2-55);
+		textRenderer.draw(arcs, (int) (width / 2 - textRenderer.getBounds(arcs).getWidth() / 2), height - stringHeight * 2 - 55);
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
@@ -316,6 +344,28 @@ public class OverView extends GenosideComponent {
 			textRenderer.draw(pos, (int)(width/2-textRenderer.getBounds(pos).getWidth()/2), 10);
 		}
 		textRenderer.endRendering();
+
+		chromosomeNameRenderer.beginRendering(width, height);
+		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
+		int i=1;
+		Vector2[] chromobounds=geneCircle.getChromosomeBoundariesPositions();
+		for (Vector2 v : chromobounds)
+		{
+			Vector2 vv=new Vector2(v);
+			AbstractChromosome c = AbstractGenome.getChromosome(i-1);
+			float angle=v.relativeAngle(chromobounds[i % 23])/2; // Rotate the numbers to the center of the chromosome.
+			vv.rotate((angle<0)?angle:(-((float)Math.PI-angle))); // Fix the >180 angle.
+			String chromoname=String.valueOf(i);
+
+			// Magic constant 1.75 is for positioning the numbers a little bit out from the circle.
+			chromosomeNameRenderer.draw(
+					chromoname,
+					(width/2)+(int)((width*(vv.x)-chromosomeNameRenderer.getBounds(chromoname).getWidth())/1.90),
+					(height/2)+(int)(((height*vv.y)-chromosomeNameRenderer.getBounds(chromoname).getHeight())/1.90)
+			);
+			++i;
+		}
+		chromosomeNameRenderer.endRendering();
 	}
 
 	@Override
