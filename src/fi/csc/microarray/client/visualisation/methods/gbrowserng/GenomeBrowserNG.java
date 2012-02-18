@@ -65,9 +65,14 @@ public class GenomeBrowserNG {
 
 	public static void useChipsterData() {
 		int i=1;
+//                ConcurrentLinkedQueue<Long> lengths = ChipsterInterface.getLengths("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz", 
+//                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
+//				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+//						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+//                
 		ConcurrentLinkedQueue<Long> lengths = ChipsterInterface.getLengths("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 		for(long l : lengths) {
 			AbstractGenome.addChromosome(new AbstractChromosome(i,l));
 			++i;
@@ -78,8 +83,8 @@ public class GenomeBrowserNG {
 
 		// fill with bogus data
 		//useSmallData();
-		useBigData();
-		//useChipsterData();
+		//useBigData();
+		useChipsterData();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
