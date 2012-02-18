@@ -191,7 +191,7 @@ public class OverView extends GenosideComponent {
 						return true;
 					}
 				}
-				// respond to mouse click
+//				 respond to mouse click
 				System.out.println("Adding capsule with " + x + " " + y);
 				SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
 				capsule.getSession().setDimensions(0.4f, 0.2f);
@@ -202,26 +202,26 @@ public class OverView extends GenosideComponent {
 					textureUpdateList.add(capsule);
 					capsule.setNeedsTextureUpdate();
 				}
-			} else if (event.getButton() == 3) {
-				for (SessionViewCapsule capsule : sessions) {
-					if (capsule.isDying()) {
-						continue;
-					}
-					if (capsule.handle(event, x, y)) {
-						capsule.die();
-						capsule.deactivate();
-						return true;
-					}
-				}
-				AbstractChromosome chromosome = geneCircle.getChromosome();
-				if (chromosome.isMinimized()) {
-					chromosome.setMinimized(false);
-				}
-				else {
-					chromosome.setMinimized(true);
-				}
-				geneCircle.animating = true;
-				return true;
+//			} else if (event.getButton() == 3) {
+//				for (SessionViewCapsule capsule : sessions) {
+//					if (capsule.isDying()) {
+//						continue;
+//					}
+//					if (capsule.handle(event, x, y)) {
+//						capsule.die();
+//						capsule.deactivate();
+//						return true;
+//					}
+//				}
+//				AbstractChromosome chromosome = geneCircle.getChromosome();
+//				if (chromosome.isMinimized()) {
+//					chromosome.setMinimized(false);
+//				}
+//				else {
+//					chromosome.setMinimized(true);
+//				}
+//				geneCircle.animating = true;
+//				return true;
 			}
 		}
 
