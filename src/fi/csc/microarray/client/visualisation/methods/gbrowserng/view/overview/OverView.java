@@ -272,7 +272,6 @@ public class OverView extends GenosideComponent {
 						lastMouseClick.getWhen()+250>event.getWhen()) {
 					for(int i=0; i<AbstractGenome.getNumChromosomes(); ++i) AbstractGenome.getChromosome(i).setMinimized(false);
 				}
-				System.out.println(event.getWhen()-lastMouseClick.getWhen());
 				geneCircle.animating = true;
 				lastMouseClick = new SimpleMouseEvent(x,y,event.getWhen());
 				return true;
