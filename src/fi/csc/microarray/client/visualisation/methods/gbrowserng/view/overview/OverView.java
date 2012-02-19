@@ -317,7 +317,7 @@ public class OverView extends GenosideComponent {
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		for (GeneralLink link : links) {
-			link.draw(gl, geneCircle.getSize(), showLinksInterval);
+			link.draw(gl, geneCircle.getSize());
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 
@@ -391,6 +391,24 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.endRendering();
 	}
 
+	private void fadeLinks(float dt) {
+		// TODO: Hide links between two closed chromosomes.
+		for(GeneralLink link : links) {
+			int thischromonumber=geneCircle.getChromosome().getChromosomeNumber();
+			float[] chromobounds=geneCircle.getChromosomeBoundaries();
+			float thischromostart=chromobounds[thischromonumber-1];
+			float thischromoend=chromobounds[(thischromonumber)%chromobounds.length];
+			if(link.inInterval(showLinksInterval)) {
+				link.fadeIn(dt*16);
+			}
+			else if(((link.getStartPos() <= thischromostart) && (link.getStartPos() > thischromoend)) ||
+					((link.getEndPos() <= thischromostart) && (link.getEndPos() > thischromoend))) {
+				link.fadeDim(dt*8);
+			}
+			else link.fadeOut(dt*8);
+		}
+	}
+
 	@Override
 	public void userTick(float dt) {
 		synchronized (geneCircle.tickdrawLock) {
@@ -401,6 +419,8 @@ public class OverView extends GenosideComponent {
 		}
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
+
+		fadeLinks(dt);
 
 		SessionViewCapsule killCapsule = null;
 		for (SessionViewCapsule capsule : sessions) {

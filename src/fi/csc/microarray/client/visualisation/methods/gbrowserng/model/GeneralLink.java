@@ -22,6 +22,30 @@ public class GeneralLink {
 	private static float tstep;
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
+	private float opacity;
+
+	public void fadeIn(float fadespeed) {
+		this.opacity+=fadespeed;
+		if(this.opacity>1.0f) this.opacity=1.0f;
+	}
+
+	public void fadeDim(float fadespeed) {
+		this.opacity-=fadespeed;
+		if(this.opacity<0.2f) this.opacity=0.2f;
+	}
+
+	public void fadeOut(float fadespeed) {
+		this.opacity-=fadespeed;
+		if(this.opacity<0.0f) this.opacity=0.0f;
+	}
+
+	public float getStartPos() {
+		return aCirclePos;
+	}
+
+	public float getEndPos() {
+		return bCirclePos;
+	}
 
 	public static void initBezierPoints() {
 		final int points = 50; // Setting this too low will cause problems on sharp curves
@@ -42,6 +66,7 @@ public class GeneralLink {
 		this.bStart = bStart;
 		this.aStart = aEnd;
 		this.bStart = bEnd;
+		this.opacity = 1.0f;
 		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
 	}
 
@@ -52,10 +77,9 @@ public class GeneralLink {
 		bXYPos = geneCircle.getXYPosition(bCirclePos);
 	}
 
-	public void draw(SoulGL2 gl, float zoomLevel, Vector2 showLinksInterval) {
-		float nonActive = 0.0f;
-		if(!inInterval(showLinksInterval))
-			nonActive = 0.9f;
+	public void draw(SoulGL2 gl, float zoomLevel) {
+		if(opacity<=0.0f) return; // No need to call shader on invisible links.
+
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		shader.start(gl);
 
@@ -63,7 +87,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
-		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", 1.0f - nonActive);
+		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
 		ShaderMemory.setUniformVec1(gl, shader, "tstep", tstep);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
@@ -105,7 +129,7 @@ public class GeneralLink {
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 
-	private boolean inInterval(Vector2 showLinksInterval) {
+	public boolean inInterval(Vector2 showLinksInterval) {
 		if(showLinksInterval.x < showLinksInterval.y) {
 			return (aCirclePos >= showLinksInterval.x && aCirclePos <= showLinksInterval.y)
 					|| (bCirclePos >= showLinksInterval.x && bCirclePos <= showLinksInterval.y);
