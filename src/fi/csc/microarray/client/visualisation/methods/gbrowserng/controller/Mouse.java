@@ -70,5 +70,10 @@ public class Mouse implements MouseListener
 	
 	public void mouseWheelMoved(MouseEvent e)
 	{
+            	try {
+			this.eventQueue.put(e);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 	}
 }
