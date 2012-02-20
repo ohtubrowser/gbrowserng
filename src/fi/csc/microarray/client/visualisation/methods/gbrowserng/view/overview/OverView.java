@@ -277,18 +277,12 @@ public class OverView extends GenosideComponent {
 				return true;
 			}
 		}
-                
-                // Wheel
-                if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
+
+		// Wheel
+		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation()*0.05f));
-                        updateCircleSize();
-                        
-                        /*AbstractChromosome chromosome = geneCircle.getChromosome();
-			if (!chromosome.isMinimized()) {
-					chromosome.setRelSize(event.getWheelRotation()*0.1f);
-                                        System.out.println("Kromosomi "+chromosome.getChromosomeNumber()+": "+chromosome.getRelSize());
-                        }*/
-                }
+			updateCircleSize();
+		}
 
 		mousePosition.x = x;
 		mousePosition.y = y;

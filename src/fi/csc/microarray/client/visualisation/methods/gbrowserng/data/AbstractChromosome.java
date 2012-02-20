@@ -4,7 +4,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 
 public class AbstractChromosome {
 
-        private float relativeSize = 1f;
+	private float relativeSize = 1f;
 	private final long size;
 	private final int id;
 	private final ReferenceSequence sequence;
@@ -63,13 +63,4 @@ public class AbstractChromosome {
 			if (animationProgress + 0.01f > 1) { animating = false; }
 		}
 	}
-        
-        public void setRelSize(float change) {
-            this.relativeSize += change;
-        }
-
-        public float getRelSize() {
-            return relativeSize;
-        }
-
 }
