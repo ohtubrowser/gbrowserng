@@ -38,7 +38,7 @@ public class GeneCircle {
 		assert (sliceSizeLeft >= 0.0f);
 
 		chromosomeBoundaries[0] = 1.0f;
-                chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
+		chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
 		animating = AbstractGenome.getChromosome(AbstractGenome.getNumChromosomes()-1).isAnimating();
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
 			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
