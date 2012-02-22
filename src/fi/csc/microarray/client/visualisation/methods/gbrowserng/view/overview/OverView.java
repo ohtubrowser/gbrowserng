@@ -396,18 +396,21 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void fadeLinks(float dt) {
-		// TODO: Hide links between two closed chromosomes.
+		int thischromonumber=geneCircle.getChromosome().getChromosomeNumber();
+		float[] chromobounds=geneCircle.getChromosomeBoundaries();
+		float thischromostart=chromobounds[thischromonumber-1];
+		float thischromoend=chromobounds[(thischromonumber)%chromobounds.length];
 		for(GeneralLink link : links) {
-			int thischromonumber=geneCircle.getChromosome().getChromosomeNumber();
-			float[] chromobounds=geneCircle.getChromosomeBoundaries();
-			float thischromostart=chromobounds[thischromonumber-1];
-			float thischromoend=chromobounds[(thischromonumber)%chromobounds.length];
-			if(link.inInterval(showLinksInterval)) {
-				link.fadeIn(dt*16);
-			}
-			else if(((link.getStartPos() <= thischromostart) && (link.getStartPos() > thischromoend)) ||
-					((link.getEndPos() <= thischromostart) && (link.getEndPos() > thischromoend))) {
-				link.fadeDim(dt*8);
+			if (!geneCircle.getChromosomeByRelativePosition(link.getStartPos()).isMinimized() &&!geneCircle.getChromosomeByRelativePosition(link.getEndPos()).isMinimized())
+			{
+				if(link.inInterval(showLinksInterval)) {
+					link.fadeIn(dt*16);
+				}
+				else if(((link.getStartPos() <= thischromostart) && (link.getStartPos() > thischromoend)) ||
+						((link.getEndPos() <= thischromostart) && (link.getEndPos() > thischromoend))) {
+					link.fadeDim(dt*8);
+				}
+				else link.fadeOut(dt*8);
 			}
 			else link.fadeOut(dt*8);
 		}

@@ -11,6 +11,7 @@ public class AbstractChromosome {
 	private boolean minimized = false;
 	private boolean animating = false;
 	private float animationProgress = 1f;
+	public float centromerePosition = 0.5f; // Relative position of centromere
 
 	public AbstractChromosome(int id, long size) {
 		this.id = id;

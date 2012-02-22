@@ -57,11 +57,11 @@ public class OpenGLBuffers {
 	}
 
 	private static void initCentromereBuffer() {
-		centromereBuffer = FloatBuffer.allocate(6 * 2);
+		centromereBuffer = FloatBuffer.allocate(4 * 2);
 		centromereBuffer.put(-1);centromereBuffer.put(1);
-		centromereBuffer.put(-1);centromereBuffer.put(-1);
-		centromereBuffer.put(0);centromereBuffer.put(0);
-		centromereBuffer.put(1);centromereBuffer.put(1);
 		centromereBuffer.put(1);centromereBuffer.put(-1);
+
+		centromereBuffer.put(-1);centromereBuffer.put(-1);
+		centromereBuffer.put(1);centromereBuffer.put(1);
 	}
 }

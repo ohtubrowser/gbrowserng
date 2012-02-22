@@ -65,4 +65,8 @@ public class AbstractGenome {
 		abstractGenomeData.clear();
 		name = "empty";
 	}
+
+	public static ArrayList<AbstractChromosome> getChromosomes() {
+		return abstractGenomeData;
+	}
 }

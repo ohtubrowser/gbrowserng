@@ -58,16 +58,22 @@ public class GeneCircle {
 
 	public void updatePosition(float pointerGenePosition) {
 		// TODO : clean
-		pointerGenePosition -= 0.25f;
-		if(pointerGenePosition < 0.0f)
-			pointerGenePosition += 1.0f;
+		float relativePosition = pointerGenePosition-0.25f;
+		if(relativePosition < 0.0f)
+			relativePosition += 1.0f;
+		chromosome = getChromosomeByRelativePosition(relativePosition);
+		chromosomePosition = (long) (getChromosome().length() * (relativePosition - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]) / (chromosomeBoundaries[chromosome.getChromosomeNumber()] - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]));
+	}
+
+	public AbstractChromosome getChromosomeByRelativePosition(float relativePosition) {
 		for (int i = 1; i < chromosomeBoundaries.length; ++i) {
-			if (chromosomeBoundaries[i] <= pointerGenePosition) {
-				chromosome = AbstractGenome.getChromosome(i - 1);
-				chromosomePosition = (long) (getChromosome().length() * (pointerGenePosition - chromosomeBoundaries[i - 1]) / (chromosomeBoundaries[i] - chromosomeBoundaries[i - 1]));
-				break;
+			synchronized (tickdrawLock) {
+				if (chromosomeBoundaries[i] <= relativePosition) {
+					return AbstractGenome.getChromosome(i - 1);
+				}
 			}
 		}
+		return null;
 	}
 
 	public AbstractChromosome getChromosome() {
