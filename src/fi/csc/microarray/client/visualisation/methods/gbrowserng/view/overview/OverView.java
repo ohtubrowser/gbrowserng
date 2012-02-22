@@ -346,11 +346,11 @@ public class OverView extends GenosideComponent {
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		String fps = "FPS: " + fpsCounter.getFps();
 		int stringHeight = (int)textRenderer.getBounds(fps).getHeight();
-		textRenderer.draw(fps, (int)(width/2-textRenderer.getBounds(fps).getWidth()/2), height-stringHeight-7);
+		textRenderer.draw(fps, 20, height-stringHeight-7);
 		String draw = "Draw: " + fpsCounter.getMillis() + "ms";
-		textRenderer.draw(draw, (int)(width/2-textRenderer.getBounds(draw).getWidth()/2), height-stringHeight*2-15);
+		textRenderer.draw(draw, 20, (int)(height-stringHeight*2.2));
 		String arcs = "Arcs: " + links.size();
-		textRenderer.draw(arcs, (int) (width / 2 - textRenderer.getBounds(arcs).getWidth() / 2), height - stringHeight * 2 - 55);
+		textRenderer.draw(arcs, 20, (int)(height - stringHeight * 3.3));
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
@@ -366,8 +366,8 @@ public class OverView extends GenosideComponent {
 
 			String chrom = "Chromosome " + chromosome;
 			String pos = "Position: " + position;
-			textRenderer.draw(chrom, (int)(width/2-textRenderer.getBounds(chrom).getWidth()/2), stringHeight+20);
-			textRenderer.draw(pos, (int)(width/2-textRenderer.getBounds(pos).getWidth()/2), 10);
+			textRenderer.draw(chrom, 20, stringHeight+20);
+			textRenderer.draw(pos, 20, 10);
 		}
 		textRenderer.endRendering();
 
