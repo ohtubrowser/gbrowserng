@@ -14,7 +14,8 @@ public class GeneralLink {
 
 	private AbstractChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
-	private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
+	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
+	private float r = 1.0f, g=0.0f, b=0.0f;
 	private final int drawMethod;
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
