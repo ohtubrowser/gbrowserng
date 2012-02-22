@@ -3,6 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import gles.SoulGL2;
@@ -44,30 +45,45 @@ public class GeneCircleGFX {
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
 
-		shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
+		drawChromosomeSeparators(gl);
+		drawCentromeres(gl);
+	}
+	
+	public void drawChromosomeSeparators(SoulGL2 gl) {
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
 		shader.start(gl);
 		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
-		modelMatrix = new Matrix4();
+		Matrix4 modelMatrix = new Matrix4();
 		float length = geneCircle.getSize()*0.0505f;
 		float width = geneCircle.getSize()*0.015f;
-		for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
-			float x = 0.9495f*vec.x;
-			float y = 0.9495f*vec.y;
 
-			float dy = 0.9495f*vec.y;
-			float dx = 0.9495f*vec.x;
-			
-			float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
-			
+		int len;
+		Vector2[] chromopositions;
+		synchronized (geneCircle.tickdrawLock) {
+			chromopositions = geneCircle.getChromosomeBoundariesPositions();
+			len = chromopositions.length;
+		}
+		for(int i=0; i<len; ++i) {
+			float x,y;
+			synchronized (geneCircle.tickdrawLock) {
+				x = 0.9495f*chromopositions[i].x;
+				y = 0.9495f*chromopositions[i].y;
+
+				//float dy = 0.9495f*vec.y;
+				//float dx = 0.9495f*vec.x;
+			}
+
+			float angle = 180f * (float)Math.atan2(/*dy*/y, /*dx*/x) / (float)Math.PI;
+
 			modelMatrix.makeTranslationMatrix(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
 			modelMatrix.scale(width, length, 0.2f);
 
 			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
-			vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
+			int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
 			OpenGLBuffers.squareBuffer.rewind();
 			gl.glEnableVertexAttribArray(vertexPositionHandle);
 			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.squareBuffer);
@@ -76,7 +92,6 @@ public class GeneCircleGFX {
 
 		}
 		shader.stop(gl);
-		drawCentromeres(gl);
 	}
 
 	public void drawCentromeres(SoulGL2 gl) {
