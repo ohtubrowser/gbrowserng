@@ -87,20 +87,21 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
 		for (AbstractChromosome c : AbstractGenome.getChromosomes()) {
-			modelMatrix.makeRotationMatrix(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.centromerePosition), 0, 0, 1);
-			modelMatrix.translate(geneCircle.getSize()*0.95f, 0.0f, 0);
-			modelMatrix.scale(geneCircle.getSize()*0.05f, geneCircle.getSize()*0.02f, 1.0f);
+			if(!c.isMinimized()) {
+				modelMatrix.makeRotationMatrix(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.centromerePosition), 0, 0, 1);
+				modelMatrix.translate(geneCircle.getSize()*0.95f, 0.0f, 0);
+				modelMatrix.scale(geneCircle.getSize()*0.05f, geneCircle.getSize()*0.02f, 1.0f);
 
-			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
+				ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
-			gl.glLineWidth(2.0f);
-			int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-			OpenGLBuffers.centromereBuffer.rewind();
-			gl.glEnableVertexAttribArray(vertexPositionHandle);
-			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.centromereBuffer);
-			gl.glDrawArrays(SoulGL2.GL_LINES, 0, OpenGLBuffers.centromereBuffer.capacity() / 2);
-			gl.glDisableVertexAttribArray(vertexPositionHandle);
-
+				gl.glLineWidth(2.0f);
+				int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
+				OpenGLBuffers.centromereBuffer.rewind();
+				gl.glEnableVertexAttribArray(vertexPositionHandle);
+				gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.centromereBuffer);
+				gl.glDrawArrays(SoulGL2.GL_LINES, 0, OpenGLBuffers.centromereBuffer.capacity() / 2);
+				gl.glDisableVertexAttribArray(vertexPositionHandle);
+			}
 		}
 		shader.stop(gl);
 		gl.glDisable(SoulGL2.GL_BLEND);
