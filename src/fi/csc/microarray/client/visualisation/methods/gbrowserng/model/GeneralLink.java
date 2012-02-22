@@ -58,7 +58,12 @@ public class GeneralLink {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
 		aXYPos = geneCircle.getXYPosition(aCirclePos);
+		// This magic constant is the same as in the circleseparators.
+		aXYPos.x *= 0.9495;
+		aXYPos.y *= 0.9495;
 		bXYPos = geneCircle.getXYPosition(bCirclePos);
+		bXYPos.x *= 0.9495;
+		bXYPos.y *= 0.9495;
 	}
 
 	public void draw(SoulGL2 gl, float zoomLevel) {
