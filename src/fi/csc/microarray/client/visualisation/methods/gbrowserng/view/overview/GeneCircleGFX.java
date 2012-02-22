@@ -48,14 +48,14 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		modelMatrix = new Matrix4();
-		float length = geneCircle.getSize()*0.049f;
+		float length = geneCircle.getSize()*0.0505f;
 		float width = geneCircle.getSize()*0.015f;
 		for(Vector2 vec : geneCircle.getChromosomeBoundariesPositions()) {
-			float x = 0.95f*vec.x;
-			float y = 0.95f*vec.y;
+			float x = 0.9495f*vec.x;
+			float y = 0.9495f*vec.y;
 
-			float dy = 0.95f*vec.y;
-			float dx = 0.95f*vec.x;
+			float dy = 0.9495f*vec.y;
+			float dx = 0.9495f*vec.x;
 			
 			float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
 			
