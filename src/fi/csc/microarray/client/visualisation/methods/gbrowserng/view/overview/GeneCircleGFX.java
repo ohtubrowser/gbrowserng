@@ -56,8 +56,8 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
-		float length = geneCircle.getSize()*0.0505f;
-		float width = geneCircle.getSize()*0.015f;
+		float length = CoordinateManager.toCircleCoordsY(geneCircle.getSize()*0.0505f);
+		float width = CoordinateManager.toCircleCoordsX(geneCircle.getSize()*0.015f);
 
 		int len;
 		Vector2[] chromopositions;
@@ -68,8 +68,8 @@ public class GeneCircleGFX {
 		for(int i=0; i<len; ++i) {
 			float x,y;
 			synchronized (geneCircle.tickdrawLock) {
-				x = 0.9495f*chromopositions[i].x;
-				y = 0.9495f*chromopositions[i].y;
+				x = CoordinateManager.toCircleCoordsX(0.9495f*chromopositions[i].x);
+				y = CoordinateManager.toCircleCoordsY(0.9495f*chromopositions[i].y);
 
 				//float dy = 0.9495f*vec.y;
 				//float dx = 0.9495f*vec.x;

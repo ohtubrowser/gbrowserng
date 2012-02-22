@@ -13,6 +13,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircl
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.SimpleMouseEvent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 
@@ -317,7 +318,7 @@ public class OverView extends GenosideComponent {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
-		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
+		geneCircleModelMatrix.scale(CoordinateManager.toCircleCoordsX(geneCircle.getSize()), CoordinateManager.toCircleCoordsY(geneCircle.getSize()), geneCircle.getSize());
 		for (GeneralLink link : links) {
 			link.draw(gl, geneCircle.getSize());
 		}
@@ -374,7 +375,7 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int i=1;
-		synchronized (geneCircle.tickdrawLock) {
+		synchronized (geneCircle.tickdrawLock) { // TODO: This lock could be smaller.
 			Vector2[] chromobounds=geneCircle.getChromosomeBoundariesPositions();
 			for (Vector2 v : chromobounds)
 			{
