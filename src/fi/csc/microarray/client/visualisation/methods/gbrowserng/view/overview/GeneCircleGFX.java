@@ -2,8 +2,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import gles.SoulGL2;
-import gles.primitives.PrimitiveBuffers;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import managers.ShaderManager;
@@ -30,16 +30,15 @@ public class GeneCircleGFX {
 		mousePos.copyFrom(mousePosition);
 		mousePos.normalize();
 
-		ShaderMemory.setUniformVec1(gl, shader, "time", time);
-		ShaderMemory.setUniformVec1(gl, shader, "hilight", hilight);
+		ShaderMemory.setUniformVec1(gl, shader, "thickness", 0.1f);
 		ShaderMemory.setUniformVec2(gl, shader, "mouse", mousePos.x, mousePos.y);
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-		PrimitiveBuffers.circleBuffer.rewind();
+		OpenGLBuffers.circleBuffer.rewind();
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.circleBuffer);
-		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_FAN, 0, PrimitiveBuffers.circleBuffer.capacity() / 2);
+		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.circleBuffer);
+		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_FAN, 0, OpenGLBuffers.circleBuffer.capacity() / 2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
 
@@ -67,10 +66,10 @@ public class GeneCircleGFX {
 			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 			vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-			PrimitiveBuffers.squareBuffer.rewind();
+			OpenGLBuffers.squareBuffer.rewind();
 			gl.glEnableVertexAttribArray(vertexPositionHandle);
-			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
-			gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
+			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.squareBuffer);
+			gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.squareBuffer.capacity() / 2);
 			gl.glDisableVertexAttribArray(vertexPositionHandle);
 
 		}

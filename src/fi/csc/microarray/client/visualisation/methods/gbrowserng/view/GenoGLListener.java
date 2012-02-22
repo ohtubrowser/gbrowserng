@@ -2,8 +2,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoSideTimer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
@@ -14,9 +14,6 @@ import gles.renderer.PrimitiveRenderer;
 import gles.renderer.TextRenderer;
 import gles.shaders.DefaultShaders;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL2;
@@ -70,7 +67,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
-		GeneralLink.initBezierPoints();
+		OpenGLBuffers.initBuffers();
 		SessionView.initFrameBuffer(gl);
 
 		AssetManager.setInstance(new DesktopAssetManager());

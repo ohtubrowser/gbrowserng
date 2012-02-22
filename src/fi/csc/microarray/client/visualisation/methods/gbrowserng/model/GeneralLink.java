@@ -5,12 +5,10 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
-import java.nio.FloatBuffer;
 import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
 
-import javax.media.opengl.GL2;
 
 public class GeneralLink {
 
@@ -18,8 +16,6 @@ public class GeneralLink {
 	private long aStart, bStart, aEnd, bEnd;
 	private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private final int drawMethod;
-	private static FloatBuffer bezierPoints;
-	private static float tstep;
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
 	private float opacity;
@@ -45,18 +41,6 @@ public class GeneralLink {
 
 	public float getEndPos() {
 		return bCirclePos;
-	}
-
-	public static void initBezierPoints() {
-		final int points = 50; // Setting this too low will cause problems on sharp curves
-		final float step = 1.0f / points;
-		tstep = step;
-		bezierPoints = FloatBuffer.allocate(points+1);
-		bezierPoints.put(step);
-		for (int i = 1; i < points; ++i) {
-			bezierPoints.put( ((i % 2 == 0) ? i : -i)*step);
-		}
-		bezierPoints.put(-bezierPoints.get(points-1));
 	}
 
 	public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
@@ -88,7 +72,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
 		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec1(gl, shader, "tstep", tstep);
+		ShaderMemory.setUniformVec1(gl, shader, "tstep", OpenGLBuffers.bezierStep);
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
@@ -111,15 +95,15 @@ public class GeneralLink {
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
-		bezierPoints.rewind();
+		OpenGLBuffers.bezierBuffer.rewind();
 
 		gl.glLineWidth(3.0f);
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
 
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, bezierPoints);
-		gl.glDrawArrays(drawMethod, 0, bezierPoints.capacity());
+		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.bezierBuffer);
+		gl.glDrawArrays(drawMethod, 0, OpenGLBuffers.bezierBuffer.capacity());
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 
 		gl.glEnable(gl.GL_CULL_FACE);
