@@ -1,5 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
@@ -92,7 +94,6 @@ public class GeneCircleGFX {
 			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 			gl.glLineWidth(2.0f);
-			System.out.println(OpenGLBuffers.centromereBuffer.capacity());
 			int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
 			OpenGLBuffers.centromereBuffer.rewind();
 			gl.glEnableVertexAttribArray(vertexPositionHandle);
