@@ -396,10 +396,16 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void fadeLinks(float dt) {
-		int thischromonumber=geneCircle.getChromosome().getChromosomeNumber();
-		float[] chromobounds=geneCircle.getChromosomeBoundaries();
-		float thischromostart=chromobounds[thischromonumber-1];
-		float thischromoend=chromobounds[(thischromonumber)%chromobounds.length];
+		int thischromonumber;
+		float[] chromobounds;
+		float thischromostart;
+		float thischromoend;
+		synchronized (geneCircle.tickdrawLock) {
+			thischromonumber=geneCircle.getChromosome().getChromosomeNumber();
+			chromobounds=geneCircle.getChromosomeBoundaries();
+			thischromostart=chromobounds[thischromonumber-1];
+			thischromoend=chromobounds[(thischromonumber)%chromobounds.length];
+		}
 		for(GeneralLink link : links) {
 			if (!geneCircle.getChromosomeByRelativePosition(link.getStartPos()).isMinimized() &&!geneCircle.getChromosomeByRelativePosition(link.getEndPos()).isMinimized())
 			{
