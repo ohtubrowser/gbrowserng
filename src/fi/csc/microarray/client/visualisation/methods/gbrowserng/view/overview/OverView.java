@@ -5,7 +5,7 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -17,6 +17,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.
 import gles.SoulGL2;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -44,6 +45,7 @@ public class OverView extends GenosideComponent {
 	public TextRenderer textRenderer;
 	private Vector2 showLinksInterval = new Vector2(0, 1);
 	private SimpleMouseEvent lastMouseClick;
+	private float arcHighlightArea = 0.02f;
 
 	public OverView() {
 		super(null);
@@ -65,7 +67,7 @@ public class OverView extends GenosideComponent {
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 
 		Font smallFont;
-		float smallfontSize = 10f;
+		float smallfontSize = 12f;
 		try {
 			smallFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(smallfontSize);
 		} catch (IOException e) {
@@ -173,10 +175,10 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	private void minimizeAllButOne(AbstractChromosome chromosome) {
+	private void minimizeAllButOne(Chromosome chromosome) {
 		int chromosomes = AbstractGenome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			AbstractChromosome c = AbstractGenome.getChromosome(i);
+			Chromosome c = AbstractGenome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
 			}
@@ -211,6 +213,7 @@ public class OverView extends GenosideComponent {
 				resetShowLinksInterval();
 			}
 		}
+
 		// allow capsules to update their states
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.handle(event, x, y);
@@ -259,7 +262,7 @@ public class OverView extends GenosideComponent {
 						return true;
 					}
 				}
-				AbstractChromosome chromosome = geneCircle.getChromosome();
+				Chromosome chromosome = geneCircle.getChromosome();
 				if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
 				} else {
@@ -284,8 +287,15 @@ public class OverView extends GenosideComponent {
 
 		// Wheel
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
-			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
-			updateCircleSize();
+			if (arcHighlightLocked) {
+				arcHighlightArea += 0.001f * event.getWheelRotation();
+				arcHighlightArea = Math.max(arcHighlightArea, 0.001f);
+				updateShowLinksArea();
+
+			} else {
+				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
+				updateCircleSize();
+			}
 		}
 
 		mousePosition.x = x;
@@ -310,8 +320,8 @@ public class OverView extends GenosideComponent {
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
 			Random r = new Random();
-			AbstractChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			AbstractChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
@@ -381,19 +391,37 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int i = 1;
+		float halfHeight = height / 2f;
+		float halfWidth = width / 2f;
 		synchronized (geneCircle.tickdrawLock) {
 			Vector2[] chromobounds = geneCircle.getChromosomeBoundariesPositions();
+			float lastBound = 0f;
+			float overlap = 1.04f;
+			boolean first = true;
 			for (Vector2 v : chromobounds) {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : (-((float) Math.PI - angle))); // Fix the >180 angle.
 				String chromoname = String.valueOf(i);
+				float bound = vv.relativeAngle(new Vector2(0f, 1f));
+				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
+				if (first) {
+					first = false;
+					lastBound = bound;
+				} else {
+					if (lastBound - bound > -0.1f) {
+						overlap += 0.04f;
+					} else {
+						overlap = 1.04f;
+						lastBound = bound;
+					}
+				}
 
-				// Magic constant 1.90 is for positioning the numbers a little bit out from the circle.
+				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 				chromosomeNameRenderer.draw(
 						chromoname,
-						(width / 2) + (int) ((width * (vv.x) - chromosomeNameRenderer.getBounds(chromoname).getWidth()) / 1.90),
-						(height / 2) + (int) (((height * vv.y) - chromosomeNameRenderer.getBounds(chromoname).getHeight()) / 1.90));
+						(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
+						(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
 				++i;
 			}
 		}
@@ -525,8 +553,20 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void updateShowLinksInterval(float pointerGenePosition) {
-		showLinksInterval.x = pointerGenePosition - 0.25f - 0.02f;
-		showLinksInterval.y = pointerGenePosition - 0.25f + 0.02f;
+		showLinksInterval.x = pointerGenePosition - 0.25f - arcHighlightArea;
+		showLinksInterval.y = pointerGenePosition - 0.25f + arcHighlightArea;
+		clampShowLinksInterval();
+	}
+
+	private void updateShowLinksArea() {
+		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
+		float change = arcHighlightArea - oldArea;
+		showLinksInterval.x -= change/2;
+		showLinksInterval.y += change/2;
+		clampShowLinksInterval();
+	}
+
+	private void clampShowLinksInterval() {
 		if (showLinksInterval.x < 0.0f) {
 			showLinksInterval.x += 1.0f;
 		}

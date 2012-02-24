@@ -2,7 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 
-public class AbstractChromosome {
+public class Chromosome {
 
 	private float relativeSize = 1f;
 	private final long size;
@@ -11,9 +11,9 @@ public class AbstractChromosome {
 	private boolean minimized = false;
 	private boolean animating = false;
 	private float animationProgress = 1f;
-	public float centromerePosition; // Relative position of centromere
+	public float centromerePosition = 0.5f; // Relative position of centromere
 
-	public AbstractChromosome(int id, long size) {
+	public Chromosome(int id, long size) {
 		this.id = id;
 		this.size = size;
 		sequence = new ReferenceSequence(id, (int) 300);

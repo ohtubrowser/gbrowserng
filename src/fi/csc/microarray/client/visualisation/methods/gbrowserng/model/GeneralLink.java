@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -12,7 +12,7 @@ import math.Vector2;
 
 public class GeneralLink {
 
-	private AbstractChromosome aChromosome, bChromosome;
+	private Chromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g=0.0f, b=0.0f;
@@ -44,7 +44,7 @@ public class GeneralLink {
 		return bCirclePos;
 	}
 
-	public GeneralLink(AbstractChromosome aChromosome, AbstractChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
+	public GeneralLink(Chromosome aChromosome, Chromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
 		this.aChromosome = aChromosome;
 		this.bChromosome = bChromosome;
 		this.aStart = aStart;
