@@ -290,7 +290,6 @@ public class OverView extends GenosideComponent {
 			if (arcHighlightLocked) {
 				arcHighlightArea += 0.001f * event.getWheelRotation();
 				arcHighlightArea = Math.max(arcHighlightArea, 0.001f);
-				System.out.println(arcHighlightArea);
 				updateShowLinksArea();
 
 			} else {
@@ -561,12 +560,9 @@ public class OverView extends GenosideComponent {
 
 	private void updateShowLinksArea() {
 		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
-		System.out.println("Old : " + oldArea);
-		System.out.println("AHA : " + arcHighlightArea);
 		float change = arcHighlightArea - oldArea;
-		System.out.println("Change : " + oldArea);
-		showLinksInterval.x += change/2;
-		showLinksInterval.y -= change/2;
+		showLinksInterval.x -= change/2;
+		showLinksInterval.y += change/2;
 		clampShowLinksInterval();
 	}
 
