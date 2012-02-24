@@ -1,13 +1,18 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import math.Matrix4;
 import math.Vector2;
 
 public class CoordinateManager {
-	/*
-	 * The idea of CircleCoords is that the circle would take a square-sized space
-	 * from the center of the screen. That square is mapped as -1, 1, -1, 1 coordinates.
-	 */
+	
+	public static final float XASPECT=4/3;
+	
+	public static Matrix4 getCircleMatrix() {
+		Matrix4 ret = new Matrix4();
+		ret.makeScaleMatrix(0.5f*XASPECT, 0.5f*GlobalVariables.aspectRatio, 1.0f);
+		return ret;
+	}
 	public static Vector2 toCircleCoords(Vector2 v) {
 		v.x *= 0.5;
 		v.y *= 0.5 * GlobalVariables.aspectRatio;

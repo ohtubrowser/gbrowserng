@@ -78,7 +78,7 @@ public class GeneCircleGFX {
 
 			float angle = 180f * (float)Math.atan2(/*dy*/y, /*dx*/x) / (float)Math.PI;
 
-			modelMatrix.makeScaleMatrix(0.5f*4/3, 0.5f*GlobalVariables.aspectRatio, 1.0f);
+			modelMatrix=CoordinateManager.getCircleMatrix();
 			modelMatrix.translate(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
 			modelMatrix.scale(width, length, 0.2f);
@@ -105,7 +105,7 @@ public class GeneCircleGFX {
 		Matrix4 modelMatrix = new Matrix4();
 		for (AbstractChromosome c : AbstractGenome.getChromosomes()) {
 			if(!c.isMinimized()) {
-				modelMatrix.makeScaleMatrix(0.5f*4/3, 0.5f*GlobalVariables.aspectRatio, 1.0f);
+				modelMatrix=CoordinateManager.getCircleMatrix();
 				modelMatrix.rotate(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.centromerePosition), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize()*0.95f, 0.0f, 0);
 				modelMatrix.scale(geneCircle.getSize()*0.05f, geneCircle.getSize()*0.02f, 1.0f);
