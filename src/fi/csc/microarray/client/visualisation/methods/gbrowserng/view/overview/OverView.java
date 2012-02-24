@@ -14,7 +14,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLi
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.SimpleMouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
-import gles.SoulGL2;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -26,6 +25,7 @@ import math.Vector2;
 
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.media.opengl.GL2;
 
 public class OverView extends GenosideComponent {
 
@@ -330,7 +330,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);

@@ -23,7 +23,7 @@ public class OpenGLBuffers {
 		gl.glGenBuffers(1, temp);
 		int id = temp.get(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, id);
-		gl.glBufferData(gl.GL_ARRAY_BUFFER, buffer.capacity(), buffer, gl.GL_STATIC_DRAW);
+		gl.glBufferData(gl.GL_ARRAY_BUFFER, buffer.capacity()*Float.SIZE/Byte.SIZE, buffer, gl.GL_STATIC_DRAW);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		return id;
 	}
@@ -40,6 +40,7 @@ public class OpenGLBuffers {
 			circleBuffer.put(x);
 			circleBuffer.put(y);
 		}
+		circleBuffer.rewind();
 		circleID = generateVBO(gl, circleBuffer);
 	}
 
@@ -53,7 +54,8 @@ public class OpenGLBuffers {
 		squareBuffer.put(1);
 		squareBuffer.put(1);
 		squareBuffer.put(1);
-
+		squareBuffer.rewind();
+		
 		squareID = generateVBO(gl, squareBuffer);
 	}
 
@@ -61,13 +63,16 @@ public class OpenGLBuffers {
 		final int points = numBezierPoints; // Setting this too low will cause problems on sharp curves
 		final float step = 1.0f / points;
 		bezierStep = step;
-		FloatBuffer bezierBuffer = FloatBuffer.allocate(points + 1);
+		FloatBuffer bezierBuffer = FloatBuffer.allocate(points+3);
 		bezierBuffer.put(step);
 		for (int i = 1; i < points; ++i) {
 			bezierBuffer.put(((i % 2 == 0) ? i : -i) * step);
 		}
 		bezierBuffer.put(-bezierBuffer.get(points - 1));
+		bezierBuffer.put(-bezierBuffer.get(points - 1));
+		bezierBuffer.put(-bezierBuffer.get(points - 1));
 
+		bezierBuffer.rewind();
 		bezierID = generateVBO(gl, bezierBuffer);
 	}
 
@@ -79,6 +84,7 @@ public class OpenGLBuffers {
 		centromereBuffer.put(-1);centromereBuffer.put(-1);
 		centromereBuffer.put(1);centromereBuffer.put(1);
 
+		centromereBuffer.rewind();
 		centromereID = generateVBO(gl, centromereBuffer);
 	}
 }

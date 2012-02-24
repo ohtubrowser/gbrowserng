@@ -12,6 +12,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
+import javax.media.opengl.GL2;
+import soulaim.DesktopGL2;
 
 public class SessionViewRecentCapsule extends GenosideComponent {
 
@@ -97,11 +99,12 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		float r=this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		Color c=new Color(r,r,r);
 		gl.glEnable(SoulGL2.GL_BLEND);
-		PrimitiveRenderer.drawRectangle(this.sessionView.getPosition().x, this.sessionView.getPosition().y, 0.05f, 0.05f/GlobalVariables.aspectRatio, gl, c);
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		PrimitiveRenderer.drawRectangle(this.sessionView.getPosition().x, this.sessionView.getPosition().y, 0.05f, 0.05f/GlobalVariables.aspectRatio, soulgl, c);
 		border.draw(gl);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}

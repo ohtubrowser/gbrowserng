@@ -12,6 +12,7 @@ import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
 import javax.media.opengl.GL2;
 import math.Vector2;
+import soulaim.DesktopGL2;
 
 public class SessionViewCapsule extends GenosideComponent {
 
@@ -125,7 +126,7 @@ public class SessionViewCapsule extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		link.draw(gl);
 
 		// this is just for debug
@@ -138,7 +139,8 @@ public class SessionViewCapsule extends GenosideComponent {
 			this.backGroundColor.g = v;
 			this.backGroundColor.b = v;
 			this.backGroundColor.a = alpha * (1.0f - death);
-			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
+			SoulGL2 soulgl = new DesktopGL2(gl);
+			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, soulgl, backGroundColor);
 			gl.glDisable(SoulGL2.GL_BLEND);
 		}
 		sessionView.setActive(isActive);
@@ -227,7 +229,7 @@ public class SessionViewCapsule extends GenosideComponent {
 		this.positionAdjustment.y = 0;
 	}
 
-	void drawToTexture(SoulGL2 gl) {
+	void drawToTexture(GL2 gl) {
 		sessionView.updateTexture(gl);
 		needsTextureUpdate = false;
 	}

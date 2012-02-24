@@ -23,6 +23,7 @@ import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import managers.TextureManager;
 import math.Matrix4;
+import soulaim.DesktopGL2;
 
 public class SessionView extends GenosideComponent {
 
@@ -238,14 +239,15 @@ public class SessionView extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		if (!inScreen()) {
 			return;
 		}
 		if (active) {
 			drawActive(gl);
 		} else {
-			drawFromTexture(gl);
+			SoulGL2 soulgl = new DesktopGL2(gl);
+			drawFromTexture(soulgl);
 		}
 		Color tempcolor = new Color(0, 0, 0, hide ? 0 : 255);
 		gl.glEnable(SoulGL2.GL_BLEND);
@@ -280,7 +282,7 @@ public class SessionView extends GenosideComponent {
 		gl.glGenFramebuffers(1, frameBufferHandle);
 	}
 
-	private void genTexture(SoulGL2 gl) {
+	private void genTexture(GL2 gl) {
 		gl.glGenTextures(1, textureHandle);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
 		gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, 160, 120, 0, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, null);
@@ -291,7 +293,7 @@ public class SessionView extends GenosideComponent {
 		updateTexture(gl);
 	}
 
-	public void updateTexture(SoulGL2 gl) {
+	public void updateTexture(GL2 gl) {
 		if (!textureCreated) {
 			textureCreated = true;
 			genTexture(gl);
@@ -317,7 +319,7 @@ public class SessionView extends GenosideComponent {
 		gl.glViewport(oldViewPort.get(0), oldViewPort.get(1), oldViewPort.get(2), oldViewPort.get(3));
 	}
 
-	private void drawActive(SoulGL2 gl) {
+	private void drawActive(GL2 gl) {
 		for (TrackView t : trackViews) {
 			t.draw(gl);
 		}

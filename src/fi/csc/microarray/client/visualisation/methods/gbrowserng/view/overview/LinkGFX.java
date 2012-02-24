@@ -7,8 +7,10 @@ import gles.SoulGL2;
 import gles.primitives.PrimitiveBuffers;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
+import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
+import soulaim.DesktopGL2;
 
 public class LinkGFX {
 
@@ -28,21 +30,23 @@ public class LinkGFX {
 		component2 = b;
 	}
 
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 
 		// if invisible, don't bother drawing
 		if(alpha < 0)
 			return;
 
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		
 		gl.glEnable(SoulGL2.GL_BLEND);
 
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.TORRENT);
-		shader.start(gl);
+		shader.start(soulgl);
 
-		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", alpha);
-		ShaderMemory.setUniformVec1(gl, shader, "lifetime", time * velocity);
-		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", alpha);
+		ShaderMemory.setUniformVec1(soulgl, shader, "lifetime", time * velocity);
+		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
 
 		float x = (component1.getPosition().x + component2.getPosition().x) / 2.0f;
 		float y = (component1.getPosition().y + component2.getPosition().y) / 2.0f;
@@ -57,16 +61,16 @@ public class LinkGFX {
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(0.01f, length, 0.2f);
 
-		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
 
-		int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
+		int vertexPositionHandle = shader.getAttribLocation(soulgl, "vertexPosition");
 		PrimitiveBuffers.squareBuffer.rewind();
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
 		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
 		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 
-		shader.stop(gl);
+		shader.stop(soulgl);
 
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}

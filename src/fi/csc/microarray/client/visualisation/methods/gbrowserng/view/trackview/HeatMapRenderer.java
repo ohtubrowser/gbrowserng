@@ -5,8 +5,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.VisualComponent;
 import gles.Color;
-import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
+import javax.media.opengl.GL2;
 
 public class HeatMapRenderer extends CascadingComponent implements VisualComponent {
 	
@@ -21,8 +21,8 @@ public class HeatMapRenderer extends CascadingComponent implements VisualCompone
 		this.heatMap = heatMap;
 	}
 
-	public void draw(SoulGL2 gl) {
-		float smoothPosition = ((TrackView)getParent()).getGenePosition();
+	public void draw(GL2 gl) {
+		/*float smoothPosition = ((TrackView)getParent()).getGenePosition();
 		float halfWidth = this.session.halfSizeX;
 		
 		int intPosition = (int) smoothPosition;
@@ -61,7 +61,7 @@ public class HeatMapRenderer extends CascadingComponent implements VisualCompone
 					glxSize(this.session.halfSizeX * session.payloadSize),
 					glySize(0.5f), gl, heatColor);
 		}
-		
+		*/
 	}
 
 	public void tick(float dt) {
