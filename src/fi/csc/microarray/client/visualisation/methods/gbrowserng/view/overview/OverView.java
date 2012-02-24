@@ -45,6 +45,7 @@ public class OverView extends GenosideComponent {
 	public TextRenderer textRenderer;
 	private Vector2 showLinksInterval = new Vector2(0, 1);
 	private SimpleMouseEvent lastMouseClick;
+	private float arcHighlightArea = 0.02f;
 
 	public OverView() {
 		super(null);
@@ -212,6 +213,7 @@ public class OverView extends GenosideComponent {
 				resetShowLinksInterval();
 			}
 		}
+
 		// allow capsules to update their states
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.handle(event, x, y);
@@ -285,8 +287,16 @@ public class OverView extends GenosideComponent {
 
 		// Wheel
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
-			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
-			updateCircleSize();
+			if (arcHighlightLocked) {
+				arcHighlightArea += 0.001f * event.getWheelRotation();
+				arcHighlightArea = Math.max(arcHighlightArea, 0.001f);
+				System.out.println(arcHighlightArea);
+				updateShowLinksArea();
+
+			} else {
+				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
+				updateCircleSize();
+			}
 		}
 
 		mousePosition.x = x;
@@ -385,37 +395,34 @@ public class OverView extends GenosideComponent {
 		float halfHeight = height / 2f;
 		float halfWidth = width / 2f;
 		synchronized (geneCircle.tickdrawLock) {
-			Vector2[] chromobounds=geneCircle.getChromosomeBoundariesPositions();
+			Vector2[] chromobounds = geneCircle.getChromosomeBoundariesPositions();
 			float lastBound = 0f;
 			float overlap = 1.04f;
 			boolean first = true;
 			for (Vector2 v : chromobounds) {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
-				vv.rotate( (angle < 0) ? angle : -((float)Math.PI - angle) ); // Fix the >180 angle.
+				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 				String chromoname = String.valueOf(i);
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
-				bound = bound > 0 ? bound : (float)Math.PI*2 + bound;
+				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
 					first = false;
 					lastBound = bound;
-				}
-				else {
+				} else {
 					if (lastBound - bound > -0.1f) {
 						overlap += 0.04f;
-					}
-					else {
+					} else {
 						overlap = 1.04f;
 						lastBound = bound;
 					}
 				}
-				
+
 				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 				chromosomeNameRenderer.draw(
 						chromoname,
-						(int)(halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
-						(int)(halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f)
-				);
+						(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
+						(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
 				++i;
 			}
 		}
@@ -547,8 +554,23 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void updateShowLinksInterval(float pointerGenePosition) {
-		showLinksInterval.x = pointerGenePosition - 0.25f - 0.02f;
-		showLinksInterval.y = pointerGenePosition - 0.25f + 0.02f;
+		showLinksInterval.x = pointerGenePosition - 0.25f - arcHighlightArea;
+		showLinksInterval.y = pointerGenePosition - 0.25f + arcHighlightArea;
+		clampShowLinksInterval();
+	}
+
+	private void updateShowLinksArea() {
+		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
+		System.out.println("Old : " + oldArea);
+		System.out.println("AHA : " + arcHighlightArea);
+		float change = arcHighlightArea - oldArea;
+		System.out.println("Change : " + oldArea);
+		showLinksInterval.x += change/2;
+		showLinksInterval.y -= change/2;
+		clampShowLinksInterval();
+	}
+
+	private void clampShowLinksInterval() {
 		if (showLinksInterval.x < 0.0f) {
 			showLinksInterval.x += 1.0f;
 		}
