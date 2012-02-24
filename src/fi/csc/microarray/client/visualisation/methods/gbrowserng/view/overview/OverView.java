@@ -317,8 +317,9 @@ public class OverView extends GenosideComponent {
 	public void draw(SoulGL2 gl) {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
-		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
-		geneCircleModelMatrix.scale(CoordinateManager.toCircleCoordsX(geneCircle.getSize()), CoordinateManager.toCircleCoordsY(geneCircle.getSize()), geneCircle.getSize());
+		geneCircleModelMatrix.makeScaleMatrix(0.5f*4/3, 0.5f*GlobalVariables.aspectRatio, 1.0f);
+		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
+		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		for (GeneralLink link : links) {
 			link.draw(gl, geneCircle.getSize());
 		}
