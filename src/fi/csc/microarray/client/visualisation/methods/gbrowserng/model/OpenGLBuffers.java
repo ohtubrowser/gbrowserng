@@ -1,25 +1,35 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import javax.media.opengl.GL2;
 
 public class OpenGLBuffers {
 
-	public static FloatBuffer circleBuffer,
-			squareBuffer,
-			bezierBuffer,
-			centromereBuffer;
 	public static float bezierStep;
 	public static int numBezierPoints = 50, circlePoints = 128;
 
-	public static void initBuffers() {
-		initCircleBuffer();
-		initSquareBuffer();
-		initBezierBuffer();
-		initCentromereBuffer();
+	public static int circleID, squareID, bezierID, centromereID;
+
+	public static void initBuffers(GL2 gl) {
+		initCircleBuffer(gl);
+		initSquareBuffer(gl);
+		initBezierBuffer(gl);
+		initCentromereBuffer(gl);
 	}
 
-	private static void initCircleBuffer() {
-		circleBuffer = FloatBuffer.allocate((circlePoints + 2) * 2);
+	private static int generateVBO(GL2 gl, FloatBuffer buffer) {
+		IntBuffer temp = IntBuffer.allocate(1);
+		gl.glGenBuffers(1, temp);
+		int id = temp.get(0);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, id);
+		gl.glBufferData(gl.GL_ARRAY_BUFFER, buffer.capacity(), buffer, gl.GL_STATIC_DRAW);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		return id;
+	}
+
+	private static void initCircleBuffer(GL2 gl) {
+		FloatBuffer circleBuffer = FloatBuffer.allocate((circlePoints + 2) * 2);
 
 		circleBuffer.put(0);
 		circleBuffer.put(0);
@@ -30,10 +40,11 @@ public class OpenGLBuffers {
 			circleBuffer.put(x);
 			circleBuffer.put(y);
 		}
+		circleID = generateVBO(gl, circleBuffer);
 	}
 
-	private static void initSquareBuffer() {
-		squareBuffer = FloatBuffer.allocate(4 * 2);
+	private static void initSquareBuffer(GL2 gl) {
+		FloatBuffer squareBuffer = FloatBuffer.allocate(4 * 2);
 		squareBuffer.put(-1);
 		squareBuffer.put(-1);
 		squareBuffer.put(1);
@@ -42,26 +53,32 @@ public class OpenGLBuffers {
 		squareBuffer.put(1);
 		squareBuffer.put(1);
 		squareBuffer.put(1);
+
+		squareID = generateVBO(gl, squareBuffer);
 	}
 
-	private static void initBezierBuffer() {
+	private static void initBezierBuffer(GL2 gl) {
 		final int points = numBezierPoints; // Setting this too low will cause problems on sharp curves
 		final float step = 1.0f / points;
 		bezierStep = step;
-		bezierBuffer = FloatBuffer.allocate(points + 1);
+		FloatBuffer bezierBuffer = FloatBuffer.allocate(points + 1);
 		bezierBuffer.put(step);
 		for (int i = 1; i < points; ++i) {
 			bezierBuffer.put(((i % 2 == 0) ? i : -i) * step);
 		}
 		bezierBuffer.put(-bezierBuffer.get(points - 1));
+
+		bezierID = generateVBO(gl, bezierBuffer);
 	}
 
-	private static void initCentromereBuffer() {
-		centromereBuffer = FloatBuffer.allocate(4 * 2);
+	private static void initCentromereBuffer(GL2 gl) {
+		FloatBuffer centromereBuffer = FloatBuffer.allocate(4 * 2);
 		centromereBuffer.put(-1);centromereBuffer.put(1);
 		centromereBuffer.put(1);centromereBuffer.put(-1);
 
 		centromereBuffer.put(-1);centromereBuffer.put(-1);
 		centromereBuffer.put(1);centromereBuffer.put(1);
+
+		centromereID = generateVBO(gl, centromereBuffer);
 	}
 }

@@ -67,7 +67,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
-		OpenGLBuffers.initBuffers();
+		OpenGLBuffers.initBuffers(gl);
 		SessionView.initFrameBuffer(gl);
 
 		AssetManager.setInstance(new DesktopAssetManager());

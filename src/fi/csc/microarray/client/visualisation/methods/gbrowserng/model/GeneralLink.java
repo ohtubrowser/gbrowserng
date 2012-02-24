@@ -101,21 +101,20 @@ public class GeneralLink {
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
-		OpenGLBuffers.bezierBuffer.rewind();
-
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glLineWidth(3.0f);
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
 
 		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.bezierBuffer);
-		gl.glDrawArrays(drawMethod, 0, OpenGLBuffers.bezierBuffer.capacity());
+		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, null);
+		gl.glDrawArrays(drawMethod, 0, OpenGLBuffers.numBezierPoints);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 
 		gl.glEnable(gl.GL_CULL_FACE);
 
 		shader.stop(gl);
-
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 
@@ -130,4 +129,5 @@ public class GeneralLink {
 		}
 
 	}
+	
 }

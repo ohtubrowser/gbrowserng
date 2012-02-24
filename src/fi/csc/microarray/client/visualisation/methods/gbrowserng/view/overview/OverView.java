@@ -560,9 +560,9 @@ public class OverView extends GenosideComponent {
 
 	private void updateShowLinksArea() {
 		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
-		float change = arcHighlightArea - oldArea;
-		showLinksInterval.x -= change/2;
-		showLinksInterval.y += change/2;
+		float change = (arcHighlightArea - oldArea)/2;
+		showLinksInterval.x -= change;
+		showLinksInterval.y += change;
 		clampShowLinksInterval();
 	}
 

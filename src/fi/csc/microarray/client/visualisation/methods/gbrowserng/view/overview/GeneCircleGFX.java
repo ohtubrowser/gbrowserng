@@ -8,6 +8,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuf
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
+import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
@@ -37,10 +38,10 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 		int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-		OpenGLBuffers.circleBuffer.rewind();
-		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.circleBuffer);
-		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_FAN, 0, OpenGLBuffers.circleBuffer.capacity() / 2);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.circleID);
+
+		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, null);
+		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_FAN, 0, OpenGLBuffers.circlePoints);
 		gl.glDisableVertexAttribArray(vertexPositionHandle);
 		shader.stop(gl);
 
@@ -83,11 +84,12 @@ public class GeneCircleGFX {
 			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 			int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-			OpenGLBuffers.squareBuffer.rewind();
+			gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
 			gl.glEnableVertexAttribArray(vertexPositionHandle);
-			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.squareBuffer);
-			gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.squareBuffer.capacity() / 2);
+			gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, null);
+			gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, 4);
 			gl.glDisableVertexAttribArray(vertexPositionHandle);
+			gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 
 		}
 		shader.stop(gl);
@@ -110,11 +112,13 @@ public class GeneCircleGFX {
 
 				gl.glLineWidth(2.0f);
 				int vertexPositionHandle = shader.getAttribLocation(gl, "vertexPosition");
-				OpenGLBuffers.centromereBuffer.rewind();
+				gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.centromereID);
+
 				gl.glEnableVertexAttribArray(vertexPositionHandle);
-				gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, OpenGLBuffers.centromereBuffer);
-				gl.glDrawArrays(SoulGL2.GL_LINES, 0, OpenGLBuffers.centromereBuffer.capacity() / 2);
+				gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, null);
+				gl.glDrawArrays(SoulGL2.GL_LINES, 0, 4);
 				gl.glDisableVertexAttribArray(vertexPositionHandle);
+				gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 			}
 		}
 		shader.stop(gl);
