@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
@@ -100,7 +100,7 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
-		for (AbstractChromosome c : AbstractGenome.getChromosomes()) {
+		for (Chromosome c : AbstractGenome.getChromosomes()) {
 			if(!c.isMinimized()) {
 				modelMatrix.makeRotationMatrix(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.centromerePosition), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize()*0.95f, 0.0f, 0);

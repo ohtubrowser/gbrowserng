@@ -2,7 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import math.Vector2;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 
 public class GeneCircle {
@@ -10,7 +10,7 @@ public class GeneCircle {
 	private float minimumChromosomeSlice;
 	private float minimizedChromosomeSize = 0.007f;
 	private float size;
-	private AbstractChromosome chromosome = AbstractGenome.getChromosome(0);
+	private Chromosome chromosome = AbstractGenome.getChromosome(0);
 	private long chromosomePosition = 0;
 	private float[] chromosomeBoundaries;
 	private Vector2[] chromosomeBoundariesPositions;
@@ -30,7 +30,7 @@ public class GeneCircle {
 		minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
 		float sliceSizeLeft = 1.0f;
 		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
-			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
+			Chromosome chromosome = AbstractGenome.getChromosome(i - 1);
 			chromosome.tick(dt);
 			sliceSizeLeft -= chromosome.isAnimating() ? minimumChromosomeSlice*chromosome.getAnimationProgress() + minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) :
 					chromosome.isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
@@ -41,7 +41,7 @@ public class GeneCircle {
 		chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
 		animating = AbstractGenome.getChromosome(AbstractGenome.getNumChromosomes()-1).isAnimating();
 		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
-			AbstractChromosome chromosome = AbstractGenome.getChromosome(i - 1);
+			Chromosome chromosome = AbstractGenome.getChromosome(i - 1);
 			if (chromosome.isAnimating()) {
 				float chromosomesize = (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength())*chromosome.getAnimationProgress();
 				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) - chromosomesize;
@@ -65,7 +65,7 @@ public class GeneCircle {
 		chromosomePosition = (long) (getChromosome().length() * (relativePosition - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]) / (chromosomeBoundaries[chromosome.getChromosomeNumber()] - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]));
 	}
 
-	public AbstractChromosome getChromosomeByRelativePosition(float relativePosition) {
+	public Chromosome getChromosomeByRelativePosition(float relativePosition) {
 		for (int i = 1; i < chromosomeBoundaries.length; ++i) {
 			synchronized (tickdrawLock) {
 				if (chromosomeBoundaries[i] <= relativePosition) {
@@ -76,7 +76,7 @@ public class GeneCircle {
 		return null;
 	}
 
-	public AbstractChromosome getChromosome() {
+	public Chromosome getChromosome() {
 		return chromosome;
 	}
 

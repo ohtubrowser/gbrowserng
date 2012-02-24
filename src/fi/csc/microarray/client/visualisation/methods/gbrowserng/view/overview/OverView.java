@@ -5,7 +5,7 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -173,10 +173,10 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	private void minimizeAllButOne(AbstractChromosome chromosome) {
+	private void minimizeAllButOne(Chromosome chromosome) {
 		int chromosomes = AbstractGenome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			AbstractChromosome c = AbstractGenome.getChromosome(i);
+			Chromosome c = AbstractGenome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
 			}
@@ -259,7 +259,7 @@ public class OverView extends GenosideComponent {
 						return true;
 					}
 				}
-				AbstractChromosome chromosome = geneCircle.getChromosome();
+				Chromosome chromosome = geneCircle.getChromosome();
 				if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
 				} else {
@@ -310,8 +310,8 @@ public class OverView extends GenosideComponent {
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
 			Random r = new Random();
-			AbstractChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			AbstractChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
