@@ -376,18 +376,36 @@ public class OverView extends GenosideComponent {
 		int i=1;
 		synchronized (geneCircle.tickdrawLock) {
 			Vector2[] chromobounds=geneCircle.getChromosomeBoundariesPositions();
+			float lastBound = 0f;
+			float overlap = 1.05f;
+			boolean first = true;
 			for (Vector2 v : chromobounds)
 			{
 				Vector2 vv=new Vector2(v);
 				float angle=v.relativeAngle(chromobounds[i % 23])/2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle<0)?angle:(-((float)Math.PI-angle))); // Fix the >180 angle.
 				String chromoname=String.valueOf(i);
+				float bound = vv.relativeAngle(new Vector2(0f,1f));
+				bound = bound > 0 ? bound : (float)Math.PI*2+bound;
+				if (first) {
+					first = false;
+					lastBound = bound;
+				}
+				else {
+					if (lastBound - bound > -0.1f) {
+						overlap += 0.05f;
+					}
+					else {
+						overlap = 1.05f;
+						lastBound = bound;
+					}
+				}
 
 				// Magic constant 1.90 is for positioning the numbers a little bit out from the circle.
 				chromosomeNameRenderer.draw(
 						chromoname,
-						(width/2)+(int)((width*(vv.x)-chromosomeNameRenderer.getBounds(chromoname).getWidth())/1.90),
-						(height/2)+(int)(((height*vv.y)-chromosomeNameRenderer.getBounds(chromoname).getHeight())/1.90)
+						(width/2)+(int)(width/2*vv.x*overlap),
+						(height/2)+(int)(height/2*vv.y*overlap)
 				);
 				++i;
 			}
