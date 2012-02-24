@@ -63,12 +63,11 @@ public class OpenGLBuffers {
 		final int points = numBezierPoints; // Setting this too low will cause problems on sharp curves
 		final float step = 1.0f / points;
 		bezierStep = step;
-		FloatBuffer bezierBuffer = FloatBuffer.allocate(points+3);
+		FloatBuffer bezierBuffer = FloatBuffer.allocate(points+2);
 		bezierBuffer.put(step);
 		for (int i = 1; i < points; ++i) {
 			bezierBuffer.put(((i % 2 == 0) ? i : -i) * step);
 		}
-		bezierBuffer.put(-bezierBuffer.get(points - 1));
 		bezierBuffer.put(-bezierBuffer.get(points - 1));
 		bezierBuffer.put(-bezierBuffer.get(points - 1));
 
