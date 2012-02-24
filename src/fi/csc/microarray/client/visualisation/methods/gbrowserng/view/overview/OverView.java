@@ -385,7 +385,7 @@ public class OverView extends GenosideComponent {
 			Vector2[] chromobounds = geneCircle.getChromosomeBoundariesPositions();
 			for (Vector2 v : chromobounds) {
 				Vector2 vv = new Vector2(v);
-				float angle = v.relativeAngle(chromobounds[i % 23]) / 2; // Rotate the numbers to the center of the chromosome.
+				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : (-((float) Math.PI - angle))); // Fix the >180 angle.
 				String chromoname = String.valueOf(i);
 
