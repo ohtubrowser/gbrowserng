@@ -71,6 +71,11 @@ public class GeneCircleGFX {
 			chromopositions = geneCircle.getChromosomeBoundariesPositions();
 			len = chromopositions.length;
 		}
+		
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
+		
 		for (int i = 0; i < len; ++i) {
 			float x, y;
 			synchronized (geneCircle.tickdrawLock) {
@@ -93,14 +98,11 @@ public class GeneCircleGFX {
 
 			ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
 
-			gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
-			
-			gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-			gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
 			gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
-			gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-			
 		}
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+
 		shader.stop(soulgl);
 	}
 
@@ -114,6 +116,12 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
+		gl.glLineWidth(2.0f);
+
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.centromereID);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
+		
 		for (Chromosome c : AbstractGenome.getChromosomes()) {
 			if (!c.isMinimized()) {
 				modelMatrix.makeRotationMatrix(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.centromerePosition), 0, 0, 1);
@@ -121,18 +129,12 @@ public class GeneCircleGFX {
 				modelMatrix.scale(geneCircle.getSize() * 0.05f, geneCircle.getSize() * 0.02f, 1.0f);
 
 				ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
-
-				gl.glLineWidth(2.0f);
-				gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.centromereID);
-
-				gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-				gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
 				gl.glDrawArrays(GL2.GL_LINES, 0, 4);
-				gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-				
 			}
 		}
 		shader.stop(soulgl);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 

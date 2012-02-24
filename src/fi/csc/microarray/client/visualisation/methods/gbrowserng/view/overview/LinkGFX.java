@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.primitives.PrimitiveBuffers;
@@ -63,13 +64,15 @@ public class LinkGFX {
 
 		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
 
-		int vertexPositionHandle = shader.getAttribLocation(soulgl, "vertexPosition");
-		PrimitiveBuffers.squareBuffer.rewind();
-		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 2, SoulGL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
-		gl.glDrawArrays(SoulGL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
-		gl.glDisableVertexAttribArray(vertexPositionHandle);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 
+		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
+
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		
 		shader.stop(soulgl);
 
 		gl.glDisable(SoulGL2.GL_BLEND);

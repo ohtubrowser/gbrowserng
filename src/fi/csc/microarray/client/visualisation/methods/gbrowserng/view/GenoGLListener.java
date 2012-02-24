@@ -87,7 +87,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-                GL2 gl = drawable.getGL().getGL2();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 
 		gl.glEnable(SoulGL2.GL_CULL_FACE);
