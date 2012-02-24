@@ -216,7 +216,7 @@ public class OverView extends GenosideComponent {
 				synchronized (geneCircle.tickdrawLock) {
 					int id = chromoName.getChromosome().getChromosomeNumber();
 					float[] bounds = geneCircle.getChromosomeBoundaries();
-					pointerGenePosition = bounds[id-1] + (bounds[(id) % AbstractGenome.getNumChromosomes()] - bounds[id-1])/2 + 0.25f;
+					pointerGenePosition = bounds[id-1] + (bounds[id] - bounds[id-1])/2 + 0.25f;
 				}
 			}
 		}
