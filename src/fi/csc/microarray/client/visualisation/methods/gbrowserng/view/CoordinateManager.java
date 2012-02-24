@@ -6,7 +6,7 @@ import math.Vector2;
 
 public class CoordinateManager {
 	
-	public static final float XASPECT=4.0f/3.0f;
+	public static final float XASPECT=4.0f/3.5f;
 	
 	public static Matrix4 getCircleMatrix() {
 		Matrix4 ret = new Matrix4();
@@ -19,7 +19,7 @@ public class CoordinateManager {
 		return v;
 	}
 	public static float toCircleCoordsX(float x) {
-		return x*= 0.5 * 4/3;
+		return x*= 0.5 * XASPECT;
 	}
 	public static float toCircleCoordsY(float y) {
 		return y*= 0.5 * GlobalVariables.aspectRatio;

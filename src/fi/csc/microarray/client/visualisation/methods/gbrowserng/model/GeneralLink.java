@@ -1,6 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -74,29 +75,15 @@ public class GeneralLink {
 		shader.start(gl);
 
 		Matrix4 identityMatrix = new Matrix4();
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", CoordinateManager.toCircleCoordsX(aXYPos.x), CoordinateManager.toCircleCoordsY(aXYPos.y));
 		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
 		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
 		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
 		ShaderMemory.setUniformVec1(gl, shader, "tstep", OpenGLBuffers.bezierStep);
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", CoordinateManager.toCircleCoordsX(bXYPos.x), CoordinateManager.toCircleCoordsY(bXYPos.y));
 		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
-
-		float x = (aXYPos.x + bXYPos.x) / 2.0f;
-		float y = (aXYPos.y + bXYPos.y) / 2.0f;
-
-		float dx = x - bXYPos.x;
-		float dy = y - bXYPos.y;
-
-		float angle = 180f * (float) Math.atan2(dy, dx) / (float) Math.PI;
-		float length = aXYPos.distance(bXYPos) * 0.5f;
-
-		Matrix4 modelMatrix = new Matrix4();
-		modelMatrix.makeTranslationMatrix(x, y, 0);
-		modelMatrix.rotate(angle + 90f, 0, 0, 1);
-		modelMatrix.scale(0.01f, length, 0.2f);
 
 		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
 
