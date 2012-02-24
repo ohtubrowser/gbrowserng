@@ -17,6 +17,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.
 import gles.SoulGL2;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -65,7 +66,7 @@ public class OverView extends GenosideComponent {
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 
 		Font smallFont;
-		float smallfontSize = 10f;
+		float smallfontSize = 12f;
 		try {
 			smallFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(smallfontSize);
 		} catch (IOException e) {
@@ -381,38 +382,39 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int i = 1;
+		float halfHeight = height / 2f;
+		float halfWidth = width / 2f;
 		synchronized (geneCircle.tickdrawLock) {
 			Vector2[] chromobounds=geneCircle.getChromosomeBoundariesPositions();
 			float lastBound = 0f;
-			float overlap = 1.05f;
+			float overlap = 1.04f;
 			boolean first = true;
-			for (Vector2 v : chromobounds)
-			{
-				Vector2 vv=new Vector2(v);
-				float angle=v.relativeAngle(chromobounds[i % 23])/2; // Rotate the numbers to the center of the chromosome.
-				vv.rotate((angle<0)?angle:(-((float)Math.PI-angle))); // Fix the >180 angle.
-				String chromoname=String.valueOf(i);
-				float bound = vv.relativeAngle(new Vector2(0f,1f));
-				bound = bound > 0 ? bound : (float)Math.PI*2+bound;
+			for (Vector2 v : chromobounds) {
+				Vector2 vv = new Vector2(v);
+				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
+				vv.rotate( (angle < 0) ? angle : -((float)Math.PI - angle) ); // Fix the >180 angle.
+				String chromoname = String.valueOf(i);
+				float bound = vv.relativeAngle(new Vector2(0f, 1f));
+				bound = bound > 0 ? bound : (float)Math.PI*2 + bound;
 				if (first) {
 					first = false;
 					lastBound = bound;
 				}
 				else {
 					if (lastBound - bound > -0.1f) {
-						overlap += 0.05f;
+						overlap += 0.04f;
 					}
 					else {
-						overlap = 1.05f;
+						overlap = 1.04f;
 						lastBound = bound;
 					}
 				}
-
-				// Magic constant 1.90 is for positioning the numbers a little bit out from the circle.
+				
+				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 				chromosomeNameRenderer.draw(
 						chromoname,
-						(width/2)+(int)(width/2*vv.x*overlap),
-						(height/2)+(int)(height/2*vv.y*overlap)
+						(int)(halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
+						(int)(halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f)
 				);
 				++i;
 			}
