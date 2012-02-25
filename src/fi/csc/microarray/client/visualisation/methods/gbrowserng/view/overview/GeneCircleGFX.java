@@ -21,7 +21,7 @@ public class GeneCircleGFX {
 	private float hilightTarget = 0;
 	private Vector2 mousePos = new Vector2();
 	private GeneCircle geneCircle;
-	
+
 	public GeneCircleGFX(GeneCircle geneCircle) {
 		this.geneCircle = geneCircle;
 	}
@@ -49,7 +49,7 @@ public class GeneCircleGFX {
 		drawChromosomeSeparators(gl);
 		drawCentromeres(gl);
 	}
-	
+
 	public void drawChromosomeSeparators(SoulGL2 gl) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
 		shader.start(gl);
