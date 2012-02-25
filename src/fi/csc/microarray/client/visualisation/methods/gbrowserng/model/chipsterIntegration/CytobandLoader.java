@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipster
 
 import fi.csc.microarray.client.visualisation.methods.gbrowser.CytobandDataSource;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.dataFetcher.AreaResultListener;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.dataFetcher.Cytoband;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.dataFetcher.CytobandHandlerThread;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.fileFormat.ColumnType;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.*;
@@ -17,6 +18,7 @@ public class CytobandLoader implements AreaResultListener {
 	private String seqPath;
 	private Queue<AreaRequest> areaRequestQueue;
 	private ConcurrentLinkedQueue<Long> lengths;
+        private ConcurrentLinkedQueue<long[]> chrosomeData;
 	private CytobandHandlerThread dataThread;
 	private AtomicInteger requestsReady;
 	private String[] chromosomes;
@@ -29,6 +31,7 @@ public class CytobandLoader implements AreaResultListener {
 		this.lengths = new ConcurrentLinkedQueue<Long>();
 		this.requestsReady = new AtomicInteger(0);
 		this.chromosomes=chr;
+                this.chrosomeData = new ConcurrentLinkedQueue<long[]>();
 	}
 
 	public ConcurrentLinkedQueue<Long> getLengths() {
@@ -54,6 +57,29 @@ public class CytobandLoader implements AreaResultListener {
 		return lengths;
 	}
 
+        public ConcurrentLinkedQueue<long[]> getData() {
+		CytobandDataSource file = null;
+		try {
+			file = new CytobandDataSource(new File(this.karyotypePath), new File(this.seqPath));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		this.dataThread = new CytobandHandlerThread(file, areaRequestQueue, this);
+		this.dataThread.start();
+		requestData(areaRequestQueue, chromosomes);
+
+		while (requestsReady.get() != chromosomes.length) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return chrosomeData;
+	}
+        
 	private void requestData(Queue<AreaRequest> areaRequestQueue, String[] chromosomenames) {
 		// TODO: Does chipster offer a more efficient way of doing this?
 		for(String s : chromosomenames) {
@@ -67,12 +93,38 @@ public class CytobandLoader implements AreaResultListener {
 
 	@Override
 	public void processAreaResult(AreaResult areaResult) {
-		long len=0;
-		List<RegionContent> contents=areaResult.getContents();
-		for(RegionContent r : contents) {
-			len+=r.region.getLength();
+	List<RegionContent> contents = areaResult.getContents();
+		long chromosomeLength = 0;
+		long[] centromereData = new long[5];
+		int counter = 1;
+		
+		for (RegionContent r : contents) {
+			Cytoband cband = (Cytoband) r.values.get(ColumnType.VALUE);
+			Cytoband.Stain stain = cband.getStain();
+			r.region.start.chr.toString();
+			if (Cytoband.Stain.ACEN == stain) {
+				long start = r.region.start.bp;
+				centromereData[counter] = start;
+				counter++;
+				long end = r.region.end.bp;
+				centromereData[counter] = end;
+				counter++;
+			}	
+			chromosomeLength = r.region.end.bp;
 		}
-		lengths.add(len);
+		centromereData[0] = chromosomeLength;
+		lengths.add(chromosomeLength);
+		chrosomeData.add(centromereData);
 		requestsReady.addAndGet(1);
 	}
+        
+        public static void main(String[] args) {
+            String karyotype = "karyotype.txt";
+            String seq = "seq_region.txt";
+            String[] chromosomes = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+            "13", "14", "15", "16", "17", "18", "19", "20", "X"};
+            CytobandLoader loader = new CytobandLoader(karyotype, seq, chromosomes);
+            loader.getLengths();
+            
+        }
 }

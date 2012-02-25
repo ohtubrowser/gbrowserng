@@ -11,13 +11,19 @@ public class Chromosome {
 	private boolean minimized = false;
 	private boolean animating = false;
 	private float animationProgress = 1f;
-	public float centromerePosition = 0.5f; // Relative position of centromere
+	public float centromerePosition; // Relative position of centromere
 
 	public Chromosome(int id, long size) {
 		this.id = id;
 		this.size = size;
 		sequence = new ReferenceSequence(id, (int) 300);
-
+                centromerePosition = 0.5f;		// if no centromere data is available, use halfway point!
+	}
+        
+        public void setCentromerePosition(long centromereMiddle) {
+		float value = centromereMiddle;
+		this.centromerePosition = value / size;
+		
 	}
 
 	public int getChromosomeNumber() {

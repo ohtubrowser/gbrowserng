@@ -78,13 +78,68 @@ public class GenomeBrowserNG {
 			++i;
 		}
 	}
+        
+        public static void useChipsterDataRat() {
+		int i=1;
+//                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz", 
+//                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
+//				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+//						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+//               
+                
+                
+		ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("karyotype.txt", "seq_region.txt", 
+				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+		
+		for(long[] data : chromosomeData) {
+			long chromosomeLength = data[0];
+			Chromosome chr = new Chromosome(i, chromosomeLength);
+			long centromereCenter = data[2];
+			if (data[2] != 0 ) {
+				System.out.println("centromereposition: " + centromereCenter);
+				chr.setCentromerePosition(centromereCenter);
+			}
+			
+			AbstractGenome.addChromosome(chr);
+			++i;
+		}
+	
+	}
+	
+	public static void useChipsterDataHuman() {
+		int i=1;
+//                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
+//				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
+//				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
+//				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+//						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+//               
+		ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("karyotypeHuman.txt", "seq_regionHuman.txt",
+				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+		for(long[] data : chromosomeData) {
+			long chromosomeLength = data[0];
+			Chromosome chr = new Chromosome(i, chromosomeLength);
+			long centromereCenter = data[2];
+			if (data[2] != 0 ) {
+				System.out.println("centromereposition: " + centromereCenter);
+				chr.setCentromerePosition(centromereCenter);
+			}
+			AbstractGenome.addChromosome(chr);
+			++i;
+		}
+	}
+	
 
 	public GenomeBrowserNG(int width, int height) {
 
 		// fill with bogus data
 		//useSmallData();
-		useBigData();
+		//useBigData();
 		//useChipsterData();
+                //useChipsterDataHuman();
+                useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
