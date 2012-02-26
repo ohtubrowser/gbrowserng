@@ -9,11 +9,11 @@ public class ChipsterInterface {
 //      
 //          Not working yet due to problem with files and not going into ProcessAreaResult for some reason! Use randomgenerated data below        
 //         public static ConcurrentLinkedQueue<long[]> getConnections(String firstFile, String secondFile) {
-//            return new ConnectionsLoaderWithinChr(firstFile, secondFile).getConnections();
+//            return new ConnectionsLoader(firstFile, secondFile).getConnections();
 //        }
          
-              public static ConcurrentLinkedQueue<long[]> geGeneratedtConnections() {
-            return new ConnectionsLoaderWithinChr("default", "default").getConnections();
+              public static ConcurrentLinkedQueue<long[]> getGeneratedtConnections() {
+            return new ConnectionsLoader("default", "default").getConnections();
         }
               
         /** Returns queue of data about chromosome. 

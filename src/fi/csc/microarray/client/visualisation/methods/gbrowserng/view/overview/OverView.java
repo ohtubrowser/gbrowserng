@@ -10,6 +10,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 
@@ -335,12 +336,22 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			Random r = new Random();
-			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
+                        ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getGeneratedtConnections();
+
+                        for (long[] table : queue) {
+
+                            GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
+                        
+                        }
+//                        
+//			Random r = new Random();
+//			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+//			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+//			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
+//			newlink.calculatePositions(geneCircle);
+//			links.add(newlink);
 		}
 		return false;
 	}

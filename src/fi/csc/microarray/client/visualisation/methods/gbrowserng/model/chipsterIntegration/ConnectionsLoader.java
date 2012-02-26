@@ -27,7 +27,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.RegionContent;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ConnectionsLoaderWithinChr implements AreaResultListener {
+public class ConnectionsLoader implements AreaResultListener {
 
     public SAMHandlerThread dataThread;
     public Queue<AreaRequest> areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
@@ -37,52 +37,52 @@ public class ConnectionsLoaderWithinChr implements AreaResultListener {
     private Long[] chrLengths;
     private AtomicInteger requestsReady;
     
-    public ConnectionsLoaderWithinChr(String firstFile, String secondFile) {
+    public ConnectionsLoader(String firstFile, String secondFile) {
 
         queue = new ConcurrentLinkedQueue<long[]>();
         //Init Chipster data layer
         SAMDataSource file = null;
         this.requestsReady = new AtomicInteger(0);
         
-        try {
+//        try {
 //
 //             Adjust these paths to point to the demo data   
-            File bam = new File(firstFile);
-            File bai = new File(secondFile);
-//                
-//          File bam = new File("ohtu-between-chrs.bam");
-//          File bai = new File("ohtu-between-chrs.bam.bai");
-            
-            System.out.println("Bam: " + bam.getAbsolutePath());
-            System.out.println("Bai: " + bai.getAbsolutePath());
-            bam = new File(bam.getAbsolutePath());
-            bai = new File(bam.getAbsolutePath());
-                     
-            file = new SAMDataSource(bam, bai);
-      
-        } catch (FileNotFoundException e) {
-            System.out.println(e.toString());
-            e.printStackTrace();
-        } catch (RuntimeException re) {
-            System.out.println(re.toString());
-        } catch (Exception ex) {
-            System.out.println(ex.toString());
-        }
+//            File bam = new File(firstFile);
+//            File bai = new File(secondFile);
+////                
+////          File bam = new File("ohtu-between-chrs.bam");
+////          File bai = new File("ohtu-between-chrs.bam.bai");
+//            
+//            System.out.println("Bam: " + bam.getAbsolutePath());
+//            System.out.println("Bai: " + bai.getAbsolutePath());
+//            bam = new File(bam.getAbsolutePath());
+//            bai = new File(bam.getAbsolutePath());
+//                     
+//            file = new SAMDataSource(bam, bai);
+//      
+//        } catch (FileNotFoundException e) {
+//            System.out.println(e.toString());
+//            e.printStackTrace();
+//        } catch (RuntimeException re) {
+//            System.out.println(re.toString());
+//        } catch (Exception ex) {
+//            System.out.println(ex.toString());
+//        }
+//
+//        this.dataThread = new SAMHandlerThread(file, areaRequestQueue, this);
+//  
+//        this.dataThread.start();
+//
+//        requestData();
+//        while(requestsReady.get()!=21) {
+//			try {
+//				Thread.sleep(1);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
-        this.dataThread = new SAMHandlerThread(file, areaRequestQueue, this);
-  
-        this.dataThread.start();
-
-        requestData();
-        while(requestsReady.get()!=21) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-//        generateRandomContent();
+      generateRandomContent();
     }
 
     public void requestData() {
@@ -119,7 +119,7 @@ public class ConnectionsLoaderWithinChr implements AreaResultListener {
                 String firstFile = "C:/Users/Mammutti/Desktop/ohtu-within-chr.bam";
         String secondFile = "C:/Users/Mammutti/Desktop/ohtu-within-chr.bam.bai";
 //        
-        ConnectionsLoaderWithinChr loader = new ConnectionsLoaderWithinChr(
+        ConnectionsLoader loader = new ConnectionsLoader(
                 firstFile, secondFile);
         Queue queue = loader.getConnections();
         
@@ -216,17 +216,17 @@ public class ConnectionsLoaderWithinChr implements AreaResultListener {
             i++;
         }
         
-        for (int j = 0; j < 10000; j++) {
-            int readChr = (int)  (Math.random() * 20);
-            int mateChr = (int)  (Math.random() * 20);
+        for (int j = 0; j < 1; j++) {
+            int readChr = (int)  (Math.random() * 21) + 1;
+            int mateChr = (int)  (Math.random() * 21) + 1;
             
            
-            int beginning = getLocation(readChr +1);
-            int end = getLocation(mateChr +1);
+            int beginning = getLocation(readChr);
+            int end = getLocation(mateChr);
             
-            long[] table = {readChr, mateChr, beginning, end};
+            long[] table = {readChr, mateChr, beginning, end, this.chrLengths[readChr], this.chrLengths[mateChr]};
             queue.add(table);
-
+//            System.out.println(readChr + " " + mateChr + " " + beginning + " " + end);
         }
         
     }
