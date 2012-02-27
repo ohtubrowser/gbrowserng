@@ -101,13 +101,13 @@ public class GeneralLink {
 		gl.glEnable(SoulGL2.GL_BLEND);
 		
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
 
-		gl.glVertexPointer(2, GL2.GL_FLOAT, Float.SIZE/Byte.SIZE, 0);
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableVertexAttribArray(0);
 
 		gl.glEnable(gl.GL_CULL_FACE);
 		gl.glDisable(SoulGL2.GL_BLEND);

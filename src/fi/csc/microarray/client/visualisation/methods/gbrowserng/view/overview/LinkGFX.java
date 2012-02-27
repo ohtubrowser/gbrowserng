@@ -65,13 +65,13 @@ public class LinkGFX {
 		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 
-		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableVertexAttribArray(0);
 		
 		shader.stop(soulgl);
 

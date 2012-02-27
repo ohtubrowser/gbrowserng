@@ -42,17 +42,15 @@ public class GeneCircleGFX {
 		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.circleID);
-
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
-		gl.glDrawArrays(GL2.GL_TRIANGLE_FAN, 0, 2*OpenGLBuffers.circlePoints);
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-	
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
+		gl.glDrawArrays(GL2.GL_TRIANGLE_FAN, 0, OpenGLBuffers.circlePoints+2);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glDisableVertexAttribArray(0);
 		shader.stop(soulgl);
 
 		drawChromosomeSeparators(gl);
 		drawCentromeres(gl);
-		assert(gl.glGetError() == GL2.GL_NO_ERROR);
 	}
 
 	public void drawChromosomeSeparators(GL2 gl) {
@@ -76,9 +74,8 @@ public class GeneCircleGFX {
 		}
 		
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
-		
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 		for (int i = 0; i < len; ++i) {
 			float x, y;
 			synchronized (geneCircle.tickdrawLock) {
@@ -103,7 +100,7 @@ public class GeneCircleGFX {
 
 			gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 		}
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableVertexAttribArray(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 
 		shader.stop(soulgl);
@@ -122,8 +119,8 @@ public class GeneCircleGFX {
 		gl.glLineWidth(2.0f);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.centromereID);
-		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, 0);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 		
 		for (Chromosome c : AbstractGenome.getChromosomes()) {
 			if (!c.isMinimized()) {
@@ -136,7 +133,7 @@ public class GeneCircleGFX {
 			}
 		}
 		shader.stop(soulgl);
-		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableVertexAttribArray(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
