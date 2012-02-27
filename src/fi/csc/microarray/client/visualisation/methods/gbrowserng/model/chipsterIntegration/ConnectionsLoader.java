@@ -33,17 +33,17 @@ public class ConnectionsLoader implements AreaResultListener {
     public Queue<AreaRequest> areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
     private SortedSet<RegionContent> reads = new TreeSet<RegionContent>();
     private static final int WIN_WIDTH = 1280;
-    private ConcurrentLinkedQueue<long[]> queue; 
+    private ConcurrentLinkedQueue<long[]> queue;
     private Long[] chrLengths;
     private AtomicInteger requestsReady;
-    
+
     public ConnectionsLoader(String firstFile, String secondFile) {
 
         queue = new ConcurrentLinkedQueue<long[]>();
         //Init Chipster data layer
         SAMDataSource file = null;
         this.requestsReady = new AtomicInteger(0);
-        
+
 //        try {
 //
 //             Adjust these paths to point to the demo data   
@@ -115,25 +115,25 @@ public class ConnectionsLoader implements AreaResultListener {
 
 //        String firstFile = "C:/Users/Mammutti/Desktop/ohtu-between-chrs.bam";
 //        String secondFile = "C:/Users/Mammutti/Desktop/ohtu-between-chrs.bam.bai";
-    
+
                 String firstFile = "C:/Users/Mammutti/Desktop/ohtu-within-chr.bam";
         String secondFile = "C:/Users/Mammutti/Desktop/ohtu-within-chr.bam.bai";
 //        
         ConnectionsLoader loader = new ConnectionsLoader(
                 firstFile, secondFile);
         Queue queue = loader.getConnections();
-        
+
     }
-    
-    
-    
-    public ConcurrentLinkedQueue<long[]> getConnections() { 
-        
+
+
+
+    public ConcurrentLinkedQueue<long[]> getConnections() {
+
         return queue;
-        
+
     }
-    
-    
+
+
     @Override
     public void processAreaResult(AreaResult areaResult) {
         Chromosome readChr = null;
@@ -145,14 +145,14 @@ public class ConnectionsLoader implements AreaResultListener {
         long[] values = new long[4];
 
         for (RegionContent read : areaResult.getContents()) {
-            
+
             readChr = read.region.start.chr;
             values[0] = Long.parseLong(readChr.toString());
-            
+
             String readStart = read.region.start.toString();
-            
+
             values[1] = Long.parseLong(readStart);
-            
+
             if (!upperChr.equals(readChr) && !lowerChr.equals(readChr)) {
                 //Make sure that there aren't any data from other chromosomes
                 continue;
@@ -162,7 +162,7 @@ public class ConnectionsLoader implements AreaResultListener {
             values[2] = Long.parseLong(mateChr.toString());
             String mateStart = ((BpCoord) read.values.get(ColumnType.MATE_POSITION)).toString();
             values[3] = Long.parseLong(mateStart.toString());
-            
+
             if (readChr.equals(mateChr)) {
 
                 /*
@@ -198,44 +198,42 @@ public class ConnectionsLoader implements AreaResultListener {
             queue.add(values);
         }
         System.out.println(values[0] + values[1] + values[2] + values[3]);
-        
+
     }
 
 
-    
+
     public void generateRandomContent() {
-        ConcurrentLinkedQueue lengths = ChipsterInterface.getLengths("karyotype.txt", "seq_region.txt", new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-            
+        ConcurrentLinkedQueue lengths = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt", new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
             "13", "14", "15", "16", "17", "18", "19", "20", "X"});
-      
+
         int i = 1;
         chrLengths = new Long[22];
-        for (Object contents : lengths) {          
+        for (Object contents : lengths) {
             Long length = (Long) contents;
             this.chrLengths[i] = length;
             i++;
         }
-        
+
         for (int j = 0; j < 1; j++) {
-            int readChr = (int)  (Math.random() * 21) + 1;
-            int mateChr = (int)  (Math.random() * 21) + 1;
-            
-           
+            int readChr = (int) (Math.random() * 21) + 1;
+            int mateChr = (int) (Math.random() * 21) + 1;
+
             int beginning = getLocation(readChr);
             int end = getLocation(mateChr);
-            
+
             long[] table = {readChr, mateChr, beginning, end, this.chrLengths[readChr], this.chrLengths[mateChr]};
             queue.add(table);
 //            System.out.println(readChr + " " + mateChr + " " + beginning + " " + end);
         }
-        
+
     }
-    
+
     private int getLocation(int chr) {
         int location = 0;
         Double length = (double) this.chrLengths[chr];
         location = (int) (Math.random() * length);
-        
+
         return location;
     }
 }

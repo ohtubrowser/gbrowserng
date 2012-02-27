@@ -78,7 +78,7 @@ public class OverView extends GenosideComponent {
 		}
 		this.chromosomeNameRenderer = new com.jogamp.opengl.util.awt.TextRenderer(smallFont, true, true);
 	}
-	
+
 	private void initChromoNames() {
 		for (Chromosome chromosome : AbstractGenome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
@@ -221,7 +221,7 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
-		
+
 		geneCircle.updatePosition(pointerGenePosition);
 		if (!arcHighlightLocked) {
 			if (pointOnCircle(x, y)) {
@@ -336,22 +336,23 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-                        ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getGeneratedtConnections();
+			/*
+			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getGeneratedConnections();
 
-                        for (long[] table : queue) {
+			for (long[] table : queue) {
 
-                            GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
+				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
+				newlink.calculatePositions(geneCircle);
+				links.add(newlink);
+
+			}
+	         */
+			Random r = new Random();
+			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
-                        
-                        }
-//                        
-//			Random r = new Random();
-//			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-//			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-//			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
-//			newlink.calculatePositions(geneCircle);
-//			links.add(newlink);
 		}
 		return false;
 	}
@@ -429,7 +430,7 @@ public class OverView extends GenosideComponent {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
-				String chromoname = String.valueOf(i);
+				String chromoname = AbstractGenome.getChromosome(i-1).getName();
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
