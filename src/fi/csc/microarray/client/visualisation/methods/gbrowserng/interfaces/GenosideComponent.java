@@ -3,7 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.AnimatedValues;
-import gles.SoulGL2;
+import javax.media.opengl.GL2;
 
 public abstract class GenosideComponent extends CascadingComponent implements VisualComponent, InteractiveComponent {
 
@@ -27,7 +27,7 @@ public abstract class GenosideComponent extends CascadingComponent implements Vi
 
 	public abstract boolean handle(KeyEvent event);
 
-	public abstract void draw(SoulGL2 gl);
+	public abstract void draw(GL2 gl);
 
 	public abstract void userTick(float dt);
 

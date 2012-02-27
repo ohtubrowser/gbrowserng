@@ -12,7 +12,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
-import gles.SoulGL2;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -25,6 +24,7 @@ import math.Vector2;
 
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.media.opengl.GL2;
 
 public class OverView extends GenosideComponent {
 
@@ -358,14 +358,16 @@ public class OverView extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
+		GeneralLink.beginDrawing(gl, geneCircle.getSize());
 		for (GeneralLink link : links) {
-			link.draw(gl, geneCircle.getSize());
+			link.draw(gl);
 		}
+		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 
 		synchronized (textureUpdateListLock) {

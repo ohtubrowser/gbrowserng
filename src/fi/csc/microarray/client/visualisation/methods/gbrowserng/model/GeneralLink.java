@@ -5,17 +5,18 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
+import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
-
+import soulaim.DesktopGL2;
 
 public class GeneralLink {
 
 	private Chromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
-	private float r = 1.0f, g=0.0f, b=0.0f;
+	private float r = 1.0f, g = 0.0f, b = 0.0f;
 	private final int drawMethod;
 	private float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
@@ -33,18 +34,24 @@ public class GeneralLink {
     }
 
 	public void fadeIn(float fadespeed) {
-		this.opacity+=fadespeed;
-		if(this.opacity>1.0f) this.opacity=1.0f;
+		this.opacity += fadespeed;
+		if (this.opacity > 1.0f) {
+			this.opacity = 1.0f;
+		}
 	}
 
 	public void fadeDim(float fadespeed) {
-		this.opacity-=fadespeed;
-		if(this.opacity<0.2f) this.opacity=0.2f;
+		this.opacity -= fadespeed;
+		if (this.opacity < 0.2f) {
+			this.opacity = 0.2f;
+		}
 	}
 
 	public void fadeOut(float fadespeed) {
-		this.opacity-=fadespeed;
-		if(this.opacity<0.0f) this.opacity=0.0f;
+		this.opacity -= fadespeed;
+		if (this.opacity < 0.0f) {
+			this.opacity = 0.0f;
+		}
 	}
 
 	public float getStartPos() {
@@ -77,68 +84,66 @@ public class GeneralLink {
 		bXYPos.x *= 0.9495;
 		bXYPos.y *= 0.9495;
 	}
-
-	public void draw(SoulGL2 gl, float zoomLevel) {
-		if(opacity<=0.0f) return; // No need to call shader on invisible links.
-
+	
+	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
-		shader.start(gl);
+
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		shader.start(soulgl);
 
 		Matrix4 identityMatrix = new Matrix4();
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
-		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
-		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec1(gl, shader, "tstep", OpenGLBuffers.bezierStep);
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
-		ShaderMemory.setUniformVec3(gl, shader, "color", r, g, b);
-		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint2", 0.0f, 0.0f);
+		ShaderMemory.setUniformVec1(soulgl, shader, "width", 0.005f * zoomLevel);
+		ShaderMemory.setUniformVec1(soulgl, shader, "tstep", OpenGLBuffers.bezierStep);
+		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
 
-		float x = (aXYPos.x + bXYPos.x) / 2.0f;
-		float y = (aXYPos.y + bXYPos.y) / 2.0f;
-
-		float dx = x - bXYPos.x;
-		float dy = y - bXYPos.y;
-
-		float angle = 180f * (float) Math.atan2(dy, dx) / (float) Math.PI;
-		float length = aXYPos.distance(bXYPos) * 0.5f;
-
-		Matrix4 modelMatrix = new Matrix4();
-		modelMatrix.makeTranslationMatrix(x, y, 0);
-		modelMatrix.rotate(angle + 90f, 0, 0, 1);
-		modelMatrix.scale(0.01f, length, 0.2f);
-
-		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
-
-		int vertexPositionHandle = shader.getAttribLocation(gl, "t");
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
-		gl.glLineWidth(3.0f);
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
-
-		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 1, SoulGL2.GL_FLOAT, false, 0, null);
-		gl.glDrawArrays(drawMethod, 0, OpenGLBuffers.numBezierPoints);
-		gl.glDisableVertexAttribArray(vertexPositionHandle);
+		
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+	}
+	
+	public static void endDrawing(GL2 gl) {
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glDisableVertexAttribArray(0);
 
 		gl.glEnable(gl.GL_CULL_FACE);
-
-		shader.stop(gl);
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(SoulGL2.GL_BLEND);
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		shader.stop(soulgl);
+	}
+
+
+	public void draw(GL2 gl) {
+		if (opacity <= 0.0f) {
+			return; // No need to call shader on invisible links.
+		}
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+
+		SoulGL2 soulgl = new DesktopGL2(gl);
+
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec3(soulgl, shader, "color", r, g, b);
+
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
+
 	}
 
 	public boolean inInterval(Vector2 showLinksInterval) {
-		if(showLinksInterval.x < showLinksInterval.y) {
+		if (showLinksInterval.x < showLinksInterval.y) {
 			return (aCirclePos >= showLinksInterval.x && aCirclePos <= showLinksInterval.y)
 					|| (bCirclePos >= showLinksInterval.x && bCirclePos <= showLinksInterval.y);
-		}
-		else {
+		} else {
 			return (aCirclePos >= showLinksInterval.x || aCirclePos <= showLinksInterval.y)
 					|| (bCirclePos >= showLinksInterval.x || bCirclePos <= showLinksInterval.y);
 		}
 
 	}
-	
 }

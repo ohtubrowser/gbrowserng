@@ -9,7 +9,9 @@ import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
 import gles.renderer.TextRenderer;
+import javax.media.opengl.GL2;
 import managers.TextureManager;
+import soulaim.DesktopGL2;
 
 public class ReferenceRenderer extends CascadingComponent implements VisualComponent {
 
@@ -71,8 +73,9 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 		}
 	}
 
-	public void draw(SoulGL2 gl) {
-		this.drawRefSeq(gl, height);
+	public void draw(GL2 gl) {
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		this.drawRefSeq(soulgl, height);
 	}
 
 	public void tick(float dt) {

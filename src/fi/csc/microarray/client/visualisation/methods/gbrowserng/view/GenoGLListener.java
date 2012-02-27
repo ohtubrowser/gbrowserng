@@ -50,7 +50,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	public void display(GLAutoDrawable drawable) {
 		timer.start();
 
-		SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
 		overView.draw(gl);
@@ -63,6 +63,8 @@ public class GenoGLListener implements GLEventListener, Runnable {
 
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
+
+		System.out.println("OpenGL version :" + gl.glGetString(GL2.GL_VERSION));
 
 		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
@@ -87,7 +89,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		SoulGL2 gl = new DesktopGL2(drawable.getGL().getGL2());
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 
 		gl.glEnable(SoulGL2.GL_CULL_FACE);
