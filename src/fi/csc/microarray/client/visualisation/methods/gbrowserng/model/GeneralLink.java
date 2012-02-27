@@ -115,7 +115,6 @@ public class GeneralLink {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
 		SoulGL2 soulgl = new DesktopGL2(gl);
-		//shader.start(soulgl);
 
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
