@@ -64,6 +64,8 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 
+		System.out.println("OpenGL version :" + gl.glGetString(GL2.GL_VERSION));
+
 		gl.setSwapInterval(1);
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
