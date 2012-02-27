@@ -21,6 +21,17 @@ public class GeneralLink {
 	private Vector2 aXYPos, bXYPos;
 	private float opacity;
 
+    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
+                this.aChromosome = new Chromosome((int) readChr, readChrLength);
+                this.bChromosome = new Chromosome((int) mateChr, mateChrLength);
+		this.aStart = aStart;
+		this.bStart = bStart;
+		this.aStart = aEnd;
+		this.bStart = bEnd;
+		this.opacity = 1.0f;
+		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+    }
+
 	public void fadeIn(float fadespeed) {
 		this.opacity+=fadespeed;
 		if(this.opacity>1.0f) this.opacity=1.0f;

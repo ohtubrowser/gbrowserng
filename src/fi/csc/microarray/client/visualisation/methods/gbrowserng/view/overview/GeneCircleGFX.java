@@ -104,7 +104,7 @@ public class GeneCircleGFX {
 		Matrix4 modelMatrix = new Matrix4();
 		for (Chromosome c : AbstractGenome.getChromosomes()) {
 			if(!c.isMinimized()) {
-				modelMatrix.makeRotationMatrix(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.centromerePosition), 0, 0, 1);
+				modelMatrix.makeRotationMatrix(360.f*geneCircle.getRelativePosition(c.getChromosomeNumber()-1, c.getCentromereRelativePosition()), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize()*0.95f, 0.0f, 0);
 				modelMatrix.scale(geneCircle.getSize()*0.05f, geneCircle.getSize()*0.02f, 1.0f);
 

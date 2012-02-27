@@ -9,10 +9,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoFPSCounter;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.SimpleMouseEvent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
 
@@ -20,6 +18,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import math.Matrix4;
 import math.Vector2;
@@ -38,6 +37,7 @@ public class OverView extends GenosideComponent {
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
 	LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
+	ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false, arcHighlightLocked = false;
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
@@ -50,6 +50,7 @@ public class OverView extends GenosideComponent {
 	public OverView() {
 		super(null);
 		initTextRenderers();
+		initChromoNames();
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 	}
@@ -76,6 +77,12 @@ public class OverView extends GenosideComponent {
 			smallFont = new Font("SansSerif", Font.BOLD, (int) smallfontSize);
 		}
 		this.chromosomeNameRenderer = new com.jogamp.opengl.util.awt.TextRenderer(smallFont, true, true);
+	}
+
+	private void initChromoNames() {
+		for (Chromosome chromosome : AbstractGenome.getChromosomes()) {
+			chromoNames.add(new ChromoName(chromosome));
+		}
 	}
 
 	@Override
@@ -205,6 +212,16 @@ public class OverView extends GenosideComponent {
 
 		// note, x axis is negated to make tracking begin from the mathematical zero angle.
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
+		for (ChromoName chromoName : chromoNames) {
+			if (chromoName.isOver(x, y)) {
+				synchronized (geneCircle.tickdrawLock) {
+					int id = chromoName.getChromosome().getChromosomeNumber();
+					float[] bounds = geneCircle.getChromosomeBoundaries();
+					pointerGenePosition = bounds[id-1] + (bounds[id] - bounds[id-1])/2 + 0.25f;
+				}
+			}
+		}
+
 		geneCircle.updatePosition(pointerGenePosition);
 		if (!arcHighlightLocked) {
 			if (pointOnCircle(x, y)) {
@@ -319,6 +336,17 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
+			/*
+			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getGeneratedConnections();
+
+			for (long[] table : queue) {
+
+				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
+				newlink.calculatePositions(geneCircle);
+				links.add(newlink);
+
+			}
+	         */
 			Random r = new Random();
 			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
@@ -402,7 +430,7 @@ public class OverView extends GenosideComponent {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
-				String chromoname = String.valueOf(i);
+				String chromoname = AbstractGenome.getChromosome(i-1).getName();
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
@@ -418,10 +446,18 @@ public class OverView extends GenosideComponent {
 				}
 
 				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
+
+				ChromoName chromoBox = chromoNames.get(i-1);
+				chromoBox.setPosition(vv.x * overlap, vv.y * overlap);
+				chromoBox.setSize((float)(rect.getWidth()*1.5f / halfWidth), (float)(rect.getHeight()*1.5f / halfHeight));
+				if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f); }
+
 				chromosomeNameRenderer.draw(
 						chromoname,
 						(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
 						(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
+
+				if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f); }
 				++i;
 			}
 		}
