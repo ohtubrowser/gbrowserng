@@ -73,8 +73,42 @@ public class GeneralLink {
 		bXYPos.x *= 0.9495;
 		bXYPos.y *= 0.9495;
 	}
+	
+	public static void beginDrawing(GL2 gl, float zoomLevel) {
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
-	public void draw(GL2 gl, float zoomLevel) {
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		shader.start(soulgl);
+
+		Matrix4 identityMatrix = new Matrix4();
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint2", 0.0f, 0.0f);
+		ShaderMemory.setUniformVec1(soulgl, shader, "width", 0.005f * zoomLevel);
+		ShaderMemory.setUniformVec1(soulgl, shader, "tstep", OpenGLBuffers.bezierStep);
+		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
+
+		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
+		gl.glEnable(SoulGL2.GL_BLEND);
+		
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+	}
+	
+	public static void endDrawing(GL2 gl) {
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glDisableVertexAttribArray(0);
+
+		gl.glEnable(gl.GL_CULL_FACE);
+		gl.glDisable(SoulGL2.GL_BLEND);
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+		SoulGL2 soulgl = new DesktopGL2(gl);
+		shader.stop(soulgl);
+	}
+
+
+	public void draw(GL2 gl) {
 		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
 		}
@@ -83,35 +117,12 @@ public class GeneralLink {
 		SoulGL2 soulgl = new DesktopGL2(gl);
 		shader.start(soulgl);
 
-		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint2", 0.0f, 0.0f);
-		ShaderMemory.setUniformVec1(soulgl, shader, "width", 0.005f * zoomLevel);
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec1(soulgl, shader, "tstep", OpenGLBuffers.bezierStep);
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", r, g, b);
-		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
-
-		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
-
-
-		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
-		gl.glEnable(SoulGL2.GL_BLEND);
-		
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
-		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
-
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-		gl.glDisableVertexAttribArray(0);
-
-		gl.glEnable(gl.GL_CULL_FACE);
-		gl.glDisable(SoulGL2.GL_BLEND);
-		shader.stop(soulgl);
 
 	}
 
