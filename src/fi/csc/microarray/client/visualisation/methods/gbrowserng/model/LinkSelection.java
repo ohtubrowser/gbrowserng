@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
@@ -12,6 +13,7 @@ import soulaim.DesktopGL2;
 
 public class LinkSelection {
 	float begin, end, area;
+	private boolean leftKeyDown = false, rightKeyDown = false;
 	public LinkSelection() {
 		begin = 0.0f;
 		end = 1.0f;
@@ -107,6 +109,29 @@ public class LinkSelection {
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 
 		shader.stop(soulgl);
+	}
+	
+	public void handle(KeyEvent keyEvent) {
+		if(keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+			leftKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+			rightKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+		}
+	}
+	
+	public void deactivate() {
+		leftKeyDown = rightKeyDown = false;
+		resetArea();
+		reset();
+	}
+	
+	public void tick(float dt) {
+		// TODO : concurrency
+		if(leftKeyDown)
+			move(-0.1f*dt);
+		if(rightKeyDown)
+			move(0.1f*dt);
 	}
 
 	public void move(float value) {

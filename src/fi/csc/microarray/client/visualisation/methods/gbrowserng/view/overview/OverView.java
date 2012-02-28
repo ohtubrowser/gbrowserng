@@ -259,8 +259,7 @@ public class OverView extends GenosideComponent {
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
-						linkSelection.resetArea();
-						linkSelection.reset();
+						linkSelection.deactivate();
 					} else {
 						System.out.println("Adding capsule with " + x + " " + y);
 
@@ -335,13 +334,7 @@ public class OverView extends GenosideComponent {
 		}
 		if(arcHighlightLocked)
 		{
-			float change = 0.0f;
-			if(KeyEvent.VK_LEFT == event.getKeyCode())
-				change = 0.001f;
-			if(KeyEvent.VK_RIGHT == event.getKeyCode())
-				change = -0.001f;
-			if(change != 0.0f)
-				linkSelection.move(change);
+			linkSelection.handle(event);
 		}
 
 		if (KeyEvent.VK_Z == event.getKeyCode()) {
@@ -522,6 +515,7 @@ public class OverView extends GenosideComponent {
 		}
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
+		linkSelection.tick(dt);
 
 		fadeLinks(dt);
 
