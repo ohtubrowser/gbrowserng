@@ -18,7 +18,7 @@ public class GeneralLink {
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
 	private final int drawMethod;
-	private float aCirclePos, bCirclePos;
+	float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
 	private float opacity;
 
@@ -136,14 +136,4 @@ public class GeneralLink {
 
 	}
 
-	public boolean inInterval(Vector2 showLinksInterval) {
-		if (showLinksInterval.x < showLinksInterval.y) {
-			return (aCirclePos >= showLinksInterval.x && aCirclePos <= showLinksInterval.y)
-					|| (bCirclePos >= showLinksInterval.x && bCirclePos <= showLinksInterval.y);
-		} else {
-			return (aCirclePos >= showLinksInterval.x || aCirclePos <= showLinksInterval.y)
-					|| (bCirclePos >= showLinksInterval.x || bCirclePos <= showLinksInterval.y);
-		}
-
-	}
 }
