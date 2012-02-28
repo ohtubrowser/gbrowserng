@@ -10,8 +10,11 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
+import gles.SoulGL2;
+import gles.shaders.Shader;
+import gles.shaders.ShaderMemory;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -25,6 +28,8 @@ import math.Vector2;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
+import managers.ShaderManager;
+import soulaim.DesktopGL2;
 
 public class OverView extends GenosideComponent {
 
@@ -45,7 +50,7 @@ public class OverView extends GenosideComponent {
 	public TextRenderer textRenderer;
 	private Vector2 showLinksInterval = new Vector2(0, 1);
 	private SimpleMouseEvent lastMouseClick;
-	private float arcHighlightArea = 0.02f;
+	private float arcHighlightArea = GlobalVariables.selectSize;
 
 	public OverView() {
 		super(null);
@@ -250,9 +255,11 @@ public class OverView extends GenosideComponent {
 				if (pointOnCircle(x, y)) //				 respond to mouse click
 				{
 					arcHighlightLocked = true;
+					updateShowLinksArea();
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
+						arcHighlightArea = GlobalVariables.selectSize;
 						resetShowLinksInterval();
 					} else {
 						System.out.println("Adding capsule with " + x + " " + y);
@@ -306,7 +313,7 @@ public class OverView extends GenosideComponent {
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
 			if (arcHighlightLocked) {
 				arcHighlightArea += 0.001f * event.getWheelRotation();
-				arcHighlightArea = Math.max(arcHighlightArea, 0.001f);
+				arcHighlightArea = Math.min(0.9f, Math.max(arcHighlightArea, 0.001f));
 				updateShowLinksArea();
 
 			} else {
@@ -329,6 +336,9 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
+		if(arcHighlightLocked)
+			moveSelection(event);
+
 		if (KeyEvent.VK_Z == event.getKeyCode()) {
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
 			updateCircleSize();
@@ -369,6 +379,9 @@ public class OverView extends GenosideComponent {
 		}
 		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
+		if(arcHighlightLocked) {
+			drawClamps(gl);
+		}
 
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
@@ -591,13 +604,13 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void updateShowLinksInterval(float pointerGenePosition) {
-		showLinksInterval.x = pointerGenePosition - 0.25f - arcHighlightArea;
-		showLinksInterval.y = pointerGenePosition - 0.25f + arcHighlightArea;
+		showLinksInterval.x = pointerGenePosition - 0.25f - arcHighlightArea/2;
+		showLinksInterval.y = pointerGenePosition - 0.25f + arcHighlightArea/2;
 		clampShowLinksInterval();
 	}
 
 	private void updateShowLinksArea() {
-		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
+		float oldArea = getCurrentIntervalSize();
 		float change = (arcHighlightArea - oldArea)/2;
 		showLinksInterval.x -= change;
 		showLinksInterval.y += change;
@@ -613,6 +626,77 @@ public class OverView extends GenosideComponent {
 		}
 		if (showLinksInterval.y > 1.0f) {
 			showLinksInterval.y -= 1.0f;
+		}
+		if (showLinksInterval.x > 1.0f) {
+			showLinksInterval.x -= 1.0f;
+		}
+	}
+
+	private float getCurrentIntervalSize() {
+		if(showLinksInterval.x > showLinksInterval.y)
+			return 1.0f-showLinksInterval.x + showLinksInterval.y;
+		return showLinksInterval.y - showLinksInterval.x;
+	}
+
+	private void drawClamps(GL2 gl) {
+		// TODO : remove from overview, remove magic numbers
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.PLAINMVP);
+
+		SoulGL2 soulgl = new DesktopGL2(gl);
+
+		shader.start(soulgl);
+
+		ShaderMemory.setUniformVec4(soulgl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
+
+		Matrix4 modelMatrix = new Matrix4();
+		float length = geneCircle.getSize() * 0.0505f;
+		float width = geneCircle.getSize() * 0.015f;
+
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
+		float x, y;
+		synchronized (geneCircle.tickdrawLock) {
+			x = 0.9495f * geneCircle.getXYPosition(this.showLinksInterval.x).x;
+			y = 0.9495f * geneCircle.getXYPosition(this.showLinksInterval.x).y;
+		}
+
+		float angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
+
+		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix.rotate(angle + 90f, 0, 0, 1);
+		modelMatrix.scale(width, length, 0.2f);
+
+		ShaderMemory.setUniformMat4(soulgl, shader, "MVP", modelMatrix);
+
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
+
+		x = 0.9495f * geneCircle.getXYPosition(this.showLinksInterval.y).x;
+		y = 0.9495f * geneCircle.getXYPosition(this.showLinksInterval.y).y;
+
+		angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
+
+		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix.rotate(angle + 90f, 0, 0, 1);
+		modelMatrix.scale(width, length, 0.2f);
+
+		ShaderMemory.setUniformMat4(soulgl, shader, "MVP", modelMatrix);
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
+
+		gl.glDisableVertexAttribArray(0);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+
+		shader.stop(soulgl);
+	}
+
+	private void moveSelection(KeyEvent event) {
+		if(event.getKeyCode() == KeyEvent.VK_LEFT) {
+			showLinksInterval.x -= 0.001f; showLinksInterval.y -= 0.001f;
+			clampShowLinksInterval();
+		}
+		if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
+			showLinksInterval.x += 0.001f; showLinksInterval.y += 0.001f;
+			clampShowLinksInterval();
 		}
 	}
 }

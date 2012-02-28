@@ -10,6 +10,7 @@ public class GlobalVariables {
 	public static final float animationConstant = 20f;
 	public static final float chromosomeAnimationConstant = 0.4f;
 	public static final Map<Character, Color> genomeColors = initializeGenomeColors();
+	public static final float selectSize = 0.02f;
 	public static int width;
 	public static int height;
 
