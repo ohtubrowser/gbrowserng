@@ -1,6 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
 import com.jogamp.newt.event.KeyEvent;
+
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.NEWTEvent;
 import com.jogamp.newt.event.WindowEvent;

@@ -13,6 +13,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -97,9 +98,10 @@ public class GenomeBrowserNG {
 	}
 
 
+
 	public GenomeBrowserNG(int width, int height) {
 
-		// fill with bogus data
+		//fill with bogus data
 		//useSmallData();
 		//useBigData();
 		//useChipsterData();

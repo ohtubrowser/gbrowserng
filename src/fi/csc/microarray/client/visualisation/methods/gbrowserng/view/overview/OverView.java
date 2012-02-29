@@ -10,6 +10,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
@@ -344,16 +345,25 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			/*
-			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getGeneratedConnections();
+			
+/*			
+			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getConnectionsBetweenChrs();
 
-			for (long[] table : queue) {
 
 			GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
 
 			}
+
+			for (long[] table : queue) {
+				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
+				newlink.calculatePositions(geneCircle);
+				links.add(newlink);
+
+			}
+			System.out.println(links.size());
+			System.out.println("finished");
 			 */
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
