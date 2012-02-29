@@ -16,14 +16,19 @@ public class EventHandler {
 	private GenoEvent genoEvent = new GenoEvent(800, 600);
 	private final GenosideComponent client;
 
-	public EventHandler(GenoWindow hostWindow, GenosideComponent client, BlockingQueue<NEWTEvent> eventQueue) {
+	public EventHandler(GenoWindow hostWindow, GenosideComponent client, BlockingQueue<NEWTEvent> eventQueue, int width, int height) {
 		this.client = client;
 		this.eventQueue = eventQueue;
 		this.window = hostWindow;
+		this.genoEvent = new GenoEvent(width, height);
 	}
 
 	public void toggleFullscreen() {
 		this.window.toggleFullscreen();
+	}
+        
+	public void resolution(int width, int height) {
+	    genoEvent.setScreenSize(width, height);
 	}
 
 	public void handleEvents() throws InterruptedException {

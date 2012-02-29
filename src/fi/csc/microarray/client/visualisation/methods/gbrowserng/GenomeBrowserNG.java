@@ -110,7 +110,7 @@ public class GenomeBrowserNG {
 
 		this.genoWindow = new GenoWindow(width, height);
 		this.glListener = new GenoGLListener(new OverView());
-		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue);
+		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue, width, height);
 		this.windowListener = new GenoWindowListener(eventQueue);
 
 		this.genoWindow.window.addKeyListener(new Keyboard(eventQueue));
