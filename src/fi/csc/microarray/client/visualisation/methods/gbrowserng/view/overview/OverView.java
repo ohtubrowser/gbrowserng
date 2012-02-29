@@ -194,6 +194,12 @@ public class OverView extends GenosideComponent {
 	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
 	@Override
 	public boolean handle(MouseEvent event, float x, float y) {
+		float xx=x;
+		float yy=y;
+		x=CoordinateManager.toCircleCoordsY(x);
+		y=CoordinateManager.toCircleCoordsX(y);
+		System.out.println("Origx: " + xx + ", tocirclecoordsY(x): " + x + " fromcirclecoordsY(x): " + CoordinateManager.fromCircleCoordsY(x));
+
 		if (lastMouseClick == null) {
 			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
 		}
@@ -583,7 +589,16 @@ public class OverView extends GenosideComponent {
 	}
 
 	private boolean pointOnCircle(float x, float y) {
-		if (Math.abs(x * x + y * y - (geneCircle.getSize() * geneCircle.getSize() * 0.95 * 0.95)) < 0.1f * geneCircle.getSize() * geneCircle.getSize()) // TODO : magic numbers
+
+		float xx = CoordinateManager.fromCircleCoordsY(x);
+		float yy = CoordinateManager.fromCircleCoordsX(y);
+
+		float size = geneCircle.getSize();
+		float a = CoordinateManager.toCircleCoordsX(size);
+		float b = CoordinateManager.toCircleCoordsY(size);
+		if (Math.abs(xx * xx + yy * yy - (a * a * 0.95 * 0.95)) < 0.1f * a * a) // TODO : magic numbers
+		//System.out.println(Math.abs(xx*xx/(a*a) + yy*yy/(b*b) - size));
+		//if (Math.abs(xx*xx/(a*a) + yy*yy/(b*b) - size) < 0.1f)
 		{
 			return true;
 		}

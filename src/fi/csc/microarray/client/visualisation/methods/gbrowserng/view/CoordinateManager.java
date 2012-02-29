@@ -7,27 +7,36 @@ import math.Vector2;
 public class CoordinateManager {
 	
 	public static final float XASPECT=4.0f/3.5f;
+	public static final float scale=0.5f;
 	
 	public static Matrix4 getCircleMatrix() {
 		Matrix4 ret = new Matrix4();
-		ret.makeScaleMatrix(0.5f*XASPECT, 0.5f*GlobalVariables.aspectRatio, 1.0f);
+		ret.makeScaleMatrix(scale*XASPECT, scale*GlobalVariables.aspectRatio, 1.0f);
 		return ret;
 	}
 	public static Vector2 toCircleCoords(Vector2 v) {
-		v.x *= 0.5f * XASPECT;
-		v.y *= 0.5f * GlobalVariables.aspectRatio;
+		v.x *= scale * XASPECT;
+		v.y *= scale * GlobalVariables.aspectRatio;
 		return v;
 	}
 	public static float toCircleCoordsX(float x) {
-		return (x * 0.5f * XASPECT);
+		return (x * scale * XASPECT);
 	}
 	public static float toCircleCoordsY(float y) {
-		return (y * 0.5f * GlobalVariables.aspectRatio);
+		return (y * scale * GlobalVariables.aspectRatio);
 	}
+	public static float fromCircleCoordsX(float x) {
+		return (x / scale / XASPECT);
+	}
+	public static float fromCircleCoordsY(float y) {
+		return (y / scale / GlobalVariables.aspectRatio);
+	}
+	/*
 	public static int toCircleCoordsX(int x) {
 		return x;
 	}
 	public static int toCircleCoordsY(int y) {
 		return y;
 	}
+	*/
 }
