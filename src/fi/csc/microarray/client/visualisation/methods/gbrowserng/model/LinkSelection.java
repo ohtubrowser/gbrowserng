@@ -13,7 +13,7 @@ import soulaim.DesktopGL2;
 
 public class LinkSelection {
 	float begin, end, area;
-	private boolean leftKeyDown = false, rightKeyDown = false;
+	private boolean leftKeyDown = false, rightKeyDown = false, upKeyDown = false, downKeyDown = false;
 	public LinkSelection() {
 		begin = 0.0f;
 		end = 1.0f;
@@ -118,10 +118,16 @@ public class LinkSelection {
 		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 			rightKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
 		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+			upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+			downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+		}
 	}
 	
 	public void deactivate() {
-		leftKeyDown = rightKeyDown = false;
+		leftKeyDown = rightKeyDown = upKeyDown = downKeyDown = false;
 		resetArea();
 		reset();
 	}
@@ -132,6 +138,10 @@ public class LinkSelection {
 			move(-0.1f*dt);
 		if(rightKeyDown)
 			move(0.1f*dt);
+		if(upKeyDown)
+			updateArea(-0.01f*dt);
+		if(downKeyDown)
+			updateArea(0.01f*dt);
 	}
 
 	public void move(float value) {
