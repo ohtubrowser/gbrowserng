@@ -222,7 +222,7 @@ public class OverView extends GenosideComponent {
 				synchronized (geneCircle.tickdrawLock) {
 					int id = chromoName.getChromosome().getChromosomeNumber();
 					float[] bounds = geneCircle.getChromosomeBoundaries();
-					pointerGenePosition = bounds[id-1] + (bounds[id] - bounds[id-1])/2 + 0.25f;
+					pointerGenePosition = bounds[id - 1] + (bounds[id] - bounds[id - 1]) / 2 + 0.25f;
 				}
 			}
 		}
@@ -255,7 +255,8 @@ public class OverView extends GenosideComponent {
 				if (pointOnCircle(x, y)) //				 respond to mouse click
 				{
 					arcHighlightLocked = true;
-					linkSelection.updateArea();
+					linkSelection.update(pointerGenePosition);
+					linkSelection.updateArea(links);
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
@@ -311,7 +312,7 @@ public class OverView extends GenosideComponent {
 		// Wheel
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
 			if (arcHighlightLocked) {
-				linkSelection.updateArea(0.001f*event.getWheelRotation());
+				linkSelection.updateArea(0.001f * event.getWheelRotation(), links);
 			} else {
 				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
 				updateCircleSize();
@@ -332,8 +333,7 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
-		if(arcHighlightLocked)
-		{
+		if (arcHighlightLocked) {
 			linkSelection.handle(event);
 		}
 
@@ -349,18 +349,20 @@ public class OverView extends GenosideComponent {
 
 			for (long[] table : queue) {
 
-				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
-
-			}
-	         */
-			Random r = new Random();
-			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
+			GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
 			newlink.calculatePositions(geneCircle);
 			links.add(newlink);
+
+			}
+			 */
+			Random r = new Random();
+			for (int i = 0; i < 1000; ++i) {
+				Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+				Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+				GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
+				newlink.calculatePositions(geneCircle);
+				links.add(newlink);
+			}
 		}
 		return false;
 	}
@@ -372,12 +374,16 @@ public class OverView extends GenosideComponent {
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		GeneralLink.beginDrawing(gl, geneCircle.getSize());
-		for (GeneralLink link : links) {
-			link.draw(gl);
+		if (arcHighlightLocked) {
+			linkSelection.draw(gl);
+		} else {
+			for (GeneralLink link : links) {
+				link.draw(gl, 1.0f, 0.0f, 0.0f);
+			}
 		}
 		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if(arcHighlightLocked) {
+		if (arcHighlightLocked) {
 			linkSelection.draw(gl, geneCircle);
 		}
 
@@ -443,7 +449,7 @@ public class OverView extends GenosideComponent {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
-				String chromoname = AbstractGenome.getChromosome(i-1).getName();
+				String chromoname = AbstractGenome.getChromosome(i - 1).getName();
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
@@ -460,17 +466,21 @@ public class OverView extends GenosideComponent {
 
 				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 
-				ChromoName chromoBox = chromoNames.get(i-1);
+				ChromoName chromoBox = chromoNames.get(i - 1);
 				chromoBox.setPosition(vv.x * overlap, vv.y * overlap);
-				chromoBox.setSize((float)(rect.getWidth()*1.5f / halfWidth), (float)(rect.getHeight()*1.5f / halfHeight));
-				if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f); }
+				chromoBox.setSize((float) (rect.getWidth() * 1.5f / halfWidth), (float) (rect.getHeight() * 1.5f / halfHeight));
+				if (chromoBox.isActive()) {
+					chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f);
+				}
 
 				chromosomeNameRenderer.draw(
 						chromoname,
 						(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
 						(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
 
-				if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f); }
+				if (chromoBox.isActive()) {
+					chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
+				}
 				++i;
 			}
 		}
@@ -513,9 +523,9 @@ public class OverView extends GenosideComponent {
 				updateCircleSize();
 			}
 		}
+		linkSelection.tick(dt, links);
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
-		linkSelection.tick(dt);
 
 		fadeLinks(dt);
 

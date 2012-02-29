@@ -119,10 +119,10 @@ public class GeneralLink {
 	}
 
 
-	public void draw(GL2 gl) {
-		if (opacity <= 0.0f) {
+	public void draw(GL2 gl, float f, float f0, float f1) {
+		/*if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
-		}
+		}*/
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
 		SoulGL2 soulgl = new DesktopGL2(gl);
@@ -130,10 +130,30 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
-		ShaderMemory.setUniformVec3(soulgl, shader, "color", r, g, b);
+		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
 
+	}
+
+	boolean isMinimized() {
+		return aChromosome.isMinimized() || bChromosome.isMinimized();
+	}
+
+	Chromosome getAChromosome() {
+		return aChromosome;
+	}
+
+	Chromosome getBChromosome() {
+		return bChromosome;
+	}
+
+	long getaStart() {
+		return aStart;
+	}
+
+	long getbStart() {
+		return bStart;
 	}
 
 }
