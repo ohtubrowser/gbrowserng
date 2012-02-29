@@ -85,7 +85,7 @@ public class ConnectionsLoader implements AreaResultListener {
 		
 		
 		requestData();
-		while (requestsReady.get() != 22) {
+		while (requestsReady.get() != 23) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
