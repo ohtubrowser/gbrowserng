@@ -105,8 +105,8 @@ public class GenomeBrowserNG {
 		//useSmallData();
 		//useBigData();
 		//useChipsterData();
-		useChipsterDataHuman();
-		//useChipsterDataRat();
+		//useChipsterDataHuman();
+		useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
