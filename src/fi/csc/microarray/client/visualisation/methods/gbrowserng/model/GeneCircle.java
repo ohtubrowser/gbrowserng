@@ -97,7 +97,7 @@ public class GeneCircle {
 		return ret;
 	}
 
-	Vector2 getXYPosition(float relativeCirclePos) {
+	public Vector2 getXYPosition(float relativeCirclePos) {
 		Vector2 ret = new Vector2(size, 0.0f);
 		ret.rotate((float)(Math.PI/2f) + 2 * (float) Math.PI * relativeCirclePos);
 		return ret;

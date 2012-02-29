@@ -8,7 +8,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoButton;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
-import gles.SoulGL2;
+import javax.media.opengl.GL2;
 
 public class TrackView extends GenosideComponent {
 
@@ -67,7 +67,7 @@ public class TrackView extends GenosideComponent {
 		return this.session;
 	}
 
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		switch (this.trackViewMode) {
 			case TrackView.MINIMIZED:
 				this.deleteButton.draw(gl);

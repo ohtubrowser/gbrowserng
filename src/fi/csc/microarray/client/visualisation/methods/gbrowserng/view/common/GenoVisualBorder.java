@@ -7,6 +7,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
+import javax.media.opengl.GL2;
+import soulaim.DesktopGL2;
 
 public class GenoVisualBorder extends GenosideComponent {
 
@@ -29,7 +31,7 @@ public class GenoVisualBorder extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		draw(gl, Color.BLACK);
 	}
 
@@ -37,11 +39,12 @@ public class GenoVisualBorder extends GenosideComponent {
 	public void userTick(float dt) {
 	}
 
-	public void draw(SoulGL2 gl, Color tempcolor) {
+	public void draw(GL2 gl, Color tempcolor) {
+                SoulGL2 soulgl = new DesktopGL2(gl);
 		GenosideComponent parent = this.getParent();
-		PrimitiveRenderer.drawRectangle(parent.glx(0), parent.gly(-1), parent.glxSize(1.0f), 0.003f, gl, tempcolor);
-		PrimitiveRenderer.drawRectangle(parent.glx(0), parent.gly(+1), parent.glxSize(1.0f), 0.003f, gl, tempcolor);
-		PrimitiveRenderer.drawRectangle(parent.glx(+1), parent.gly(0), 0.003f, parent.glySize(1.0f / GlobalVariables.aspectRatio), gl, tempcolor);
-		PrimitiveRenderer.drawRectangle(parent.glx(-1), parent.gly(0), 0.003f, parent.glySize(1.0f / GlobalVariables.aspectRatio), gl, tempcolor);
+		PrimitiveRenderer.drawRectangle(parent.glx(0), parent.gly(-1), parent.glxSize(1.0f), 0.003f, soulgl, tempcolor);
+		PrimitiveRenderer.drawRectangle(parent.glx(0), parent.gly(+1), parent.glxSize(1.0f), 0.003f, soulgl, tempcolor);
+		PrimitiveRenderer.drawRectangle(parent.glx(+1), parent.gly(0), 0.003f, parent.glySize(1.0f / GlobalVariables.aspectRatio), soulgl, tempcolor);
+		PrimitiveRenderer.drawRectangle(parent.glx(-1), parent.gly(0), 0.003f, parent.glySize(1.0f / GlobalVariables.aspectRatio), soulgl, tempcolor);
 	}
 }

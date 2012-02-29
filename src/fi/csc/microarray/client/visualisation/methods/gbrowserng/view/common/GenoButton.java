@@ -8,7 +8,9 @@ import gles.Color;
 import gles.SoulGL2;
 import gles.TextureID;
 import gles.renderer.PrimitiveRenderer;
+import javax.media.opengl.GL2;
 import math.Vector2;
+import soulaim.DesktopGL2;
 
 public class GenoButton extends GenosideComponent {
 
@@ -72,14 +74,15 @@ public class GenoButton extends GenosideComponent {
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		Vector2 position=new Vector2(xpos+x_offset, ypos+y_offset);
 		Vector2 dimensions=getTargetDimensions();
 		gl.glEnable(SoulGL2.GL_BLEND);
 		myColor.g = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		myColor.b = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float myScale = 0.02f + this.getAnimatedValues().getAnimatedValue("MOUSEHOVER") * 0.01f;
-		PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x*0.5f, gl, myColor, myTexture);
+                SoulGL2 soulgl = new DesktopGL2(gl);
+		PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x*0.5f, soulgl, myColor, myTexture);
 		gl.glDisable(SoulGL2.GL_BLEND);
 	}
 

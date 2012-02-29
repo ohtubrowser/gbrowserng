@@ -10,13 +10,18 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import gles.SoulGL2;
+import gles.shaders.Shader;
+import gles.shaders.ShaderMemory;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import math.Matrix4;
@@ -24,6 +29,9 @@ import math.Vector2;
 
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.media.opengl.GL2;
+import managers.ShaderManager;
+import soulaim.DesktopGL2;
 
 public class OverView extends GenosideComponent {
 
@@ -42,9 +50,8 @@ public class OverView extends GenosideComponent {
 	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 	public TextRenderer chromosomeNameRenderer;
 	public TextRenderer textRenderer;
-	private Vector2 showLinksInterval = new Vector2(0, 1);
 	private SimpleMouseEvent lastMouseClick;
-	private float arcHighlightArea = 0.02f;
+	private LinkSelection linkSelection = new LinkSelection();
 
 	public OverView() {
 		super(null);
@@ -77,7 +84,7 @@ public class OverView extends GenosideComponent {
 		}
 		this.chromosomeNameRenderer = new com.jogamp.opengl.util.awt.TextRenderer(smallFont, true, true);
 	}
-	
+
 	private void initChromoNames() {
 		for (Chromosome chromosome : AbstractGenome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
@@ -216,17 +223,17 @@ public class OverView extends GenosideComponent {
 				synchronized (geneCircle.tickdrawLock) {
 					int id = chromoName.getChromosome().getChromosomeNumber();
 					float[] bounds = geneCircle.getChromosomeBoundaries();
-					pointerGenePosition = bounds[id-1] + (bounds[(id) % AbstractGenome.getNumChromosomes()] - bounds[id-1])/2 + 0.25f;
+					pointerGenePosition = bounds[id-1] + (bounds[id] - bounds[id-1])/2 + 0.25f;
 				}
 			}
 		}
-		
+
 		geneCircle.updatePosition(pointerGenePosition);
 		if (!arcHighlightLocked) {
 			if (pointOnCircle(x, y)) {
-				updateShowLinksInterval(pointerGenePosition);
+				linkSelection.update(pointerGenePosition);
 			} else {
-				resetShowLinksInterval();
+				linkSelection.reset();
 			}
 		}
 
@@ -249,10 +256,11 @@ public class OverView extends GenosideComponent {
 				if (pointOnCircle(x, y)) //				 respond to mouse click
 				{
 					arcHighlightLocked = true;
+					linkSelection.updateArea();
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
-						resetShowLinksInterval();
+						linkSelection.deactivate();
 					} else {
 						System.out.println("Adding capsule with " + x + " " + y);
 
@@ -304,10 +312,7 @@ public class OverView extends GenosideComponent {
 		// Wheel
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
 			if (arcHighlightLocked) {
-				arcHighlightArea += 0.001f * event.getWheelRotation();
-				arcHighlightArea = Math.max(arcHighlightArea, 0.001f);
-				updateShowLinksArea();
-
+				linkSelection.updateArea(0.001f*event.getWheelRotation());
 			} else {
 				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
 				updateCircleSize();
@@ -328,6 +333,11 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
+		if(arcHighlightLocked)
+		{
+			linkSelection.handle(event);
+		}
+
 		if (KeyEvent.VK_Z == event.getKeyCode()) {
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
 			updateCircleSize();
@@ -335,26 +345,45 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			Random r = new Random();
-			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
-			newlink.calculatePositions(geneCircle);
-			links.add(newlink);
+			
+			
+			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getConnectionsBetweenChrs();
+
+
+			for (long[] table : queue) {
+				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
+				newlink.calculatePositions(geneCircle);
+				links.add(newlink);
+
+			}
+			System.out.println(links.size());
+			System.out.println("finished");
+	         
+//			Random r = new Random();
+//			Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+//			Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+//			GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
+//			newlink.calculatePositions(geneCircle);
+//			links.add(newlink);
 		}
 		return false;
 	}
 
 	@Override
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
+		GeneralLink.beginDrawing(gl, geneCircle.getSize());
 		for (GeneralLink link : links) {
-			link.draw(gl, geneCircle.getSize());
+			link.draw(gl);
 		}
+		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
+		if(arcHighlightLocked) {
+			linkSelection.draw(gl, geneCircle);
+		}
 
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
@@ -418,7 +447,7 @@ public class OverView extends GenosideComponent {
 				Vector2 vv = new Vector2(v);
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
-				String chromoname = String.valueOf(i);
+				String chromoname = AbstractGenome.getChromosome(i-1).getName();
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
@@ -465,7 +494,7 @@ public class OverView extends GenosideComponent {
 		}
 		for (GeneralLink link : links) {
 			if (!geneCircle.getChromosomeByRelativePosition(link.getStartPos()).isMinimized() && !geneCircle.getChromosomeByRelativePosition(link.getEndPos()).isMinimized()) {
-				if (link.inInterval(showLinksInterval)) {
+				if (linkSelection.inSelection(link)) {
 					link.fadeIn(dt * 16);
 				} else if (!arcHighlightLocked
 						&& (((link.getStartPos() <= thischromostart) && (link.getStartPos() > thischromoend))
@@ -490,6 +519,7 @@ public class OverView extends GenosideComponent {
 		}
 		geneCircleGFX.tick(dt);
 		fpsCounter.tick(dt);
+		linkSelection.tick(dt);
 
 		fadeLinks(dt);
 
@@ -569,36 +599,5 @@ public class OverView extends GenosideComponent {
 			return true;
 		}
 		return false;
-	}
-
-	private void resetShowLinksInterval() {
-		showLinksInterval.x = 0.0f;
-		showLinksInterval.y = 1.0f;
-	}
-
-	private void updateShowLinksInterval(float pointerGenePosition) {
-		showLinksInterval.x = pointerGenePosition - 0.25f - arcHighlightArea;
-		showLinksInterval.y = pointerGenePosition - 0.25f + arcHighlightArea;
-		clampShowLinksInterval();
-	}
-
-	private void updateShowLinksArea() {
-		float oldArea = Math.abs(showLinksInterval.y - showLinksInterval.x);
-		float change = arcHighlightArea - oldArea;
-		showLinksInterval.x -= change/2;
-		showLinksInterval.y += change/2;
-		clampShowLinksInterval();
-	}
-
-	private void clampShowLinksInterval() {
-		if (showLinksInterval.x < 0.0f) {
-			showLinksInterval.x += 1.0f;
-		}
-		if (showLinksInterval.y < 0.0f) {
-			showLinksInterval.y += 1.0f;
-		}
-		if (showLinksInterval.y > 1.0f) {
-			showLinksInterval.y -= 1.0f;
-		}
 	}
 }

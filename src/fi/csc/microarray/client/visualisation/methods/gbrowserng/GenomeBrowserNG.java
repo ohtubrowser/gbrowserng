@@ -65,65 +65,47 @@ public class GenomeBrowserNG {
 	}
 
 	public static void useChipsterDataRat() {
-		int i=1;
-//                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz", 
+//                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 //				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 //						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 //               
-                
-                
-		ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("karyotype.txt", "seq_region.txt", 
+
+
+		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
-		
-		for(long[] data : chromosomeData) {
-			long chromosomeLength = data[0];
-			Chromosome chr = new Chromosome(i, chromosomeLength);
-			long centromereCenter = data[2];
-			if (data[2] != 0 ) {
-				System.out.println("centromereposition: " + centromereCenter);
-				chr.setCentromerePosition(centromereCenter);
-			}
-			
-			AbstractGenome.addChromosome(chr);
-			++i;
+
+		for (Chromosome c : chromosomeData) {
+			AbstractGenome.addChromosome(c);
 		}
-	
+
 	}
-	
+
 	public static void useChipsterDataHuman() {
-		int i=1;
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
 //				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 //						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 //               
-		ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("karyotypeHuman.txt", "seq_regionHuman.txt",
+		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
-		for(long[] data : chromosomeData) {
-			long chromosomeLength = data[0];
-			Chromosome chr = new Chromosome(i, chromosomeLength);
-			long centromereCenter = data[2];
-			if (data[2] != 0 ) {
-				System.out.println("centromereposition: " + centromereCenter);
-				chr.setCentromerePosition(centromereCenter);
-			}
-			AbstractGenome.addChromosome(chr);
-			++i;
+		for (Chromosome c : chromosomeData) {
+			AbstractGenome.addChromosome(c);
 		}
 	}
-	
+
 
 	public GenomeBrowserNG(int width, int height) {
 
 		//fill with bogus data
 		//useSmallData();
 		//useBigData();
-		//useChipsterDataRat();
+		//useChipsterData();
 		useChipsterDataHuman();
+		//useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
@@ -152,6 +134,6 @@ public class GenomeBrowserNG {
 	public static void main(String[] s) throws InterruptedException {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int)(dim.width*fraction), (int)(dim.height*fraction)).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction)).run();
 	}
 }

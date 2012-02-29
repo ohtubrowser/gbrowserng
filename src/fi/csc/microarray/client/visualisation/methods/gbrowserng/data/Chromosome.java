@@ -11,19 +11,35 @@ public class Chromosome {
 	private boolean minimized = false;
 	private boolean animating = false;
 	private float animationProgress = 1f;
-	public float centromerePosition = 0.5f; // Relative position of centromere
+	private String name;
+	private float centromerePosition; // Relative position of centromere
 
 	public Chromosome(int id, long size) {
 		this.id = id;
 		this.size = size;
-		sequence = new ReferenceSequence(id, (int) 300);
-		centromerePosition = 0.5f;		// if no centromere data is available, use halfway point!
+		this.sequence = new ReferenceSequence(id, (int) 300);
+		this.centromerePosition = -1;
+		this.name="NULL";
+	}
+
+	public Chromosome(int id, String name, long size, long centromereposition) {
+		this.id = id;
+		this.size = size;
+		this.sequence = new ReferenceSequence(id, (int) 300);
+		setCentromerePosition(centromereposition);
+		this.name=name;
+	}
+
+	public void setCentromerePosition(long pos) {
+		this.centromerePosition = (float)((double)pos/size);
 	}
 	
-	public void setCentromerePosition(long centromereMiddle) {
-		float value = centromereMiddle;
-		this.centromerePosition = value / size;
-		
+	public String getName() {
+		return this.name;
+	}
+
+	public float getCentromereRelativePosition() {
+		return this.centromerePosition;
 	}
 
 	public int getChromosomeNumber() {
@@ -63,11 +79,14 @@ public class Chromosome {
 	public void tick(float dt) {
 		if (minimized) {
 			animationProgress = Math.max(0f, animationProgress - dt / GlobalVariables.chromosomeAnimationConstant);
-			if (animationProgress - 0.01f < 0) { animating = false; }
-		}
-		else {
+			if (animationProgress - 0.01f < 0) {
+				animating = false;
+			}
+		} else {
 			animationProgress = Math.min(1f, animationProgress + dt / GlobalVariables.chromosomeAnimationConstant);
-			if (animationProgress + 0.01f > 1) { animating = false; }
+			if (animationProgress + 0.01f > 1) {
+				animating = false;
+			}
 		}
 	}
 }
