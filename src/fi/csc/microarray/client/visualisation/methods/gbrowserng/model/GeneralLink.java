@@ -79,13 +79,13 @@ public class GeneralLink {
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
 		aXYPos = geneCircle.getXYPosition(aCirclePos);
 		// This magic constant is the same as in the circleseparators.
-		aXYPos.x *= 0.9495;
-		aXYPos.y *= 0.9495;
+		aXYPos.x *= 0.9485;
+		aXYPos.y *= 0.9485;
 		bXYPos = geneCircle.getXYPosition(bCirclePos);
-		bXYPos.x *= 0.9495;
-		bXYPos.y *= 0.9495;
+		bXYPos.x *= 0.9485;
+		bXYPos.y *= 0.9485;
 	}
-	
+
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
@@ -102,12 +102,12 @@ public class GeneralLink {
 
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
-		
+
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
 	}
-	
+
 	public static void endDrawing(GL2 gl) {
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);

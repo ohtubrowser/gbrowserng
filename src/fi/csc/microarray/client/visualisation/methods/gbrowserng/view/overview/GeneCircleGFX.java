@@ -10,8 +10,6 @@ import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.gl2.GLUgl2;
 import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
