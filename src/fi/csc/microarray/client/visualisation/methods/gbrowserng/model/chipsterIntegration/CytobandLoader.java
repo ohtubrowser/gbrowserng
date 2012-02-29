@@ -89,8 +89,13 @@ public class CytobandLoader implements AreaResultListener {
 			chromosomeLength = r.region.end.bp;
 		}
 		// This id system is stupid.
-		chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
-		requestsReady.addAndGet(1);
+		
+                 if (acenstart != null && acenend != null) {
+                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
+                } else {
+                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength));
+                }
+                requestsReady.addAndGet(1);
 	}
 
 	
