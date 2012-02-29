@@ -6,6 +6,7 @@ import com.jogamp.newt.event.NEWTEvent;
 import com.jogamp.newt.event.WindowEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -13,7 +14,7 @@ public class EventHandler {
 
 	private BlockingQueue<NEWTEvent> eventQueue = null;
 	private final GenoWindow window;
-	private GenoEvent genoEvent = new GenoEvent(800, 600);
+	private GenoEvent genoEvent;
 	private final GenosideComponent client;
 
 	public EventHandler(GenoWindow hostWindow, GenosideComponent client, BlockingQueue<NEWTEvent> eventQueue, int width, int height) {
@@ -25,10 +26,12 @@ public class EventHandler {
 
 	public void toggleFullscreen() {
 		this.window.toggleFullscreen();
+		//genoEvent.setScreenSize(GlobalVariables.width, GlobalVariables.height);
+		System.out.println("Screen size "+GlobalVariables.width+"x"+GlobalVariables.height);
 	}
         
 	public void resolution(int width, int height) {
-	    genoEvent.setScreenSize(width, height);
+		genoEvent.setScreenSize(width, height);
 	}
 
 	public void handleEvents() throws InterruptedException {
