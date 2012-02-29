@@ -88,6 +88,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
+	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
