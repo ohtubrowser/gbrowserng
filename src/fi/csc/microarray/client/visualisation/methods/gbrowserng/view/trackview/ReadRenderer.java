@@ -12,8 +12,10 @@ import gles.renderer.PrimitiveRenderer;
 import gles.renderer.TextRenderer;
 
 import java.util.ArrayList;
+import javax.media.opengl.GL2;
 
 import managers.TextureManager;
+import soulaim.DesktopGL2;
 
 public class ReadRenderer extends CascadingComponent implements VisualComponent {
 
@@ -82,13 +84,14 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 	}
 
 
-	public void draw(SoulGL2 gl) {
+	public void draw(GL2 gl) {
+		SoulGL2 soulgl = new DesktopGL2(gl);
 		float y = -0.2f;
 		for (int i = 0; i < this.reads.size(); ++i, y += 2.5f * this.session.halfSizeY) {
 			if( y - session.halfSizeY > 1.0f )
 				break;
 			Read read = this.reads.get(i);
-			drawRead(gl, y, read);
+			drawRead(soulgl, y, read);
 		}
 	}
 
