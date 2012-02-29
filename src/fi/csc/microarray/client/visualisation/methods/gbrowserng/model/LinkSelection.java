@@ -17,7 +17,6 @@ import soulaim.DesktopGL2;
 public class LinkSelection {
 
 	float begin, end, area;
-<<<<<<< HEAD
 	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
 	public final Object linkSelectionLock = new Object();
 	private int activeLinkIndex = 0;
