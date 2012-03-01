@@ -37,7 +37,8 @@ public class OverView extends GenosideComponent {
 
 	GeneCircle geneCircle = new GeneCircle();
 	GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
-	GenoFPSCounter fpsCounter = new GenoFPSCounter();
+	GenoFPSCounter tickCounter = new GenoFPSCounter();
+	GenoFPSCounter drawCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
@@ -418,10 +419,10 @@ public class OverView extends GenosideComponent {
 		int width = GlobalVariables.width, height = GlobalVariables.height;
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
-		String fps = "FPS: " + fpsCounter.getFps();
+		String fps = "Tick: " + tickCounter.getMillis() + "ms";
 		int stringHeight = (int) textRenderer.getBounds(fps).getHeight();
 		textRenderer.draw(fps, 20, height - stringHeight - 7);
-		String draw = "Draw: " + fpsCounter.getMillis() + "ms";
+		String draw = "Draw: " + drawCounter.getMillis() + "ms";
 		textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
 		String arcs = "Arcs: " + links.size();
 		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
@@ -503,7 +504,7 @@ public class OverView extends GenosideComponent {
 			thisChromo = geneCircle.getChromosome();
 		}
 		for (GeneralLink link : links) {
-			if (!link.getAChromosome().isMinimized() && !link.getBChromosome().isMinimized()) {
+			if (!link.isMinimized()) {
 				if (linkSelection.inSelection(link)) {
 					link.fadeIn(dt * 16);
 				} else if (!arcHighlightLocked
@@ -528,7 +529,6 @@ public class OverView extends GenosideComponent {
 		}
 		linkSelection.tick(dt, links);
 		geneCircleGFX.tick(dt);
-		fpsCounter.tick(dt);
 
 		fadeLinks(dt);
 
@@ -589,8 +589,12 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	public GenoFPSCounter getFpsCounter() {
-		return fpsCounter;
+	public GenoFPSCounter getDrawCounter() {
+		return drawCounter;
+	}
+
+	public GenoFPSCounter getTickCounter() {
+		return tickCounter;
 	}
 
 	private void updateCircleSize() {
