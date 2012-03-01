@@ -136,7 +136,7 @@ public class GeneralLink {
 
 	}
 
-	boolean isMinimized() {
+	public boolean isMinimized() {
 		return aChromosome.isMinimized() || bChromosome.isMinimized();
 	}
 

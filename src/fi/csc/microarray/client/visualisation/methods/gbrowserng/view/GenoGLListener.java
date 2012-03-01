@@ -27,7 +27,8 @@ import soulaim.DesktopTextureManager;
 
 public class GenoGLListener implements GLEventListener, Runnable {
 
-	private GenoSideTimer timer = new GenoSideTimer();
+	private GenoSideTimer drawTimer = new GenoSideTimer();
+	private GenoSideTimer tickTimer = new GenoSideTimer();
 	private OverView overView;
 
 	public GenoGLListener(OverView overView) {
@@ -37,8 +38,13 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	@Override
 	public void run() {
 		while (!overView.die) {
-			float dt = timer.getDT();
+			tickTimer.start();
+
+			float dt = tickTimer.getDT();
 			overView.tick(dt);
+
+			overView.getTickCounter().addNano(tickTimer.end());
+
 			try {
 				Thread.sleep(0, 10);
 			} catch (InterruptedException ex) {
@@ -48,14 +54,14 @@ public class GenoGLListener implements GLEventListener, Runnable {
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		timer.start();
+		drawTimer.start();
 
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
 		overView.draw(gl);
 
-		overView.getFpsCounter().addNano(timer.end());
+		overView.getDrawCounter().addNano(drawTimer.end());
 	}
 
 	public void dispose(GLAutoDrawable drawable) {
