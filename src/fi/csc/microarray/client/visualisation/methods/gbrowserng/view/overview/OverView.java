@@ -54,8 +54,12 @@ public class OverView extends GenosideComponent {
 	private SimpleMouseEvent lastMouseClick;
 	private LinkSelection linkSelection = new LinkSelection();
 
-	public OverView() {
+	public OverView(ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
+		this.links=links;
+		for(GeneralLink l : links) {
+			l.calculatePositions(geneCircle);
+		}
 		initTextRenderers();
 		initChromoNames();
 		geneCircle.setSize(0.485f);

@@ -1,6 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -15,8 +16,8 @@ public class ChipsterInterface {
 //            return new ConnectionsLoader(firstFile, secondFile).getConnections();
 //        }
 
-	public static ConcurrentLinkedQueue<long[]> getConnectionsBetweenChrs() {
-		return new ConnectionsLoader("ohtu-between-chrs.bam", "ohtu-between-chrs.bam.bai").getConnections();
+	public static ConcurrentLinkedQueue<GeneralLink> getConnections(ConcurrentLinkedQueue<Chromosome> chromosomes) {
+		return new ConnectionsLoader("ohtu-between-chrs.bam", "ohtu-between-chrs.bam.bai", chromosomes).getLinks();
 	}
 	
 }

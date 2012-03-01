@@ -120,9 +120,9 @@ public class GeneralLink {
 
 
 	public void draw(GL2 gl, float f, float f0, float f1) {
-		/*if (opacity <= 0.0f) {
+		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
-		}*/
+		}
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
 		SoulGL2 soulgl = new DesktopGL2(gl);

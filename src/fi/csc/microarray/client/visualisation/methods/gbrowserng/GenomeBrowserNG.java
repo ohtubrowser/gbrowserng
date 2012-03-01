@@ -7,6 +7,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyb
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
@@ -82,7 +83,7 @@ public class GenomeBrowserNG {
 
 	}
 
-	public static void useChipsterDataHuman() {
+	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataHuman() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -95,6 +96,7 @@ public class GenomeBrowserNG {
 		for (Chromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
+		return ChipsterInterface.getConnections(chromosomeData);
 	}
 
 
@@ -105,13 +107,15 @@ public class GenomeBrowserNG {
 		//useSmallData();
 		//useBigData();
 		//useChipsterData();
-		//useChipsterDataHuman();
-		useChipsterDataRat();
+		//useChipsterDataRat();
+		
+		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
+		if(links==null) System.out.println("BEEEP BEEEP");
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
 		this.genoWindow = new GenoWindow(width, height);
-		this.glListener = new GenoGLListener(new OverView());
+		this.glListener = new GenoGLListener(new OverView(links));
 		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue, width, height);
 		this.windowListener = new GenoWindowListener(eventQueue);
 

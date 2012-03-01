@@ -57,7 +57,7 @@ public class CytobandLoader implements AreaResultListener {
 		}
 		return chrs;
 	}
-	
+
 
 	private void requestData(Queue<AreaRequest> areaRequestQueue, String[] chromosomenames) {
 		// TODO: Does chipster offer a more efficient way of doing this?
@@ -74,42 +74,26 @@ public class CytobandLoader implements AreaResultListener {
 	public void processAreaResult(AreaResult areaResult) {
 		List<RegionContent> contents = areaResult.getContents();
 		long chromosomeLength = 0;
-		Long acenstart=null;
-		Long acenend=null;
+		Long acenstart = null;
+		Long acenend = null;
 
-		String name=null;
+		String name = null;
 
 		for (RegionContent r : contents) {
 			Cytoband cband = (Cytoband) r.values.get(ColumnType.VALUE);
-			if(name==null) name=new String(cband.getRegion().start.chr.toNormalisedString()); // Not sure about this
+			if (name == null)
+				name = new String(cband.getRegion().start.chr.toNormalisedString()); // Not sure about this
 			if (cband.getStain() == Cytoband.Stain.ACEN) {
-				if(acenstart==null) acenstart=r.region.start.bp;
-				else if(acenend==null) acenend=r.region.end.bp;
+				if (acenstart == null) acenstart = r.region.start.bp;
+				else if (acenend == null) acenend = r.region.end.bp;
 			}
 			chromosomeLength = r.region.end.bp;
 		}
-		// This id system is stupid.
-		
-                 if (acenstart != null && acenend != null) {
-                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
-                } else {
-                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength));
-                }
-                requestsReady.addAndGet(1);
-	}
-
-	
-	public static void main(String[] args) {
-		String karyotype = "karyotypeHuman.txt";
-		String seq = "seq_regionHuman.txt";
-		String[] chromosomes = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-				"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"};
-		CytobandLoader loader = new CytobandLoader(karyotype, seq, chromosomes);
-		for(Chromosome c : loader.getChromosomes())
-		{
-			
-			System.out.println(c.length());
+		if (acenstart != null && acenend != null) {
+			chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart + acenend) / 2));
+		} else {
+			chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength));
 		}
+		requestsReady.addAndGet(1);
 	}
-	
 }
