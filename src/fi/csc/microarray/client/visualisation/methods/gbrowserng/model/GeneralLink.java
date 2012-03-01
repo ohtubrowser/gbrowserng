@@ -140,11 +140,11 @@ public class GeneralLink {
 		return aChromosome.isMinimized() || bChromosome.isMinimized();
 	}
 
-	Chromosome getAChromosome() {
+	public Chromosome getAChromosome() {
 		return aChromosome;
 	}
 
-	Chromosome getBChromosome() {
+	public Chromosome getBChromosome() {
 		return bChromosome;
 	}
 

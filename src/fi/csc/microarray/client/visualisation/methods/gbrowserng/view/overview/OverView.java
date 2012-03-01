@@ -498,23 +498,16 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void fadeLinks(float dt) {
-		int thischromonumber;
-		float[] chromobounds;
-		float thischromostart;
-		float thischromoend;
+		Chromosome thisChromo;
 		synchronized (geneCircle.tickdrawLock) {
-			thischromonumber = geneCircle.getChromosome().getChromosomeNumber();
-			chromobounds = geneCircle.getChromosomeBoundaries();
-			thischromostart = chromobounds[thischromonumber - 1];
-			thischromoend = chromobounds[(thischromonumber) % chromobounds.length];
+			thisChromo = geneCircle.getChromosome();
 		}
 		for (GeneralLink link : links) {
-			if (!geneCircle.getChromosomeByRelativePosition(link.getStartPos()).isMinimized() && !geneCircle.getChromosomeByRelativePosition(link.getEndPos()).isMinimized()) {
+			if (!link.getAChromosome().isMinimized() && !link.getBChromosome().isMinimized()) {
 				if (linkSelection.inSelection(link)) {
 					link.fadeIn(dt * 16);
 				} else if (!arcHighlightLocked
-						&& (((link.getStartPos() <= thischromostart) && (link.getStartPos() > thischromoend))
-						|| ((link.getEndPos() <= thischromostart) && (link.getEndPos() > thischromoend)))) {
+						&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
 					link.fadeDim(dt * 8);
 				} else {
 					link.fadeOut(dt * 8);
