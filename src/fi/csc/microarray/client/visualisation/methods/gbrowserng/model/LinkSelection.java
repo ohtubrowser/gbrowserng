@@ -130,6 +130,12 @@ public class LinkSelection {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 					activeLinkIndex--;
 				}
+				if (activeLinkIndex >= activeSelection.size()) {
+					activeLinkIndex -= activeSelection.size();
+				}
+				if (activeLinkIndex < 0) {
+					activeLinkIndex += activeSelection.size();
+				}
 				if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
 					GeneralLink l = activeSelection.get(activeLinkIndex);
 					Chromosome a = l.getAChromosome();
@@ -138,12 +144,7 @@ public class LinkSelection {
 					System.out.println("Start:\n Chromosome: " + a.getName() + " Position: " + l.getaStart());
 					System.out.println("End:\n Chromosome: " + b.getName() + " Position: " + l.getbStart());
 				}
-				if (activeLinkIndex >= activeSelection.size()) {
-					activeLinkIndex -= activeSelection.size();
-				}
-				if (activeLinkIndex < 0) {
-					activeLinkIndex += activeSelection.size();
-				}
+				System.out.println(activeLinkIndex);
 			}
 		}
 	}

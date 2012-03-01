@@ -38,7 +38,16 @@ public class ConnectionsLoader implements AreaResultListener {
 		SAMDataSource file = null;
 		this.requestsReady = new AtomicInteger(0);
 		try {
-			file = new SAMDataSource(new File(bam), new File(bai));
+			File bamfile = new File(bam), baifile = new File(bai);
+			if(!bamfile.canRead()) {
+				System.err.println("Cannot read BAM file " + bam + " !");
+				System.exit(2);
+			}
+			if(!baifile.canRead()) {
+				System.err.println("Cannot read BAI file " + bai + " !");
+				System.exit(2);
+			}
+			file = new SAMDataSource(bamfile, baifile);
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
