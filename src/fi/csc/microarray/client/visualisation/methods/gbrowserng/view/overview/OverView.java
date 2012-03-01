@@ -509,7 +509,7 @@ public class OverView extends GenosideComponent {
 			thischromoend = chromobounds[(thischromonumber) % chromobounds.length];
 		}
 		for (GeneralLink link : links) {
-			if (!geneCircle.getChromosomeByRelativePosition(link.getStartPos()).isMinimized() && !geneCircle.getChromosomeByRelativePosition(link.getEndPos()).isMinimized()) {
+			if (!link.getAChromosome().isMinimized() && !link.getBChromosome().isMinimized()) {
 				if (linkSelection.inSelection(link)) {
 					link.fadeIn(dt * 16);
 				} else if (!arcHighlightLocked
