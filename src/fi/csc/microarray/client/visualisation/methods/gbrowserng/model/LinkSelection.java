@@ -17,6 +17,7 @@ import soulaim.DesktopGL2;
 public class LinkSelection {
 
 	float begin, end, area;
+	private boolean upKeyDown = false, downKeyDown = false;
 	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
 	public final Object linkSelectionLock = new Object();
 	private int activeLinkIndex = 0;
@@ -145,15 +146,24 @@ public class LinkSelection {
 					activeLinkIndex += activeSelection.size();
 				}
 			}
+			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
+			    upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			} 
+			if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) { 
+			    downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			}
 		}
 	}
 
 	public void deactivate() {
+		upKeyDown = downKeyDown = false;
 		resetArea();
 		reset();
 	}
 
 	public void tick(float dt, ConcurrentLinkedQueue<GeneralLink> links) {
+	    if(upKeyDown) updateArea(-0.01f*dt, links); 
+	    if(downKeyDown) updateArea(0.01f*dt, links);
 	}
 
 	public void move(float value, ConcurrentLinkedQueue<GeneralLink> links) {
