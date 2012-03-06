@@ -65,7 +65,7 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new Chromosome(23, 155000000));
 	}
 
-	public static void useChipsterDataRat() {
+	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 //				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
@@ -80,7 +80,7 @@ public class GenomeBrowserNG {
 		for (Chromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
-
+                return ChipsterInterface.getConnections(chromosomeData);
 	}
 
 	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataHuman() {
@@ -109,7 +109,7 @@ public class GenomeBrowserNG {
 		//useChipsterData();
 		//useChipsterDataRat();
 		
-		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
+		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataRat();
 		if(links==null) System.out.println("BEEEP BEEEP");
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
