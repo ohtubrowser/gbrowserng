@@ -349,36 +349,7 @@ public class OverView extends GenosideComponent {
 		} else if (KeyEvent.VK_A == event.getKeyCode()) {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			
-/*			
-			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getConnectionsBetweenChrs();
-
-
-			GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
-			newlink.calculatePositions(geneCircle);
-			links.add(newlink);
-
-			}
-
-			for (long[] table : queue) {
-				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
-
-			}
-			System.out.println(links.size());
-			System.out.println("finished");
-			 */
-			Random r = new Random();
-			for (int i = 0; i < 1000; ++i) {
-				Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
-			}
-		}
+		} 
 		return false;
 	}
 
