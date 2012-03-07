@@ -43,7 +43,8 @@ public class OverView extends GenosideComponent {
     public TextRenderer textRenderer;
     private LinkSelection linkSelection = new LinkSelection();
     private MouseEventHandler mouseHandler;
-
+	private float[][] linkColors;
+	
     public OverView(ConcurrentLinkedQueue<GeneralLink> links) {
         super(null);
         this.links = links;
@@ -55,7 +56,35 @@ public class OverView extends GenosideComponent {
         geneCircle.setSize(0.485f);
         updateCircleSize();
         mouseHandler = new MouseEventHandler(this);
+		initLinkColors();
     }
+	
+	private void initLinkColors() {
+		int[] startColor = {92, 92, 92};
+		int[] endColor = {255, 0, 0};
+		this.linkColors = new float[10][3];
+		float gradients = 10;
+		
+		int[] difference = {endColor[0] - startColor[0], endColor[1]-startColor[1], endColor[2] - startColor[2]};
+		
+		System.out.println("red " + difference[0] + " green " + difference[1] + " blue " + difference[2]);
+		for (int i = 0; i < gradients; i++) {
+			float red = difference[0] * (i/(gradients-1));
+			float green = difference[1] * (i/(gradients-1));
+			float blue = difference[2] * (i/(gradients-1));
+//			red = startColor[0] + Math.abs(red);
+//			green = startColor[1] + Math.abs(green);
+//			blue = startColor[2] + Math.abs(blue);
+			
+			red = startColor[0] + red;
+			green = startColor[1] + green;
+			blue = startColor[2] + blue;
+			
+			float[] table = {red, green, blue};
+			this.linkColors[i] = table;
+			System.out.println("red: " + table[0] + ", green: " + table[1]  + ", blue: " +  table[2]);
+		}
+	}
 
     private void initTextRenderers() {
         Font font;
@@ -207,7 +236,9 @@ public class OverView extends GenosideComponent {
             linkSelection.draw(gl);
         } else {
             for (GeneralLink link : links) {
-                link.draw(gl, 1.0f, 0.0f, 0.0f);
+				int random = (int) (Math.random() * this.linkColors.length);
+				float[] colors = this.linkColors[random];
+                link.draw(gl, colors[0]/255, colors[1]/255, colors[2]/255);
             }
         }
         GeneralLink.endDrawing(gl);

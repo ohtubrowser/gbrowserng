@@ -75,12 +75,12 @@ public class GenomeBrowserNG {
 
 		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (Chromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
-                return ChipsterInterface.getConnections(chromosomeData);
+		return ChipsterInterface.getConnections(chromosomeData);
 	}
 
 	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataHuman() {
@@ -92,14 +92,12 @@ public class GenomeBrowserNG {
 //               
 		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (Chromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
 		return ChipsterInterface.getConnections(chromosomeData);
 	}
-
-
 
 	public GenomeBrowserNG(int width, int height) {
 
@@ -108,9 +106,11 @@ public class GenomeBrowserNG {
 		//useBigData();
 		//useChipsterData();
 		//useChipsterDataRat();
-		
+
 		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataRat();
-		if(links==null) System.out.println("BEEEP BEEEP");
+		if (links == null) {
+			System.out.println("BEEEP BEEEP");
+		}
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
