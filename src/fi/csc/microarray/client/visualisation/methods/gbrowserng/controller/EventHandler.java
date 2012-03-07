@@ -39,7 +39,7 @@ public class EventHandler {
 		for (;;) {
 			NEWTEvent event = this.eventQueue.take();
 			genoEvent.event = event;
-
+			System.out.println(event);
 			if (event instanceof KeyEvent) {
 				KeyEvent keyEvent = (KeyEvent) event;
 				if (keyEvent.getKeyChar() == KeyEvent.VK_ESCAPE) {
@@ -55,7 +55,7 @@ public class EventHandler {
 				if (event.getEventType() == WindowEvent.EVENT_WINDOW_RESIZED) {
 					genoEvent.setScreenSize(window.window.getWidth(), window.window.getHeight());
 				} 
-				else if(event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED)
+				else if(event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED || event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROY_NOTIFY)
 					return;
 			}
 		}
