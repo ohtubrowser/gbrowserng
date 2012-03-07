@@ -55,15 +55,6 @@
     </orderEntry>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
-      <library name="soulaim-tech.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/ext/lib/soulaim-tech.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="gbrowser_chipster.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/ext/lib/gbrowser_chipster.jar!/" />
@@ -73,6 +64,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="sam-1.32" level="project" />
+    <orderEntry type="library" name="soulaimtech" level="project" />
   </component>
 </module>
 

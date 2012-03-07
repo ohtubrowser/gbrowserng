@@ -1,7 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import math.Vector2;
 
 public abstract class CascadingComponent {
 

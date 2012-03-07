@@ -20,10 +20,10 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import managers.AssetManager;
-import managers.TextureManager;
+import com.soulaim.tech.managers.TextureManager;
 import soulaim.DesktopAssetManager;
 import soulaim.DesktopGL2;
-import soulaim.DesktopTextureManager;
+import com.soulaim.desktop.DesktopTextureManager;
 
 public class GenoGLListener implements GLEventListener, Runnable {
 
