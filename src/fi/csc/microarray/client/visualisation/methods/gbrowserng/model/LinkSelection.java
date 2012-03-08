@@ -207,7 +207,7 @@ public class LinkSelection {
 		synchronized (linkSelectionLock) {
 			for (int i = 0; i < activeSelection.size(); ++i) {
 				if (i != activeLinkIndex) {
-					activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+					activeSelection.get(i).draw(gl);
 				}
 			}
 			if (activeSelection.size() > activeLinkIndex) {

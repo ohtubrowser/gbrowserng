@@ -21,17 +21,35 @@ public class GeneralLink {
 	float aCirclePos, bCirclePos;
 	private Vector2 aXYPos, bXYPos;
 	private float opacity;
+	private float[] linkColor;
+//
+//	public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
+//		this.aChromosome = new Chromosome((int) readChr, readChrLength);
+//		this.bChromosome = new Chromosome((int) mateChr, mateChrLength);
+//		this.aStart = aStart;
+//		this.bStart = bStart;
+//		this.aStart = aEnd;
+//		this.bStart = bEnd;
+//		this.opacity = 1.0f;
+//		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+//		initLinkColor();
+//
+//	}
 
-    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new Chromosome((int) readChr, readChrLength);
-                this.bChromosome = new Chromosome((int) mateChr, mateChrLength);
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
-		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
-    }
+	private void initLinkColor() {
+		int[] startColor = {92, 92,92};
+		int[] endColor = {255, 0, 0};
+		float gradients = 1000;
+
+		int[] difference = {endColor[0] - startColor[0], endColor[1] - startColor[1], endColor[2] - startColor[2]};
+
+		int i = (int) (Math.random() * gradients);
+		float red = startColor[0] + (difference[0] * (i / (gradients - 1)));
+		float green = startColor[1] + (difference[1] * (i / (gradients - 1)));
+		float blue = startColor[2] + (difference[2] * (i / (gradients - 1)));
+		float[] table = {red/255, green/255, blue/255};
+		this.linkColor = table;
+	}
 
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
@@ -71,6 +89,7 @@ public class GeneralLink {
 		this.bStart = bEnd;
 		this.opacity = 1.0f;
 		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+		initLinkColor();
 	}
 
 	public void calculatePositions(GeneCircle geneCircle) {
@@ -84,7 +103,7 @@ public class GeneralLink {
 		bXYPos.x *= 0.9495;
 		bXYPos.y *= 0.9495;
 	}
-	
+
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
@@ -101,12 +120,12 @@ public class GeneralLink {
 
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
-		
+
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
-	
+
 	public static void endDrawing(GL2 gl) {
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
@@ -117,7 +136,6 @@ public class GeneralLink {
 		SoulGL2 soulgl = new DesktopGL2(gl);
 		shader.stop(soulgl);
 	}
-
 
 	public void draw(GL2 gl, float f, float f0, float f1) {
 		if (opacity <= 0.0f) {
@@ -132,7 +150,7 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
 
 	}
 
@@ -156,4 +174,20 @@ public class GeneralLink {
 		return bStart;
 	}
 
+	public void draw(GL2 gl) {
+		if (opacity <= 0.0f) {
+			return; // No need to call shader on invisible links.
+		}
+		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+
+		SoulGL2 soulgl = new DesktopGL2(gl);
+
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec3(soulgl, shader, "color", this.linkColor[0], this.linkColor[1], this.linkColor[2]);
+
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
+
+	}
 }
