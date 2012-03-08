@@ -37,11 +37,9 @@ public class OverView extends GenosideComponent {
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false, arcHighlightLocked = false;
 	private OverViewState state = OverViewState.OVERVIEW_ACTIVE;
-	public TextRenderer chromosomeNameRenderer;
-	public TextRenderer textRenderer;
+	public TextRenderer chromosomeNameRenderer, textRenderer;
 	private LinkSelection linkSelection = new LinkSelection();
 	private MouseEventHandler mouseHandler;
-	private float[][] linkColors;
 
 	public OverView(ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
@@ -54,35 +52,8 @@ public class OverView extends GenosideComponent {
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 		mouseHandler = new MouseEventHandler(this);
-//		initLinkColors();
 	}
 
-//	private void initLinkColors() {
-//		int[] startColor = {92, 92, 92};
-//		int[] endColor = {255, 0, 0};
-//		this.linkColors = new float[10][3];
-//		float gradients = 10;
-//		
-//		int[] difference = {endColor[0] - startColor[0], endColor[1]-startColor[1], endColor[2] - startColor[2]};
-//		
-//		System.out.println("red " + difference[0] + " green " + difference[1] + " blue " + difference[2]);
-//		for (int i = 0; i < gradients; i++) {
-//			float red = difference[0] * (i/(gradients-1));
-//			float green = difference[1] * (i/(gradients-1));
-//			float blue = difference[2] * (i/(gradients-1));
-////			red = startColor[0] + Math.abs(red);
-////			green = startColor[1] + Math.abs(green);
-////			blue = startColor[2] + Math.abs(blue);
-//			
-//			red = startColor[0] + red;
-//			green = startColor[1] + green;
-//			blue = startColor[2] + blue;
-//			
-//			float[] table = {red, green, blue};
-//			this.linkColors[i] = table;
-//			System.out.println("red: " + table[0] + ", green: " + table[1]  + ", blue: " +  table[2]);
-//		}
-//	}
 	private void initTextRenderers() {
 		Font font;
 		float fontSize = 40f;
@@ -222,24 +193,14 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public void draw(GL2 gl) {
-		Vector2 mypos = this.getPosition();
-		Matrix4 geneCircleModelMatrix = new Matrix4();
-		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
-		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
-		GeneralLink.beginDrawing(gl, geneCircle.getSize());
-		if (arcHighlightLocked) {
-			linkSelection.draw(gl);
-		} else {
-			for (GeneralLink link : links) {
-				link.draw(gl);
-			}
-		}
-		GeneralLink.endDrawing(gl);
-		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if (arcHighlightLocked) {
-			linkSelection.draw(gl, geneCircle);
-		}
-
+		
+		drawLinks(gl);
+		drawCapsules(gl);
+		int textValues[] = renderText();
+		renderChromosomeNames(textValues[0], textValues[1]);
+	}
+	
+	private void drawCapsules(GL2 gl) {
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
 				capsule.drawToTexture(gl);
@@ -260,7 +221,27 @@ public class OverView extends GenosideComponent {
 		}
 		
 		int textValues[] = renderText();
-		renderChromosomeNames(textValues[0], textValues[1]);
+	}
+	
+	private void drawLinks(GL2 gl) {
+		Vector2 mypos = this.getPosition();
+		Matrix4 geneCircleModelMatrix = new Matrix4();
+		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
+		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
+		
+		GeneralLink.beginDrawing(gl, geneCircle.getSize());
+		if (arcHighlightLocked) {
+			linkSelection.draw(gl);
+		} else {
+			for (GeneralLink link : links) {
+				link.draw(gl);
+			}
+		}
+		GeneralLink.endDrawing(gl);
+		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
+		if (arcHighlightLocked) {
+			linkSelection.draw(gl, geneCircle);
+		}
 	}
 
 	private void renderChromosomeNames(int width, int height) {

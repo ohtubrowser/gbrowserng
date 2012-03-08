@@ -39,15 +39,15 @@ public class GeneralLink {
 	private void initLinkColor() {
 		int[] startColor = {92, 92,92};
 		int[] endColor = {255, 0, 0};
-		float gradients = 1000;
 
 		int[] difference = {endColor[0] - startColor[0], endColor[1] - startColor[1], endColor[2] - startColor[2]};
-
-		int i = (int) (Math.random() * gradients);
-		float red = startColor[0] + (difference[0] * (i / (gradients - 1)));
-		float green = startColor[1] + (difference[1] * (i / (gradients - 1)));
-		float blue = startColor[2] + (difference[2] * (i / (gradients - 1)));
+		float i = (float) Math.random();
+		
+		float red = startColor[0] + (difference[0] * (i));
+		float green = startColor[1] + (difference[1] * (i));
+		float blue = startColor[2] + (difference[2] * (i));
 		float[] table = {red/255, green/255, blue/255};
+		
 		this.linkColor = table;
 	}
 
