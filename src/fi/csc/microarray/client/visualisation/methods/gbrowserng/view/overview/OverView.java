@@ -237,14 +237,14 @@ public class OverView extends GenosideComponent {
 		// then see if they actually want the event
 		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
 			if (event.getButton() == 1) {
-				for (SessionViewCapsule capsule : sessions) {
-					if (capsule.isDying()) {
-						continue;
-					}
-					if (capsule.handle(event, x, y)) {
-						openSession(capsule);
-						return true;
-					}
+			   for (SessionViewCapsule capsule : sessions) {
+				   if (capsule.isDying()) {
+					   continue;
+				   }
+				   if (capsule.handle(event, x, y)) {
+					   openSession(capsule);
+					   return true;
+				   }
 				}
 				if (pointOnCircle(x, y)) //				 respond to mouse click
 				{
@@ -256,6 +256,8 @@ public class OverView extends GenosideComponent {
 						arcHighlightLocked = false;
 						linkSelection.deactivate();
 					} else {
+						/* TODO: Disabled because primitiverenderers and texturemanager are not done yet. */
+						/*
 						System.out.println("Adding capsule with " + x + " " + y);
 
 						SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
@@ -267,6 +269,7 @@ public class OverView extends GenosideComponent {
 							textureUpdateList.add(capsule);
 							capsule.setNeedsTextureUpdate();
 						}
+						*/
 					}
 				}
 			} else if (event.getButton() == 3) {
