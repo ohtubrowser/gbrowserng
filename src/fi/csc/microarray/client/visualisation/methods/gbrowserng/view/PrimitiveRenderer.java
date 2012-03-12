@@ -1,10 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.gles.shaders.DefaultShaders;
 import com.soulaim.tech.gles.shaders.Shader;
-import com.soulaim.tech.gles.shaders.ShaderMemory;
-import com.soulaim.tech.managers.ShaderManager;
 import com.soulaim.tech.math.Matrix4;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
@@ -13,6 +10,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTe
 
 import javax.media.opengl.GL2;
 
+// TODO: This is NOT ready
 public class PrimitiveRenderer {
 	private static Matrix4 modelMatrix = new Matrix4();
 	private static Matrix4 modelviewProjectionMatrix = new Matrix4();

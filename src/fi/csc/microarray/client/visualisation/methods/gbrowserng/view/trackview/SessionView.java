@@ -6,7 +6,6 @@ import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
-import com.soulaim.tech.managers.TextureManager;
 import com.soulaim.tech.math.Matrix4;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
