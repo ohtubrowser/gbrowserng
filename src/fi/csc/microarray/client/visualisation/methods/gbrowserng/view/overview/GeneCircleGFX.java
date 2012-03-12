@@ -1,20 +1,16 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import com.soulaim.tech.gles.SoulGL2;
+import com.soulaim.tech.gles.shaders.Shader;
+import com.soulaim.tech.gles.shaders.ShaderMemory;
+import com.soulaim.tech.math.Matrix4;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
-import gles.SoulGL2;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
 import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.gl2.GLUgl2;
-import managers.ShaderManager;
-import math.Matrix4;
-import math.Vector2;
-import soulaim.DesktopGL2;
 
 public class GeneCircleGFX {
 
@@ -30,16 +26,15 @@ public class GeneCircleGFX {
 
 	public void draw(GL2 gl, Matrix4 modelMatrix, Vector2 mousePosition) {
 		gl.glEnable(GL2.GL_BLEND);
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.GENE_CIRCLE);
-		shader.start(soulgl);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.GENE_CIRCLE);
+		shader.start(gl);
 
 		mousePos.copyFrom(mousePosition);
 		mousePos.normalize();
 
-		ShaderMemory.setUniformVec1(soulgl, shader, "thickness", 0.1f);
-		ShaderMemory.setUniformVec2(soulgl, shader, "mouse", mousePos.x, mousePos.y);
-		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
+		ShaderMemory.setUniformVec1(gl, shader, "thickness", 0.1f);
+		ShaderMemory.setUniformVec2(gl, shader, "mouse", mousePos.x, mousePos.y);
+		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.circleID);
 		gl.glEnableVertexAttribArray(0);
@@ -47,21 +42,19 @@ public class GeneCircleGFX {
 		gl.glDrawArrays(GL2.GL_TRIANGLE_FAN, 0, OpenGLBuffers.circlePoints + 2);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
-		shader.stop(soulgl);
+		shader.stop(gl);
 
 		drawChromosomeSeparators(gl);
 		drawCentromeres(gl);
 	}
 
 	public void drawChromosomeSeparators(GL2 gl) {
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CIRCLESEPARATOR);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.CIRCLESEPARATOR);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-
-		shader.start(soulgl);
+		shader.start(gl);
 		Matrix4 identityMatrix = new Matrix4();
-		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
 		float length = geneCircle.getSize() * 0.0505f;
 		float width = geneCircle.getSize() * 0.015f;
@@ -96,25 +89,23 @@ public class GeneCircleGFX {
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
 			modelMatrix.scale(width, length, 0.2f);
 
-			ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
+			ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 			gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 		}
 		gl.glDisableVertexAttribArray(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 
-		shader.stop(soulgl);
+		shader.stop(gl);
 	}
 
 	public void drawCentromeres(GL2 gl) {
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.CENTROMERE);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.CENTROMERE);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-
-		shader.start(soulgl);
+		shader.start(gl);
 		Matrix4 identityMatrix = new Matrix4();
-		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 		Matrix4 modelMatrix = new Matrix4();
 		gl.glLineWidth(2.0f);
 
@@ -128,11 +119,11 @@ public class GeneCircleGFX {
 				modelMatrix.translate(geneCircle.getSize() * 0.95f, 0.0f, 0);
 				modelMatrix.scale(geneCircle.getSize() * 0.05f, geneCircle.getSize() * 0.02f, 1.0f);
 
-				ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
+				ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 				gl.glDrawArrays(GL2.GL_LINES, 0, 4);
 			}
 		}
-		shader.stop(soulgl);
+		shader.stop(gl);
 		gl.glDisableVertexAttribArray(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(SoulGL2.GL_BLEND);

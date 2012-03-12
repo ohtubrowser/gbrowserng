@@ -1,15 +1,12 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.soulaim.tech.gles.shaders.Shader;
+import com.soulaim.tech.gles.shaders.ShaderMemory;
+import com.soulaim.tech.math.Matrix4;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import gles.SoulGL2;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
 import javax.media.opengl.GL2;
-import managers.ShaderManager;
-import math.Matrix4;
-import math.Vector2;
-import soulaim.DesktopGL2;
 
 public class GeneralLink {
 
@@ -30,7 +27,7 @@ public class GeneralLink {
 		this.aStart = aEnd;
 		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+		drawMethod = GL2.GL_TRIANGLE_STRIP;
     }
 
 	public void fadeIn(float fadespeed) {
@@ -70,7 +67,7 @@ public class GeneralLink {
 		this.aStart = aEnd;
 		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+		drawMethod = GL2.GL_TRIANGLE_STRIP;
 	}
 
 	public void calculatePositions(GeneCircle geneCircle) {
@@ -86,21 +83,20 @@ public class GeneralLink {
 	}
 	
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		shader.start(soulgl);
+		shader.start(gl);
 
 		Matrix4 identityMatrix = new Matrix4();
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint2", 0.0f, 0.0f);
-		ShaderMemory.setUniformVec1(soulgl, shader, "width", 0.005f * zoomLevel);
-		ShaderMemory.setUniformVec1(soulgl, shader, "tstep", OpenGLBuffers.bezierStep);
-		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint2", 0.0f, 0.0f);
+		ShaderMemory.setUniformVec1(gl, shader, "width", 0.005f * zoomLevel);
+		ShaderMemory.setUniformVec1(gl, shader, "tstep", OpenGLBuffers.bezierStep);
+		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", identityMatrix);
 
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
-		gl.glEnable(SoulGL2.GL_BLEND);
+		gl.glEnable(GL2.GL_BLEND);
 		
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
@@ -112,10 +108,9 @@ public class GeneralLink {
 		gl.glDisableVertexAttribArray(0);
 
 		gl.glEnable(gl.GL_CULL_FACE);
-		gl.glDisable(SoulGL2.GL_BLEND);
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		shader.stop(soulgl);
+		gl.glDisable(GL2.GL_BLEND);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
+		shader.stop(gl);
 	}
 
 
@@ -123,14 +118,12 @@ public class GeneralLink {
 		/*if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
 		}*/
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
-		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
-		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec3(gl, shader, "color", f, f0, f1);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
 

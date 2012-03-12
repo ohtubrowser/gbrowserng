@@ -1,7 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
-import math.Vector2;
 
 public class ChromoName {
 	private Chromosome chromosome;

@@ -1,15 +1,9 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
-import managers.TextureManager;
-
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
-import gles.Color;
-import gles.renderer.PrimitiveRenderer;
-import gles.renderer.TextRenderer;
 import javax.media.opengl.GL2;
 
 public class CoordinateRenderer extends GenosideComponent {

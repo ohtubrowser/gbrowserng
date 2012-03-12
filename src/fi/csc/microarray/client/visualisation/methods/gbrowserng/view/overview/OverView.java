@@ -10,28 +10,20 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
-import gles.SoulGL2;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import math.Matrix4;
-import math.Vector2;
+import com.soulaim.tech.math.Matrix4;
+import com.soulaim.tech.math.Vector2;
 
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
-import managers.ShaderManager;
-import soulaim.DesktopGL2;
 
 public class OverView extends GenosideComponent {
 

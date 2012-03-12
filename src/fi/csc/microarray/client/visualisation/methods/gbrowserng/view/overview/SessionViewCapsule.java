@@ -2,17 +2,14 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import com.soulaim.tech.gles.Color;
+import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
-import gles.Color;
-import gles.SoulGL2;
-import gles.renderer.PrimitiveRenderer;
 import javax.media.opengl.GL2;
-import math.Vector2;
-import soulaim.DesktopGL2;
 
 public class SessionViewCapsule extends GenosideComponent {
 
@@ -134,14 +131,13 @@ public class SessionViewCapsule extends GenosideComponent {
 		float alpha = this.getAnimatedValues().getAnimatedValue("ALPHA");
 
 		if (alpha > 0) {
-			gl.glEnable(SoulGL2.GL_BLEND);
+			gl.glEnable(GL2.GL_BLEND);
 			this.backGroundColor.r = v;
 			this.backGroundColor.g = v;
 			this.backGroundColor.b = v;
 			this.backGroundColor.a = alpha * (1.0f - death);
-			SoulGL2 soulgl = new DesktopGL2(gl);
-			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, soulgl, backGroundColor);
-			gl.glDisable(SoulGL2.GL_BLEND);
+			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
+			gl.glDisable(GL2.GL_BLEND);
 		}
 		sessionView.setActive(isActive);
 		sessionView.draw(gl);

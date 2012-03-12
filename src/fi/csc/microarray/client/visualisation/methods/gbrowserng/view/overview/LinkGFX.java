@@ -1,17 +1,13 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import com.soulaim.tech.gles.shaders.Shader;
+import com.soulaim.tech.gles.shaders.ShaderMemory;
+import com.soulaim.tech.math.Matrix4;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import gles.SoulGL2;
-import gles.primitives.PrimitiveBuffers;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
 import javax.media.opengl.GL2;
-import managers.ShaderManager;
-import math.Matrix4;
-import soulaim.DesktopGL2;
 
 public class LinkGFX {
 
@@ -37,17 +33,15 @@ public class LinkGFX {
 		if(alpha < 0)
 			return;
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		
-		gl.glEnable(SoulGL2.GL_BLEND);
+		gl.glEnable(GL2.GL_BLEND);
 
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.TORRENT);
-		shader.start(soulgl);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TORRENT);
+		shader.start(gl);
 
-		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", alpha);
-		ShaderMemory.setUniformVec1(soulgl, shader, "lifetime", time * velocity);
-		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
-		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
+		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", alpha);
+		ShaderMemory.setUniformVec1(gl, shader, "lifetime", time * velocity);
+		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 
 		float x = (component1.getPosition().x + component2.getPosition().x) / 2.0f;
 		float y = (component1.getPosition().y + component2.getPosition().y) / 2.0f;
@@ -62,7 +56,7 @@ public class LinkGFX {
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(0.01f, length, 0.2f);
 
-		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", modelMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "modelMatrix", modelMatrix);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
 		gl.glEnableVertexAttribArray(0);
@@ -73,9 +67,9 @@ public class LinkGFX {
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
 		
-		shader.stop(soulgl);
+		shader.stop(gl);
 
-		gl.glDisable(SoulGL2.GL_BLEND);
+		gl.glDisable(GL2.GL_BLEND);
 	}
 
 

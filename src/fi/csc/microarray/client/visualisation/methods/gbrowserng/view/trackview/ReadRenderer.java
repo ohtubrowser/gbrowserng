@@ -1,21 +1,18 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
+import com.soulaim.tech.gles.Color;
+import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
+import com.soulaim.tech.gles.renderer.TextRenderer;
+import com.soulaim.tech.managers.TextureManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Read;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.VisualComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
-import gles.Color;
-import gles.SoulGL2;
-import gles.renderer.PrimitiveRenderer;
-import gles.renderer.TextRenderer;
 
 import java.util.ArrayList;
 import javax.media.opengl.GL2;
-
-import managers.TextureManager;
-import soulaim.DesktopGL2;
 
 public class ReadRenderer extends CascadingComponent implements VisualComponent {
 
@@ -29,7 +26,7 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 		this.reads = reads;
 	}
 
-	private void drawRead(SoulGL2 gl, float y, Read read) {
+	private void drawRead(GL2 gl, float y, Read read) {
 		int intPosition = (int) smoothPosition;
 		float offsetPosition = smoothPosition - intPosition;
 
@@ -51,7 +48,7 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 					glxSize(this.session.halfSizeX * session.payloadSize),
 					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
-				TextureManager.bindTexture(gl, GenoTexID.FONT);
+				//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
 						glx(x), gly(y), glySize(20 * this.session.halfSizeY));
 			}
@@ -76,7 +73,7 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 					glxSize(this.session.halfSizeX * session.payloadSize),
 					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
-				TextureManager.bindTexture(gl, GenoTexID.FONT);
+				//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
 				TextRenderer.getInstance().drawText(gl, Character.toString(c),
 						glx(x), gly(y), glySize(20 * this.session.halfSizeY));
 			}
@@ -85,13 +82,12 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 
 
 	public void draw(GL2 gl) {
-		SoulGL2 soulgl = new DesktopGL2(gl);
 		float y = -0.2f;
 		for (int i = 0; i < this.reads.size(); ++i, y += 2.5f * this.session.halfSizeY) {
 			if( y - session.halfSizeY > 1.0f )
 				break;
 			Read read = this.reads.get(i);
-			drawRead(soulgl, y, read);
+			drawRead(gl, y, read);
 		}
 	}
 

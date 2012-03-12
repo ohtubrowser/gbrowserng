@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
-import gles.Color;
+import com.soulaim.tech.gles.Color;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

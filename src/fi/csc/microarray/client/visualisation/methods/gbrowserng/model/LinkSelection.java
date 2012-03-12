@@ -1,18 +1,15 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
+import com.soulaim.tech.gles.shaders.Shader;
+import com.soulaim.tech.gles.shaders.ShaderMemory;
+import com.soulaim.tech.math.Matrix4;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import gles.SoulGL2;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
-import managers.ShaderManager;
-import math.Matrix4;
-import soulaim.DesktopGL2;
 
 public class LinkSelection {
 
@@ -73,13 +70,11 @@ public class LinkSelection {
 
 	public void draw(GL2 gl, GeneCircle geneCircle) {
 		// TODO : remove magic numbers
-		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.PLAINMVP);
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.PLAINMVP);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
+		shader.start(gl);
 
-		shader.start(soulgl);
-
-		ShaderMemory.setUniformVec4(soulgl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
+		ShaderMemory.setUniformVec4(gl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
 
 		Matrix4 modelMatrix = new Matrix4();
 		float length = geneCircle.getSize() * 0.0505f;
@@ -100,7 +95,7 @@ public class LinkSelection {
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 
-		ShaderMemory.setUniformMat4(soulgl, shader, "MVP", modelMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "MVP", modelMatrix);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 
@@ -113,13 +108,13 @@ public class LinkSelection {
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 
-		ShaderMemory.setUniformMat4(soulgl, shader, "MVP", modelMatrix);
+		ShaderMemory.setUniformMat4(gl, shader, "MVP", modelMatrix);
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 
 		gl.glDisableVertexAttribArray(0);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 
-		shader.stop(soulgl);
+		shader.stop(gl);
 	}
 
 	public void handle(KeyEvent keyEvent) {
