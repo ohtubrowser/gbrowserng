@@ -1,6 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -19,7 +20,7 @@ public class GeneralLink {
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
 	private final int drawMethod;
 	float aCirclePos, bCirclePos;
-	private Vector2 aXYPos, bXYPos;
+	private float aX, aY, bX, bY;
 	private float opacity;
 
     public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
@@ -76,15 +77,22 @@ public class GeneralLink {
 	public void calculatePositions(GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
-		aXYPos = geneCircle.getXYPosition(aCirclePos);
+		Vector2 aXYPos = geneCircle.getXYPosition(aCirclePos);
+		aX = aXYPos.x; aY = aXYPos.y;
 		// This magic constant is the same as in the circleseparators.
-		aXYPos.x *= 0.9495;
-		aXYPos.y *= 0.9495;
-		bXYPos = geneCircle.getXYPosition(bCirclePos);
-		bXYPos.x *= 0.9495;
-		bXYPos.y *= 0.9495;
+		aX *= 0.9495;
+		aY *= 0.9495;
+		Vector2 bXYPos = geneCircle.getXYPosition(bCirclePos);
+		bX = bXYPos.x; bY = bXYPos.y;
+		bX *= 0.9495;
+		bY *= 0.9495;
+		
+		aX = CoordinateManager.toCircleCoordsX(aX);
+		aY = CoordinateManager.toCircleCoordsY(aY);
+		bX = CoordinateManager.toCircleCoordsX(bX);
+		bY = CoordinateManager.toCircleCoordsY(bY);
 	}
-	
+
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
@@ -101,12 +109,12 @@ public class GeneralLink {
 
 		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
-		
+
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
 	}
-	
+
 	public static void endDrawing(GL2 gl) {
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
@@ -120,16 +128,16 @@ public class GeneralLink {
 
 
 	public void draw(GL2 gl, float f, float f0, float f1) {
-		/*if (opacity <= 0.0f) {
+		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
-		}*/
+		}
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 
 		SoulGL2 soulgl = new DesktopGL2(gl);
 
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aX, aY);
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);

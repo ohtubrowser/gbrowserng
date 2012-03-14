@@ -3,14 +3,13 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.gl2.GLUgl2;
 import managers.ShaderManager;
 import math.Matrix4;
 import math.Vector2;
@@ -92,7 +91,8 @@ public class GeneCircleGFX {
 					 * dx
 					 */ x) / (float) Math.PI;
 
-			modelMatrix.makeTranslationMatrix(x, y, 0);
+			modelMatrix=CoordinateManager.getCircleMatrix();
+			modelMatrix.translate(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
 			modelMatrix.scale(width, length, 0.2f);
 
@@ -115,7 +115,6 @@ public class GeneCircleGFX {
 		Matrix4 identityMatrix = new Matrix4();
 		ShaderMemory.setUniformMat4(soulgl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
-		Matrix4 modelMatrix = new Matrix4();
 		gl.glLineWidth(2.0f);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.centromereID);
@@ -124,7 +123,8 @@ public class GeneCircleGFX {
 
 		for (ViewChromosome c : AbstractGenome.getChromosomes()) {
 			if (!c.isMinimized()) {
-				modelMatrix.makeRotationMatrix(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.getCentromereRelativePosition()), 0, 0, 1);
+				Matrix4 modelMatrix = CoordinateManager.getCircleMatrix();
+				modelMatrix.rotate(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.getCentromereRelativePosition()), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize() * 0.95f, 0.0f, 0);
 				modelMatrix.scale(geneCircle.getSize() * 0.05f, geneCircle.getSize() * 0.02f, 1.0f);
 
