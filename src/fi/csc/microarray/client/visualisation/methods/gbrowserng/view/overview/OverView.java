@@ -445,12 +445,14 @@ public class OverView extends GenosideComponent {
 			float overlap = 1.04f;
 			boolean first = true;
 			for (Vector2 v : chromobounds) {
-				Vector2 vv = new Vector2(v);
-				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
-				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
+				// Rotation needs to be done first because of coordinate modification.
+				Vector2 rotationv=new Vector2(v);
+				float angle = rotationv.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
+				rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
+				// Convert to circlecoords using the rotated vector.
+				Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
 				String chromoname = AbstractGenome.getChromosome(i-1).getName();
 
-				/*
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
@@ -464,7 +466,6 @@ public class OverView extends GenosideComponent {
 						lastBound = bound;
 					}
 				}
-				*/
 
 				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 
