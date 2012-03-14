@@ -86,6 +86,11 @@ public class GeneralLink {
 		bX = bXYPos.x; bY = bXYPos.y;
 		bX *= 0.9495;
 		bY *= 0.9495;
+		
+		aX = CoordinateManager.toCircleCoordsX(aX);
+		aY = CoordinateManager.toCircleCoordsY(aY);
+		bX = CoordinateManager.toCircleCoordsX(bX);
+		bY = CoordinateManager.toCircleCoordsY(bY);
 	}
 
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
@@ -130,9 +135,9 @@ public class GeneralLink {
 
 		SoulGL2 soulgl = new DesktopGL2(gl);
 
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", CoordinateManager.toCircleCoordsX(aX), CoordinateManager.toCircleCoordsY(aY));
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", aX, aY);
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", CoordinateManager.toCircleCoordsX(bX), CoordinateManager.toCircleCoordsY(bY));
+		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
