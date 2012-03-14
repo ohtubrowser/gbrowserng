@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -70,7 +71,7 @@ public class LinkSelection {
 
 		ShaderMemory.setUniformVec4(soulgl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
 
-		Matrix4 modelMatrix = new Matrix4();
+		Matrix4 modelMatrix = CoordinateManager.getCircleMatrix();
 		float length = geneCircle.getSize() * 0.0505f;
 		float width = geneCircle.getSize() * 0.015f;
 
@@ -85,7 +86,7 @@ public class LinkSelection {
 
 		float angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 
-		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix.translate(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 
@@ -98,7 +99,8 @@ public class LinkSelection {
 
 		angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 
-		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix = CoordinateManager.getCircleMatrix();
+		modelMatrix.translate(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 

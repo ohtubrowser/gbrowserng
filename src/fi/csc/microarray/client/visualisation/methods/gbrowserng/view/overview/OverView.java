@@ -205,20 +205,20 @@ public class OverView extends GenosideComponent {
 		}
 		this.hoverCapsule = null;
 		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
-			if (capsule.getSession().inComponent(x, y)) {
+			if (capsule.getSession().inComponent(xx, yy)) {
 				this.hoverCapsule = capsule;
 				break;
 			}
 		}
 		// if there is an active session, let it handle input.
 		if (!activeSessions.isEmpty() && hoverCapsule != null) {
-			return hoverCapsule.getSession().handle(event, x, y);
+			return hoverCapsule.getSession().handle(event, xx, yy);
 		}
 
 		// note, x axis is negated to make tracking begin from the mathematical zero angle.
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
 		for (ChromoName chromoName : chromoNames) {
-			if (chromoName.isOver(x, y)) {
+			if (chromoName.isOver(xx, yy)) {
 				synchronized (geneCircle.tickdrawLock) {
 					int id = chromoName.getChromosome().getChromosomeNumber();
 					float[] bounds = geneCircle.getChromosomeBoundaries();
@@ -238,7 +238,7 @@ public class OverView extends GenosideComponent {
 
 		// allow capsules to update their states
 		for (SessionViewCapsule capsule : sessions) {
-			capsule.handle(event, x, y);
+			capsule.handle(event, xx, yy);
 		}
 		// then see if they actually want the event
 		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
@@ -279,7 +279,7 @@ public class OverView extends GenosideComponent {
 					if (capsule.isDying()) {
 						continue;
 					}
-					if (capsule.handle(event, x, y)) {
+					if (capsule.handle(event, xx, yy)) {
 						capsule.die();
 						capsule.deactivate();
 						return true;
