@@ -429,6 +429,11 @@ public class OverView extends GenosideComponent {
 		}
 		textRenderer.endRendering();
 
+		drawNumbers();
+	}
+
+	private void drawNumbers() {
+		int width = GlobalVariables.width, height = GlobalVariables.height;
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int i = 1;
@@ -444,6 +449,8 @@ public class OverView extends GenosideComponent {
 				float angle = v.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 				vv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 				String chromoname = AbstractGenome.getChromosome(i-1).getName();
+
+				/*
 				float bound = vv.relativeAngle(new Vector2(0f, 1f));
 				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
 				if (first) {
@@ -457,6 +464,7 @@ public class OverView extends GenosideComponent {
 						lastBound = bound;
 					}
 				}
+				*/
 
 				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
 
@@ -596,9 +604,10 @@ public class OverView extends GenosideComponent {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);
-		if (Math.abs(xx * xx + yy * yy - (a * a * 0.95 * 0.95)) < 0.1f * a * a) // TODO : magic numbers
+		//if (Math.abs(xx * xx + yy * yy - (a * a * 0.95 * 0.95)) < 0.1f * a * a) // TODO : magic numbers
 		//System.out.println(Math.abs(xx*xx/(a*a) + yy*yy/(b*b) - size));
-		//if (Math.abs(xx*xx/(a*a) + yy*yy/(b*b) - size) < 0.1f)
+		float s = Math.abs(xx*xx/(a*a) + yy*yy/(b*b));
+		if (s < 1.0f && s > 0.8f)
 		{
 			return true;
 		}

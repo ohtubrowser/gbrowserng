@@ -5,19 +5,20 @@ import math.Matrix4;
 import math.Vector2;
 
 public class CoordinateManager {
-	
-	public static final float XASPECT=4.0f/3.5f;
-	public static final float scale=0.5f;
-	
+
+	public static final float XASPECT=4.0f/4.0f;
+	public static final float scale=1.0f;
+
 	public static Matrix4 getCircleMatrix() {
 		Matrix4 ret = new Matrix4();
 		ret.makeScaleMatrix(scale*XASPECT, scale*GlobalVariables.aspectRatio, 1.0f);
 		return ret;
 	}
 	public static Vector2 toCircleCoords(Vector2 v) {
-		v.x *= scale * XASPECT;
-		v.y *= scale * GlobalVariables.aspectRatio;
-		return v;
+		Vector2 ret=new Vector2(v);
+		ret.x = ret.x * scale * XASPECT;
+		ret.y = ret.y * scale * GlobalVariables.aspectRatio;
+		return ret;
 	}
 	public static float toCircleCoordsX(float x) {
 		return (x * scale * XASPECT);
