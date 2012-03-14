@@ -199,7 +199,6 @@ public class OverView extends GenosideComponent {
 		float yy=y;
 		x=CoordinateManager.toCircleCoordsY(x);
 		y=CoordinateManager.toCircleCoordsX(y);
-		System.out.println("Origx: " + xx + ", tocirclecoordsY(x): " + x + " fromcirclecoordsY(x): " + CoordinateManager.fromCircleCoordsY(x));
 
 		if (lastMouseClick == null) {
 			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
@@ -263,8 +262,6 @@ public class OverView extends GenosideComponent {
 						arcHighlightLocked = false;
 						linkSelection.deactivate();
 					} else {
-						System.out.println("Adding capsule with " + x + " " + y);
-
 						SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
 						capsule.getSession().setDimensions(0.4f, 0.2f);
 						capsule.getSession().setPosition(x, y);
@@ -345,26 +342,6 @@ public class OverView extends GenosideComponent {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			
-/*			
-			ConcurrentLinkedQueue<long[]> queue = ChipsterInterface.getConnectionsBetweenChrs();
-
-
-			GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
-			newlink.calculatePositions(geneCircle);
-			links.add(newlink);
-
-			}
-
-			for (long[] table : queue) {
-				GeneralLink newlink = new GeneralLink(table[0], table[1], 0, table[2], 0, table[3], table[4], table[5]);
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
-
-			}
-			System.out.println(links.size());
-			System.out.println("finished");
-			 */
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
 				Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
