@@ -605,8 +605,6 @@ public class OverView extends GenosideComponent {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);
-		//if (Math.abs(xx * xx + yy * yy - (a * a * 0.95 * 0.95)) < 0.1f * a * a) // TODO : magic numbers
-		//System.out.println(Math.abs(xx*xx/(a*a) + yy*yy/(b*b) - size));
 		float s = Math.abs(xx*xx/(a*a) + yy*yy/(b*b));
 		if (s < 1.0f && s > 0.8f)
 		{
