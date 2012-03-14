@@ -1,7 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import math.Vector2;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
@@ -9,8 +7,9 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 
 public class GeneCircle {
 
+	private final float chromosomeSeperatorSize = 0.004f;
+	private final float minimizedChromosomeSize = 0.007f;
 	private float minimumChromosomeSlice;
-	private float minimizedChromosomeSize = 0.007f;
 	private float size;
 	private ViewChromosome chromosome = AbstractGenome.getChromosome(0);
 	private long chromosomePosition = 0;
@@ -64,7 +63,8 @@ public class GeneCircle {
 		if(relativePosition < 0.0f)
 			relativePosition += 1.0f;
 		chromosome = getChromosomeByRelativePosition(relativePosition);
-		chromosomePosition = (long) (getChromosome().length() * (relativePosition - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]) / (chromosomeBoundaries[chromosome.getChromosomeNumber()] - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]));
+		chromosomePosition = (long) (getChromosome().length() * (relativePosition - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1])
+				/ (chromosomeBoundaries[chromosome.getChromosomeNumber()] - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]));
 	}
 
 	public ViewChromosome getChromosomeByRelativePosition(float relativePosition) {
@@ -95,7 +95,8 @@ public class GeneCircle {
 	}
 
 	public float getRelativePosition(int chromosome, float relativeChromosomePosition) {
-		float ret = 0.25f + chromosomeBoundaries[chromosome] + (chromosomeBoundaries[chromosome + 1] - chromosomeBoundaries[chromosome]) * relativeChromosomePosition;
+		float ret = 0.25f + chromosomeBoundaries[chromosome] - chromosomeSeperatorSize
+				+ (chromosomeBoundaries[chromosome + 1] - chromosomeBoundaries[chromosome] + chromosomeSeperatorSize * 2) * relativeChromosomePosition;
 		return ret;
 	}
 
