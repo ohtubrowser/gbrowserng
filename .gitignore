@@ -7,3 +7,5 @@ ext/lib/jogamp/*
 /build/
 dist/
 nbproject/private/
+*.bam
+*.bam.bai

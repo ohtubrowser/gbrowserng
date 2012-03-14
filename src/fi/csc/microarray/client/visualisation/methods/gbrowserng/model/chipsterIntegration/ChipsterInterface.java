@@ -15,7 +15,8 @@ public class ChipsterInterface {
 //            return new ConnectionsLoader(firstFile, secondFile).getConnections();
 //        }
 
-	public static ConcurrentLinkedQueue<long[]> getGeneratedConnections() {
-		return new ConnectionsLoader("default", "default").getConnections();
+	public static ConcurrentLinkedQueue<long[]> getConnectionsBetweenChrs() {
+		return new ConnectionsLoader("ohtu-between-chrs.bam", "ohtu-between-chrs.bam.bai").getConnections();
 	}
+	
 }

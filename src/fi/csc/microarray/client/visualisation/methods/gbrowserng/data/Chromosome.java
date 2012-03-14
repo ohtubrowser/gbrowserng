@@ -21,6 +21,15 @@ public class Chromosome {
 		this.centromerePosition = -1;
 		this.name="NULL";
 	}
+        
+           public Chromosome(int id, String name, long size) {
+		this.id = id;
+		this.size = size;
+		this.sequence = new ReferenceSequence(id, (int) 300);
+		this.centromerePosition = 0.5f;
+		this.name=name;
+	}
+
 
 	public Chromosome(int id, String name, long size, long centromereposition) {
 		this.id = id;

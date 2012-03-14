@@ -2,19 +2,27 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
 import soulaim.DesktopGL2;
 
 public class LinkSelection {
+
 	float begin, end, area;
-	private boolean leftKeyDown = false, rightKeyDown = false;
+	private boolean upKeyDown = false, downKeyDown = false;
+	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
+	public final Object linkSelectionLock = new Object();
+	private int activeLinkIndex = 0;
+
 	public LinkSelection() {
 		begin = 0.0f;
 		end = 1.0f;
@@ -24,20 +32,22 @@ public class LinkSelection {
 	public void reset() {
 		begin = 0.0f;
 		end = 1.0f;
+		activeLinkIndex = 0;
 	}
 
 	public void update(float pointerGenePosition) {
-		begin = pointerGenePosition - 0.25f - area/2;
-		end = pointerGenePosition - 0.25f + area/2;
+		begin = pointerGenePosition - 0.25f - area / 2;
+		end = pointerGenePosition - 0.25f + area / 2;
 		clamp();
 	}
 
-	public void updateArea() {
+	public void updateArea(ConcurrentLinkedQueue<GeneralLink> links) {
 		float oldArea = getCurrentArea();
-		float change = (area - oldArea)/2;
+		float change = (area - oldArea) / 2;
 		begin -= change;
 		end += change;
 		clamp();
+		updateActiveLinks(links);
 	}
 
 	private void clamp() {
@@ -56,8 +66,9 @@ public class LinkSelection {
 	}
 
 	private float getCurrentArea() {
-		if(begin > end)
-			return 1.0f-begin + end;
+		if (begin > end) {
+			return 1.0f - begin + end;
+		}
 		return end - begin;
 	}
 
@@ -112,52 +123,107 @@ public class LinkSelection {
 
 		shader.stop(soulgl);
 	}
-	
+
 	public void handle(KeyEvent keyEvent) {
-		if(keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-			leftKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
-		}
-		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-			rightKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+		synchronized (linkSelectionLock) {
+			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
+				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+					activeLinkIndex++;
+				}
+				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+					activeLinkIndex--;
+				}
+				if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+					GeneralLink l = activeSelection.get(activeLinkIndex);
+					Chromosome a = l.getAChromosome();
+					Chromosome b = l.getBChromosome();
+					System.out.println("USER WANTS TO OPEN CONNECTION WITH");
+					System.out.println("Start:\n Chromosome: " + a.getName() + " Position: " + l.getaStart());
+					System.out.println("End:\n Chromosome: " + b.getName() + " Position: " + l.getbStart());
+				}
+				if (activeLinkIndex >= activeSelection.size()) {
+					activeLinkIndex -= activeSelection.size();
+				}
+				if (activeLinkIndex < 0) {
+					activeLinkIndex += activeSelection.size();
+				}
+			}
+			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
+			    upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			} 
+			if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) { 
+			    downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			}
 		}
 	}
-	
+
 	public void deactivate() {
-		leftKeyDown = rightKeyDown = false;
+		upKeyDown = downKeyDown = false;
 		resetArea();
 		reset();
 	}
-	
-	public void tick(float dt) {
-		// TODO : concurrency
-		if(leftKeyDown)
-			move(-0.1f*dt);
-		if(rightKeyDown)
-			move(0.1f*dt);
+
+	public void tick(float dt, ConcurrentLinkedQueue<GeneralLink> links) {
+	    if(upKeyDown) updateArea(-0.01f*dt, links); 
+	    if(downKeyDown) updateArea(0.01f*dt, links);
 	}
 
-	public void move(float value) {
-		begin += value; end += value;
+	public void move(float value, ConcurrentLinkedQueue<GeneralLink> links) {
+		begin += value;
+		end += value;
 		clamp();
+		updateActiveLinks(links);
 	}
 
 	public void resetArea() {
 		area = GlobalVariables.selectSize;
 	}
 
-	public void updateArea(float f) {
+	public void updateArea(float f, ConcurrentLinkedQueue<GeneralLink> links) {
 		area += f;
 		area = Math.min(0.9f, Math.max(area, 0.001f));
-		updateArea();
+		updateArea(links);
 	}
 
 	public boolean inSelection(GeneralLink link) {
+		if (link.isMinimized()) {
+			return false;
+		}
 		if (begin < end) {
 			return (link.aCirclePos >= begin && link.aCirclePos <= end)
 					|| (link.bCirclePos >= begin && link.bCirclePos <= end);
 		} else {
 			return (link.aCirclePos >= begin || link.aCirclePos <= end)
 					|| (link.bCirclePos >= begin || link.bCirclePos <= end);
+		}
+	}
+
+	private void updateActiveLinks(ConcurrentLinkedQueue<GeneralLink> links) {
+		synchronized (linkSelectionLock) {
+			getActiveSelection().clear();
+			for (GeneralLink link : links) {
+				if (inSelection(link)) {
+					getActiveSelection().add(link);
+				}
+			}
+			activeLinkIndex = 0;
+		}
+	}
+
+	public ArrayList<GeneralLink> getActiveSelection() {
+		return activeSelection;
+	}
+
+	public void draw(GL2 gl) {
+		synchronized (linkSelectionLock) {
+			for (int i = 0; i < activeSelection.size(); ++i) {
+				if (i != activeLinkIndex) {
+					activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+				}
+			}
+			if (activeSelection.size() > activeLinkIndex) {
+				activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+			}
 		}
 	}
 }

@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CytobandLoader implements AreaResultListener {
+
 	private String karyotypePath;
 	private String seqPath;
 	private Queue<AreaRequest> areaRequestQueue;
@@ -56,6 +57,7 @@ public class CytobandLoader implements AreaResultListener {
 		}
 		return chrs;
 	}
+	
 
 	private void requestData(Queue<AreaRequest> areaRequestQueue, String[] chromosomenames) {
 		// TODO: Does chipster offer a more efficient way of doing this?
@@ -87,22 +89,27 @@ public class CytobandLoader implements AreaResultListener {
 			chromosomeLength = r.region.end.bp;
 		}
 		// This id system is stupid.
-		chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
-		requestsReady.addAndGet(1);
+		
+                 if (acenstart != null && acenend != null) {
+                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
+                } else {
+                    chrs.add(new Chromosome(chromoId.getAndAdd(1), name, chromosomeLength));
+                }
+                requestsReady.addAndGet(1);
 	}
 
-	/*
+	
 	public static void main(String[] args) {
 		String karyotype = "karyotypeHuman.txt";
 		String seq = "seq_regionHuman.txt";
 		String[] chromosomes = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-				"13", "14", "15", "16", "17", "18", "19", "20", "X"};
+				"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"};
 		CytobandLoader loader = new CytobandLoader(karyotype, seq, chromosomes);
 		for(Chromosome c : loader.getChromosomes())
 		{
-			System.out.println(c.getCentromerePosition());
+			
 			System.out.println(c.length());
 		}
 	}
-	*/
+	
 }

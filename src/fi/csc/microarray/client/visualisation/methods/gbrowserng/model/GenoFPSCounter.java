@@ -34,7 +34,9 @@ public class GenoFPSCounter {
 			this.millisTemp = nano/1e6f;
 			nanoPrev = now;
 		}
-		this.millisTemp = ((nano/1e6f)+this.millisTemp)/2;
+		else {
+			this.millisTemp = ((nano/1e6f)+this.millisTemp)/2;
+		}
 	}
 
 	public String getMillis() {

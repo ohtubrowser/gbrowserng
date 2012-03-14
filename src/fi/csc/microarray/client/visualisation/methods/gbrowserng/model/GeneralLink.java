@@ -120,7 +120,7 @@ public class GeneralLink {
 	}
 
 
-	public void draw(GL2 gl) {
+	public void draw(GL2 gl, float f, float f0, float f1) {
 		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
 		}
@@ -131,10 +131,30 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint1", CoordinateManager.toCircleCoordsX(aXYPos.x), CoordinateManager.toCircleCoordsY(aXYPos.y));
 		ShaderMemory.setUniformVec1(soulgl, shader, "uniAlpha", opacity);
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", CoordinateManager.toCircleCoordsX(bXYPos.x), CoordinateManager.toCircleCoordsY(bXYPos.y));
-		ShaderMemory.setUniformVec3(soulgl, shader, "color", r, g, b);
+		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
 
+	}
+
+	public boolean isMinimized() {
+		return aChromosome.isMinimized() || bChromosome.isMinimized();
+	}
+
+	public Chromosome getAChromosome() {
+		return aChromosome;
+	}
+
+	public Chromosome getBChromosome() {
+		return bChromosome;
+	}
+
+	long getaStart() {
+		return aStart;
+	}
+
+	long getbStart() {
+		return bStart;
 	}
 
 }
