@@ -63,7 +63,7 @@ public class ConnectionsLoader implements AreaResultListener {
 			System.out.println(ex.toString());
 		}
 
-				ConcurrentLinkedQueue<fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome> chromosomes =
+				ConcurrentLinkedQueue<fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome> chromosomes =
 				ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt", new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 
@@ -71,8 +71,8 @@ public class ConnectionsLoader implements AreaResultListener {
 		int i = 1;
 
 		for (Object content : chromosomes) {
-			fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome chr =
-					(fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome) content;
+			fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome chr =
+					(fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome) content;
 			long length = chr.length();
 			this.chrLengths[i] = length;
 			i++;

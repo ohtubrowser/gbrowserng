@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class AbstractGenome {
 
-	private static final ArrayList<Chromosome> abstractGenomeData = new ArrayList<Chromosome>();
+	private static final ArrayList<ViewChromosome> abstractGenomeData = new ArrayList<ViewChromosome>();
 	private static String name = "empty";
 
 	public static void setName(String name) {
@@ -17,7 +17,7 @@ public class AbstractGenome {
 
 	public static long getTotalLength() {
 		long ans = 0;
-		for (Chromosome a : abstractGenomeData) {
+		for (ViewChromosome a : abstractGenomeData) {
 			ans += a.isAnimating() ? a.length() * a.getAnimationProgress() :
 					a.isMinimized() ? 0 : a.length();
 		}
@@ -40,7 +40,7 @@ public class AbstractGenome {
 		return ans;
 	}
 
-	public static void addChromosome(Chromosome chromosome) {
+	public static void addChromosome(ViewChromosome chromosome) {
 		abstractGenomeData.add(chromosome);
 	}
 
@@ -48,7 +48,7 @@ public class AbstractGenome {
 		return abstractGenomeData.size();
 	}
 
-	public static Chromosome getChromosomeByPosition(long position) {
+	public static ViewChromosome getChromosomeByPosition(long position) {
 		for (int i = 0; i < getNumChromosomes(); ++i) {
 			if (getEndPoint(i) >= position) {
 				return abstractGenomeData.get(i);
@@ -57,7 +57,7 @@ public class AbstractGenome {
 		return abstractGenomeData.get(0);
 	}
 
-	public static Chromosome getChromosome(int id) {
+	public static ViewChromosome getChromosome(int id) {
 		return abstractGenomeData.get(id);
 	}
 
@@ -66,7 +66,7 @@ public class AbstractGenome {
 		name = "empty";
 	}
 
-	public static ArrayList<Chromosome> getChromosomes() {
+	public static ArrayList<ViewChromosome> getChromosomes() {
 		return abstractGenomeData;
 	}
 }

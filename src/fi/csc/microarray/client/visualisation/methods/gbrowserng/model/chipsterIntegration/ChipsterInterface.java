@@ -1,12 +1,12 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChipsterInterface {
 
-	public static ConcurrentLinkedQueue<Chromosome> getChromosomes(String karyotype, String seq, String[] chromosomes) {
+	public static ConcurrentLinkedQueue<ViewChromosome> getChromosomes(String karyotype, String seq, String[] chromosomes) {
 		return new CytobandLoader(karyotype, seq, chromosomes).getChromosomes();
 	}
 //      

@@ -2,7 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -81,7 +81,7 @@ public class LinkSelection {
 
 		ShaderMemory.setUniformVec4(soulgl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
 
-		Matrix4 modelMatrix = new Matrix4();
+		Matrix4 modelMatrix = CoordinateManager.getCircleMatrix();
 		float length = geneCircle.getSize() * 0.0505f;
 		float width = geneCircle.getSize() * 0.015f;
 
@@ -89,14 +89,12 @@ public class LinkSelection {
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 		float x, y;
-		synchronized (geneCircle.tickdrawLock) {
-			x = 0.9495f * geneCircle.getXYPosition(this.begin).x;
-			y = 0.9495f * geneCircle.getXYPosition(this.begin).y;
-		}
+		x = 0.9495f * geneCircle.getXYPosition(this.begin).x;
+		y = 0.9495f * geneCircle.getXYPosition(this.begin).y;
 
 		float angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 
-		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix.translate(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 
@@ -109,7 +107,8 @@ public class LinkSelection {
 
 		angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 
-		modelMatrix.makeTranslationMatrix(x, y, 0);
+		modelMatrix = CoordinateManager.getCircleMatrix();
+		modelMatrix.translate(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);
 
@@ -121,6 +120,12 @@ public class LinkSelection {
 
 		shader.stop(soulgl);
 	}
+	
+	public GeneralLink getActiveLink() {
+		if(activeLinkIndex >= activeSelection.size())
+			return null;
+		return activeSelection.get(activeLinkIndex);
+	}
 
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
@@ -131,14 +136,7 @@ public class LinkSelection {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 					activeLinkIndex--;
 				}
-				if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
-					GeneralLink l = activeSelection.get(activeLinkIndex);
-					Chromosome a = l.getAChromosome();
-					Chromosome b = l.getBChromosome();
-					System.out.println("USER WANTS TO OPEN CONNECTION WITH");
-					System.out.println("Start:\n Chromosome: " + a.getName() + " Position: " + l.getaStart());
-					System.out.println("End:\n Chromosome: " + b.getName() + " Position: " + l.getbStart());
-				}
+				
 				if (activeLinkIndex >= activeSelection.size()) {
 					activeLinkIndex -= activeSelection.size();
 				}

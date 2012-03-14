@@ -28,24 +28,36 @@ public class EventHandler {
 	public void toggleFullscreen() {
 		this.window.toggleFullscreen();
 		//genoEvent.setScreenSize(GlobalVariables.width, GlobalVariables.height);
-		System.out.println("Screen size "+GlobalVariables.width+"x"+GlobalVariables.height);
+		System.out.println("Screen size " + GlobalVariables.width + "x" + GlobalVariables.height);
 	}
-        
+
 	public void resolution(int width, int height) {
 		genoEvent.setScreenSize(width, height);
+	}
+
+	public boolean toggleVisible() {
+		if (window.isOverviewVisible()) {
+			return true;
+		} else {
+			window.toggleVisible();
+			return false;
+		}
 	}
 
 	public void handleEvents() throws InterruptedException {
 		for (;;) {
 			NEWTEvent event = this.eventQueue.take();
 			genoEvent.event = event;
-
 			if (event instanceof KeyEvent) {
 				KeyEvent keyEvent = (KeyEvent) event;
 				if (keyEvent.getKeyChar() == KeyEvent.VK_ESCAPE) {
-					return;
+					if (toggleVisible()) {
+						return;
+					}
 				} else if (keyEvent.getKeyChar() == 'f') {
 					toggleFullscreen();
+				} else if (keyEvent.getKeyChar() == 't') {
+					window.toggleVisible();
 				} else {
 					client.handle((KeyEvent) event);
 				}
@@ -54,9 +66,11 @@ public class EventHandler {
 			} else if (event instanceof WindowEvent) {
 				if (event.getEventType() == WindowEvent.EVENT_WINDOW_RESIZED) {
 					genoEvent.setScreenSize(window.window.getWidth(), window.window.getHeight());
-				} 
-				else if(event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED)
-					return;
+				} else if (event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED || event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROY_NOTIFY) {
+					if (toggleVisible()) {
+						return;
+					}
+				}
 			}
 		}
 	}

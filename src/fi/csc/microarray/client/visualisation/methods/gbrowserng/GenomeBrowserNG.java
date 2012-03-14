@@ -5,7 +5,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Even
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.GenoWindowListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyboard;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
@@ -13,7 +13,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,40 +27,40 @@ public class GenomeBrowserNG {
 
 	public static void useSmallData() {
 		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new Chromosome(1, 600));
-		AbstractGenome.addChromosome(new Chromosome(2, 300));
-		AbstractGenome.addChromosome(new Chromosome(3, 900));
-		AbstractGenome.addChromosome(new Chromosome(4, 1200));
-		AbstractGenome.addChromosome(new Chromosome(5, 100));
-		AbstractGenome.addChromosome(new Chromosome(6, 400));
-		AbstractGenome.addChromosome(new Chromosome(7, 500));
+		AbstractGenome.addChromosome(new ViewChromosome(1, 600));
+		AbstractGenome.addChromosome(new ViewChromosome(2, 300));
+		AbstractGenome.addChromosome(new ViewChromosome(3, 900));
+		AbstractGenome.addChromosome(new ViewChromosome(4, 1200));
+		AbstractGenome.addChromosome(new ViewChromosome(5, 100));
+		AbstractGenome.addChromosome(new ViewChromosome(6, 400));
+		AbstractGenome.addChromosome(new ViewChromosome(7, 500));
 	}
 
 	public static void useBigData() {
 		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new Chromosome(1, 247000000));
-		AbstractGenome.addChromosome(new Chromosome(2, 243000000));
-		AbstractGenome.addChromosome(new Chromosome(3, 199000000));
-		AbstractGenome.addChromosome(new Chromosome(4, 191000000));
-		AbstractGenome.addChromosome(new Chromosome(5, 181000000));
-		AbstractGenome.addChromosome(new Chromosome(6, 171000000));
-		AbstractGenome.addChromosome(new Chromosome(7, 159000000));
-		AbstractGenome.addChromosome(new Chromosome(8, 146000000));
-		AbstractGenome.addChromosome(new Chromosome(9, 140000000));
-		AbstractGenome.addChromosome(new Chromosome(10, 135000000));
-		AbstractGenome.addChromosome(new Chromosome(11, 134000000));
-		AbstractGenome.addChromosome(new Chromosome(12, 132000000));
-		AbstractGenome.addChromosome(new Chromosome(13, 114000000));
-		AbstractGenome.addChromosome(new Chromosome(14, 106000000));
-		AbstractGenome.addChromosome(new Chromosome(15, 100000000));
-		AbstractGenome.addChromosome(new Chromosome(16, 89000000));
-		AbstractGenome.addChromosome(new Chromosome(17, 79000000));
-		AbstractGenome.addChromosome(new Chromosome(18, 76000000));
-		AbstractGenome.addChromosome(new Chromosome(19, 63000000));
-		AbstractGenome.addChromosome(new Chromosome(20, 62000000));
-		AbstractGenome.addChromosome(new Chromosome(21, 4700000));
-		AbstractGenome.addChromosome(new Chromosome(22, 5000000));
-		AbstractGenome.addChromosome(new Chromosome(23, 155000000));
+		AbstractGenome.addChromosome(new ViewChromosome(1, 247000000));
+		AbstractGenome.addChromosome(new ViewChromosome(2, 243000000));
+		AbstractGenome.addChromosome(new ViewChromosome(3, 199000000));
+		AbstractGenome.addChromosome(new ViewChromosome(4, 191000000));
+		AbstractGenome.addChromosome(new ViewChromosome(5, 181000000));
+		AbstractGenome.addChromosome(new ViewChromosome(6, 171000000));
+		AbstractGenome.addChromosome(new ViewChromosome(7, 159000000));
+		AbstractGenome.addChromosome(new ViewChromosome(8, 146000000));
+		AbstractGenome.addChromosome(new ViewChromosome(9, 140000000));
+		AbstractGenome.addChromosome(new ViewChromosome(10, 135000000));
+		AbstractGenome.addChromosome(new ViewChromosome(11, 134000000));
+		AbstractGenome.addChromosome(new ViewChromosome(12, 132000000));
+		AbstractGenome.addChromosome(new ViewChromosome(13, 114000000));
+		AbstractGenome.addChromosome(new ViewChromosome(14, 106000000));
+		AbstractGenome.addChromosome(new ViewChromosome(15, 100000000));
+		AbstractGenome.addChromosome(new ViewChromosome(16, 89000000));
+		AbstractGenome.addChromosome(new ViewChromosome(17, 79000000));
+		AbstractGenome.addChromosome(new ViewChromosome(18, 76000000));
+		AbstractGenome.addChromosome(new ViewChromosome(19, 63000000));
+		AbstractGenome.addChromosome(new ViewChromosome(20, 62000000));
+		AbstractGenome.addChromosome(new ViewChromosome(21, 4700000));
+		AbstractGenome.addChromosome(new ViewChromosome(22, 5000000));
+		AbstractGenome.addChromosome(new ViewChromosome(23, 155000000));
 	}
 
 	public static void useChipsterDataRat() {
@@ -72,11 +71,11 @@ public class GenomeBrowserNG {
 //               
 
 
-		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
+		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
-		for (Chromosome c : chromosomeData) {
+		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
 
@@ -89,10 +88,10 @@ public class GenomeBrowserNG {
 //				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 //						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 //               
-		ConcurrentLinkedQueue<Chromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
+		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
-		for (Chromosome c : chromosomeData) {
+		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
 	}
@@ -111,7 +110,10 @@ public class GenomeBrowserNG {
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
 		this.genoWindow = new GenoWindow(width, height);
-		this.glListener = new GenoGLListener(new OverView());
+		OverView overView = new OverView(this.genoWindow);
+		this.genoWindow.addContainer(overView.trackviewManager);
+
+		this.glListener = new GenoGLListener(overView);
 		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue, width, height);
 		this.windowListener = new GenoWindowListener(eventQueue);
 
