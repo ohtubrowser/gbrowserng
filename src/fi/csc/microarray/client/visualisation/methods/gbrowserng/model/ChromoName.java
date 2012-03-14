@@ -1,15 +1,15 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import math.Vector2;
 
 public class ChromoName {
-	private Chromosome chromosome;
+	private ViewChromosome chromosome;
 	private Vector2 position = new Vector2();
 	private Vector2 size = new Vector2();
 	private boolean active = false;
 	
-	public ChromoName(Chromosome chromo) {
+	public ChromoName(ViewChromosome chromo) {
 		this.chromosome = chromo;
 	}
 	
@@ -20,7 +20,7 @@ public class ChromoName {
 				&& position.y + size.y/2 > y);
 	}
 	
-	public Chromosome getChromosome() {
+	public ViewChromosome getChromosome() {
 		return chromosome;
 	}
 	

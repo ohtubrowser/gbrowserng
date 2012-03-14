@@ -5,33 +5,25 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
-import gles.SoulGL2;
-import gles.shaders.Shader;
-import gles.shaders.ShaderMemory;
-
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import math.Matrix4;
-import math.Vector2;
-
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
-import managers.ShaderManager;
-import soulaim.DesktopGL2;
+import math.Matrix4;
+import math.Vector2;
 
 public class OverView extends GenosideComponent {
 
@@ -53,11 +45,13 @@ public class OverView extends GenosideComponent {
 	public TextRenderer textRenderer;
 	private SimpleMouseEvent lastMouseClick;
 	private LinkSelection linkSelection = new LinkSelection();
+	public TrackviewManager trackviewManager;
 
-	public OverView() {
+	public OverView(GenoWindow window) {
 		super(null);
 		initTextRenderers();
 		initChromoNames();
+		trackviewManager = new TrackviewManager(window);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 	}
@@ -87,7 +81,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void initChromoNames() {
-		for (Chromosome chromosome : AbstractGenome.getChromosomes()) {
+		for (ViewChromosome chromosome : AbstractGenome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
 		}
 	}
@@ -108,7 +102,7 @@ public class OverView extends GenosideComponent {
 				hideActiveSessions();
 				state = OverViewState.OVERVIEW_ACTIVE;
 			}
-		}
+		}		
 	}
 
 	private void showActiveSessions() {
@@ -189,10 +183,10 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	private void minimizeAllButOne(Chromosome chromosome) {
+	private void minimizeAllButOne(ViewChromosome chromosome) {
 		int chromosomes = AbstractGenome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			Chromosome c = AbstractGenome.getChromosome(i);
+			ViewChromosome c = AbstractGenome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
 			}
@@ -288,7 +282,7 @@ public class OverView extends GenosideComponent {
 						return true;
 					}
 				}
-				Chromosome chromosome = geneCircle.getChromosome();
+				ViewChromosome chromosome = geneCircle.getChromosome();
 				if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
 				} else {
@@ -336,6 +330,11 @@ public class OverView extends GenosideComponent {
 			}
 		}
 		if (arcHighlightLocked) {
+			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+					trackviewManager.clearContainer();
+					trackviewManager.openLinkSession(linkSelection.getActiveLink());
+					trackviewManager.toggleVisible();
+			}
 			linkSelection.handle(event);
 		}
 
@@ -368,8 +367,8 @@ public class OverView extends GenosideComponent {
 			 */
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
-				Chromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				Chromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 				GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
 				newlink.calculatePositions(geneCircle);
 				links.add(newlink);
@@ -380,6 +379,7 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public void draw(GL2 gl) {
+		//trackviewManager.switchContainers();
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = new Matrix4();
 		geneCircleModelMatrix.makeTranslationMatrix(mypos.x, mypos.y, 0);
@@ -499,7 +499,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void fadeLinks(float dt) {
-		Chromosome thisChromo;
+		ViewChromosome thisChromo;
 		synchronized (geneCircle.tickdrawLock) {
 			thisChromo = geneCircle.getChromosome();
 		}

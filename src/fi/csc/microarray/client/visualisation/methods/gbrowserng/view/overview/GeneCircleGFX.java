@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
@@ -122,7 +122,7 @@ public class GeneCircleGFX {
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 
-		for (Chromosome c : AbstractGenome.getChromosomes()) {
+		for (ViewChromosome c : AbstractGenome.getChromosomes()) {
 			if (!c.isMinimized()) {
 				modelMatrix.makeRotationMatrix(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.getCentromereRelativePosition()), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize() * 0.95f, 0.0f, 0);

@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -13,7 +13,7 @@ import soulaim.DesktopGL2;
 
 public class GeneralLink {
 
-	private Chromosome aChromosome, bChromosome;
+	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
@@ -23,8 +23,8 @@ public class GeneralLink {
 	private float opacity;
 
     public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new Chromosome((int) readChr, readChrLength);
-                this.bChromosome = new Chromosome((int) mateChr, mateChrLength);
+                this.aChromosome = new ViewChromosome((int) readChr, readChrLength);
+                this.bChromosome = new ViewChromosome((int) mateChr, mateChrLength);
 		this.aStart = aStart;
 		this.bStart = bStart;
 		this.aStart = aEnd;
@@ -62,7 +62,7 @@ public class GeneralLink {
 		return bCirclePos;
 	}
 
-	public GeneralLink(Chromosome aChromosome, Chromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
+	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
 		this.aChromosome = aChromosome;
 		this.bChromosome = bChromosome;
 		this.aStart = aStart;
@@ -140,19 +140,19 @@ public class GeneralLink {
 		return aChromosome.isMinimized() || bChromosome.isMinimized();
 	}
 
-	public Chromosome getAChromosome() {
+	public ViewChromosome getAChromosome() {
 		return aChromosome;
 	}
 
-	public Chromosome getBChromosome() {
+	public ViewChromosome getBChromosome() {
 		return bChromosome;
 	}
 
-	long getaStart() {
+	public long getaStart() {
 		return aStart;
 	}
 
-	long getbStart() {
+	public long getbStart() {
 		return bStart;
 	}
 

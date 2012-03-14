@@ -2,7 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
@@ -121,6 +121,12 @@ public class LinkSelection {
 
 		shader.stop(soulgl);
 	}
+	
+	public GeneralLink getActiveLink() {
+		if(activeLinkIndex >= activeSelection.size())
+			return null;
+		return activeSelection.get(activeLinkIndex);
+	}
 
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
@@ -131,14 +137,7 @@ public class LinkSelection {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 					activeLinkIndex--;
 				}
-				if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
-					GeneralLink l = activeSelection.get(activeLinkIndex);
-					Chromosome a = l.getAChromosome();
-					Chromosome b = l.getBChromosome();
-					System.out.println("USER WANTS TO OPEN CONNECTION WITH");
-					System.out.println("Start:\n Chromosome: " + a.getName() + " Position: " + l.getaStart());
-					System.out.println("End:\n Chromosome: " + b.getName() + " Position: " + l.getbStart());
-				}
+				
 				if (activeLinkIndex >= activeSelection.size()) {
 					activeLinkIndex -= activeSelection.size();
 				}
