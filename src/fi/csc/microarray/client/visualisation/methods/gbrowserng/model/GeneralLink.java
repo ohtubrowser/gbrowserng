@@ -12,27 +12,16 @@ import math.Matrix4;
 import math.Vector2;
 import soulaim.DesktopGL2;
 
-public class GeneralLink {
+public class GeneralLink implements Comparable<GeneralLink> {
 
 	private ViewChromosome aChromosome, bChromosome;
-	private long aStart, bStart, aEnd, bEnd;
+	private long aStart, bStart;
+	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
-	private final int drawMethod;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
-
-    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new ViewChromosome((int) readChr, readChrLength);
-                this.bChromosome = new ViewChromosome((int) mateChr, mateChrLength);
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
-		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
-    }
 
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
@@ -63,15 +52,13 @@ public class GeneralLink {
 		return bCirclePos;
 	}
 
-	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
+	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
 		this.aChromosome = aChromosome;
 		this.bChromosome = bChromosome;
 		this.aStart = aStart;
 		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+		this.aOcc = aOcc;
 	}
 
 	public void calculatePositions(GeneCircle geneCircle) {
@@ -107,19 +94,19 @@ public class GeneralLink {
 		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
 
-		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
+		gl.glDisable(GL2.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
 
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
 	}
 
 	public static void endDrawing(GL2 gl) {
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
 
-		gl.glEnable(gl.GL_CULL_FACE);
+		gl.glEnable(GL2.GL_CULL_FACE);
 		gl.glDisable(SoulGL2.GL_BLEND);
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		SoulGL2 soulgl = new DesktopGL2(gl);
@@ -162,6 +149,27 @@ public class GeneralLink {
 
 	public long getbStart() {
 		return bStart;
+	}
+
+	@Override
+	public int compareTo(GeneralLink o) {
+		int thisChrNumber = aOcc ? aChromosome.getChromosomeNumber() : bChromosome.getChromosomeNumber(),
+			oChrNumber = o.aOcc ? o.aChromosome.getChromosomeNumber() : o.bChromosome.getChromosomeNumber();
+		
+		long thisPos = aOcc ? aStart : bStart,
+				oPos = o.aOcc ? o.aStart : o.bStart;
+		
+		long diff = thisChrNumber - oChrNumber;
+		if(diff == 0) diff = thisPos - oPos;
+		
+		// For type safety, maybe overkill
+		int ret = 0;
+		if(diff > 0)
+			ret = 1;
+		if(diff < 0)
+			ret = -1;
+		
+		return ret;
 	}
 
 }

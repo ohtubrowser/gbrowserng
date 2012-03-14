@@ -2,13 +2,14 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
@@ -16,13 +17,14 @@ import soulaim.DesktopGL2;
 
 public class LinkSelection {
 
+	GeneCircle geneCircle;
+	LinkRangeIterator currentSelection;
 	float begin, end, area;
 	private boolean upKeyDown = false, downKeyDown = false;
-	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
 	public final Object linkSelectionLock = new Object();
-	private int activeLinkIndex = 0;
 
-	public LinkSelection() {
+	public LinkSelection(GeneCircle geneCircle) {
+		this.geneCircle = geneCircle;
 		begin = 0.0f;
 		end = 1.0f;
 		area = GlobalVariables.selectSize;
@@ -31,7 +33,7 @@ public class LinkSelection {
 	public void reset() {
 		begin = 0.0f;
 		end = 1.0f;
-		activeLinkIndex = 0;
+		currentSelection = null;
 	}
 
 	public void update(float pointerGenePosition) {
@@ -40,13 +42,13 @@ public class LinkSelection {
 		clamp();
 	}
 
-	public void updateArea(ConcurrentLinkedQueue<GeneralLink> links) {
+	public void updateArea(LinkCollection linkCollection) {
 		float oldArea = getCurrentArea();
 		float change = (area - oldArea) / 2;
 		begin -= change;
 		end += change;
 		clamp();
-		updateActiveLinks(links);
+		updateActiveLinks(linkCollection);
 	}
 
 	private void clamp() {
@@ -122,26 +124,17 @@ public class LinkSelection {
 	}
 	
 	public GeneralLink getActiveLink() {
-		if(activeLinkIndex >= activeSelection.size())
-			return null;
-		return activeSelection.get(activeLinkIndex);
+		return currentSelection == null ? null : currentSelection.value();
 	}
 
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
 			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-					activeLinkIndex++;
+					currentSelection.increment();
 				}
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-					activeLinkIndex--;
-				}
-				
-				if (activeLinkIndex >= activeSelection.size()) {
-					activeLinkIndex -= activeSelection.size();
-				}
-				if (activeLinkIndex < 0) {
-					activeLinkIndex += activeSelection.size();
+					currentSelection.decrement();
 				}
 			}
 			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
@@ -159,66 +152,53 @@ public class LinkSelection {
 		reset();
 	}
 
-	public void tick(float dt, ConcurrentLinkedQueue<GeneralLink> links) {
-	    if(upKeyDown) updateArea(-0.01f*dt, links); 
-	    if(downKeyDown) updateArea(0.01f*dt, links);
+	public void tick(float dt, LinkCollection linkCollection) {
+	    if(upKeyDown) updateArea(-0.01f*dt, linkCollection); 
+	    if(downKeyDown) updateArea(0.01f*dt, linkCollection);
 	}
 
-	public void move(float value, ConcurrentLinkedQueue<GeneralLink> links) {
+	public void move(float value, LinkCollection linkCollection) {
 		begin += value;
 		end += value;
 		clamp();
-		updateActiveLinks(links);
+		updateActiveLinks(linkCollection);
 	}
 
 	public void resetArea() {
 		area = GlobalVariables.selectSize;
 	}
 
-	public void updateArea(float f, ConcurrentLinkedQueue<GeneralLink> links) {
+	public void updateArea(float f, LinkCollection linkCollection) {
 		area += f;
 		area = Math.min(0.9f, Math.max(area, 0.001f));
-		updateArea(links);
+		updateArea(linkCollection);
 	}
 
 	public boolean inSelection(GeneralLink link) {
 		if (link.isMinimized()) {
 			return false;
 		}
-		if (begin < end) {
-			return (link.aCirclePos >= begin && link.aCirclePos <= end)
-					|| (link.bCirclePos >= begin && link.bCirclePos <= end);
-		} else {
-			return (link.aCirclePos >= begin || link.aCirclePos <= end)
-					|| (link.bCirclePos >= begin || link.bCirclePos <= end);
-		}
+		if(currentSelection == null || (link.compareTo(currentSelection.value(currentSelection.startIndex)) >= 0 && link.compareTo(currentSelection.value(currentSelection.endIndex-1)) <= 0))
+			return true;
+		return false;
 	}
 
-	private void updateActiveLinks(ConcurrentLinkedQueue<GeneralLink> links) {
+	private void updateActiveLinks(LinkCollection linkCollection) {
 		synchronized (linkSelectionLock) {
-			getActiveSelection().clear();
-			for (GeneralLink link : links) {
-				if (inSelection(link)) {
-					getActiveSelection().add(link);
-				}
-			}
-			activeLinkIndex = 0;
+			currentSelection = linkCollection.getRangeIterator(geneCircle, end, begin);
 		}
-	}
-
-	public ArrayList<GeneralLink> getActiveSelection() {
-		return activeSelection;
 	}
 
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
-			for (int i = 0; i < activeSelection.size(); ++i) {
-				if (i != activeLinkIndex) {
-					activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+			if(currentSelection == null) return;
+			for (int i = currentSelection.startIndex; i < currentSelection.endIndex; ++i) {
+				if (i != currentSelection.currentIndex) {
+					currentSelection.value(i).draw(gl, 1.0f, 0.0f, 0.0f);
 				}
 			}
-			if (activeSelection.size() > activeLinkIndex) {
-				activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+			if (getActiveLink() != null) {
+				getActiveLink().draw(gl, 0.0f, 0.0f, 1.0f);
 			}
 		}
 	}

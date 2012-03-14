@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -36,7 +37,6 @@ public class OverView extends GenosideComponent {
 	private SessionViewCapsule hoverCapsule = null;
 	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
-	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
 	LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	private final Object textureUpdateListLock = new Object();
@@ -45,8 +45,9 @@ public class OverView extends GenosideComponent {
 	public TextRenderer chromosomeNameRenderer;
 	public TextRenderer textRenderer;
 	private SimpleMouseEvent lastMouseClick;
-	private LinkSelection linkSelection = new LinkSelection();
+	private LinkSelection linkSelection;
 	public TrackviewManager trackviewManager;
+	private LinkCollection linkCollection = new LinkCollection();
 
 	public OverView(GenoWindow window) {
 		super(null);
@@ -55,6 +56,7 @@ public class OverView extends GenosideComponent {
 		trackviewManager = new TrackviewManager(window);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
+		linkSelection = new LinkSelection(geneCircle);
 	}
 
 	private void initTextRenderers() {
@@ -103,7 +105,7 @@ public class OverView extends GenosideComponent {
 				hideActiveSessions();
 				state = OverViewState.OVERVIEW_ACTIVE;
 			}
-		}		
+		}
 	}
 
 	private void showActiveSessions() {
@@ -197,10 +199,10 @@ public class OverView extends GenosideComponent {
 	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
 	@Override
 	public boolean handle(MouseEvent event, float x, float y) {
-		float xx=x;
-		float yy=y;
-		x=CoordinateManager.toCircleCoordsY(x);
-		y=CoordinateManager.toCircleCoordsX(y);
+		float xx = x;
+		float yy = y;
+		x = CoordinateManager.toCircleCoordsY(x);
+		y = CoordinateManager.toCircleCoordsX(y);
 
 		if (lastMouseClick == null) {
 			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
@@ -256,7 +258,7 @@ public class OverView extends GenosideComponent {
 				{
 					arcHighlightLocked = true;
 					linkSelection.update(pointerGenePosition);
-					linkSelection.updateArea(links);
+					linkSelection.updateArea(linkCollection);
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
@@ -310,7 +312,7 @@ public class OverView extends GenosideComponent {
 		// Wheel
 		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
 			if (arcHighlightLocked) {
-				linkSelection.updateArea(0.001f * event.getWheelRotation(), links);
+				linkSelection.updateArea(0.001f * event.getWheelRotation(), linkCollection);
 			} else {
 				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
 				updateCircleSize();
@@ -333,9 +335,9 @@ public class OverView extends GenosideComponent {
 		}
 		if (arcHighlightLocked) {
 			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-					trackviewManager.clearContainer();
-					trackviewManager.openLinkSession(linkSelection.getActiveLink());
-					trackviewManager.toggleVisible();
+				trackviewManager.clearContainer();
+				trackviewManager.openLinkSession(linkSelection.getActiveLink());
+				trackviewManager.toggleVisible();
 			}
 			linkSelection.handle(event);
 		}
@@ -351,10 +353,9 @@ public class OverView extends GenosideComponent {
 			for (int i = 0; i < 1000; ++i) {
 				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
+				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
 			}
+			linkCollection.syncAdditions(geneCircle);
 		}
 		return false;
 	}
@@ -363,15 +364,17 @@ public class OverView extends GenosideComponent {
 	public void draw(GL2 gl) {
 		//trackviewManager.switchContainers();
 		Vector2 mypos = this.getPosition();
-		Matrix4 geneCircleModelMatrix=CoordinateManager.getCircleMatrix();
+		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		GeneralLink.beginDrawing(gl, geneCircle.getSize());
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl);
 		} else {
-			for (GeneralLink link : links) {
-				link.draw(gl, 1.0f, 0.0f, 0.0f);
+			synchronized (linkCollection.linkSyncLock) {
+				for (GeneralLink link : linkCollection.getLinks()) {
+					link.draw(gl, 1.0f, 0.0f, 0.0f);
+				}
 			}
 		}
 		GeneralLink.endDrawing(gl);
@@ -406,7 +409,7 @@ public class OverView extends GenosideComponent {
 		textRenderer.draw(fps, 20, height - stringHeight - 7);
 		String draw = "Draw: " + drawCounter.getMillis() + "ms";
 		textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
-		String arcs = "Arcs: " + links.size();
+		String arcs = "Arcs: " + linkCollection.getLinks().size();
 		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
@@ -444,13 +447,13 @@ public class OverView extends GenosideComponent {
 		boolean first = true;
 		for (Vector2 v : chromobounds) {
 			// Rotation needs to be done first because of coordinate modification.
-			Vector2 rotationv=new Vector2(v);
+			Vector2 rotationv = new Vector2(v);
 			float angle = rotationv.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 			rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 
 			// Convert to circlecoords using the rotated vector.
 			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
-			String chromoname = AbstractGenome.getChromosome(i-1).getName();
+			String chromoname = AbstractGenome.getChromosome(i - 1).getName();
 
 			float bound = vv.relativeAngle(new Vector2(0f, 1f));
 			bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
@@ -470,8 +473,10 @@ public class OverView extends GenosideComponent {
 
 			ChromoName chromoBox = chromoNames.get(i - 1);
 			chromoBox.setPosition(vv.x * overlap, vv.y * overlap);
-			chromoBox.setSize((float)(rect.getWidth()*1.5f / halfWidth), (float)(rect.getHeight()*1.5f / halfHeight));
-			if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f); }
+			chromoBox.setSize((float) (rect.getWidth() * 1.5f / halfWidth), (float) (rect.getHeight() * 1.5f / halfHeight));
+			if (chromoBox.isActive()) {
+				chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f);
+			}
 			chromosomeNameRenderer.draw(
 					chromoname,
 					(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
@@ -488,18 +493,20 @@ public class OverView extends GenosideComponent {
 	private void fadeLinks(float dt) {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
-		for (GeneralLink link : links) {
-			if (!link.isMinimized()) {
-				if (linkSelection.inSelection(link)) {
-					link.fadeIn(dt * 16);
-				} else if (!arcHighlightLocked
-						&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
-					link.fadeDim(dt * 8);
+		synchronized (linkCollection.linkSyncLock) {
+			for (GeneralLink link : linkCollection.getLinks()) {
+				if (!link.isMinimized()) {
+					if (linkSelection.inSelection(link)) {
+						link.fadeIn(dt * 16);
+					} else if (!arcHighlightLocked
+							&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
+						link.fadeDim(dt * 8);
+					} else {
+						link.fadeOut(dt * 8);
+					}
 				} else {
 					link.fadeOut(dt * 8);
 				}
-			} else {
-				link.fadeOut(dt * 8);
 			}
 		}
 	}
@@ -510,7 +517,7 @@ public class OverView extends GenosideComponent {
 			geneCircle.tick(dt);
 			updateCircleSize();
 		}
-		linkSelection.tick(dt, links);
+		linkSelection.tick(dt, linkCollection);
 		geneCircleGFX.tick(dt);
 
 		fadeLinks(dt);
@@ -584,7 +591,7 @@ public class OverView extends GenosideComponent {
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.updateGeneCirclePosition();
 		}
-		for (GeneralLink link : links) {
+		for (GeneralLink link : linkCollection.getLinks()) {
 			link.calculatePositions(geneCircle);
 		}
 	}
@@ -597,9 +604,8 @@ public class OverView extends GenosideComponent {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);
-		float s = Math.abs(xx*xx/(a*a) + yy*yy/(b*b));
-		if (s < 1.0f && s > 0.8f)
-		{
+		float s = Math.abs(xx * xx / (a * a) + yy * yy / (b * b));
+		if (s < 1.0f && s > 0.8f) {
 			return true;
 		}
 		return false;

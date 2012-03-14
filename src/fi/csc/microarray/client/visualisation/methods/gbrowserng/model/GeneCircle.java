@@ -78,7 +78,7 @@ public class GeneCircle {
 		}
 		return null;
 	}
-
+	
 	public ViewChromosome getChromosome() {
 		return chromosome;
 	}
@@ -119,6 +119,15 @@ public class GeneCircle {
 		}
 		this.chromosomeBoundariesPositions = chromosomeBoundariesPositions;
 
+	}
+
+	public long getChromosomePosition(ViewChromosome startChr, float relativePos) {
+		long ret = startChr.length();
+		int chrNum = startChr.getChromosomeNumber()-1;
+		float chrRelLength = chromosomeBoundaries[chrNum] - chromosomeBoundaries[chrNum+1];
+		ret = (long)(ret * (chromosomeBoundaries[chrNum]-relativePos)/chrRelLength);
+		
+		return ret;
 	}
 
 
