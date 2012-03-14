@@ -55,7 +55,8 @@ public class EventHandler {
 						return;
 					}
 				} else if (keyEvent.getKeyChar() == 'f') {
-					//toggleFullscreen();
+					toggleFullscreen();
+				} else if (keyEvent.getKeyChar() == 't') {
 					window.toggleVisible();
 				} else {
 					client.handle((KeyEvent) event);

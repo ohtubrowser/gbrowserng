@@ -28,7 +28,6 @@ public class GenoWindow {
 		this.window.setSize(width, height);
 		this.window.setTitle("GenomeBrowserNG");
 
-
 		newtCanvasAWT = new NewtCanvasAWT(window);
 		testFrame = new Frame("GenomeBrowserNG");
 		testFrame.setLayout(new BorderLayout());
