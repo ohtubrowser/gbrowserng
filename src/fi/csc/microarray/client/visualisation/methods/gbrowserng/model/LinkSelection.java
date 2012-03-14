@@ -89,10 +89,8 @@ public class LinkSelection {
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 		float x, y;
-		synchronized (geneCircle.tickdrawLock) {
-			x = 0.9495f * geneCircle.getXYPosition(this.begin).x;
-			y = 0.9495f * geneCircle.getXYPosition(this.begin).y;
-		}
+		x = 0.9495f * geneCircle.getXYPosition(this.begin).x;
+		y = 0.9495f * geneCircle.getXYPosition(this.begin).y;
 
 		float angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 

@@ -67,23 +67,19 @@ public class GeneCircleGFX {
 
 		int len;
 		Vector2[] chromopositions;
-		synchronized (geneCircle.tickdrawLock) {
-			chromopositions = geneCircle.getChromosomeBoundariesPositions();
-			len = chromopositions.length;
-		}
+		chromopositions = geneCircle.getChromosomeBoundariesPositions();
+		len = chromopositions.length;
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 		for (int i = 0; i < len; ++i) {
 			float x, y;
-			synchronized (geneCircle.tickdrawLock) {
-				x = 0.9495f * chromopositions[i].x;
-				y = 0.9495f * chromopositions[i].y;
+			x = 0.9495f * chromopositions[i].x;
+			y = 0.9495f * chromopositions[i].y;
 
-				//float dy = 0.9495f*vec.y;
-				//float dx = 0.9495f*vec.x;
-			}
+			//float dy = 0.9495f*vec.y;
+			//float dx = 0.9495f*vec.x;
 
 			float angle = 180f * (float) Math.atan2(/*
 					 * dy

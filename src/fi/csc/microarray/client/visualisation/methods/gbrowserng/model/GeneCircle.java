@@ -19,13 +19,12 @@ public class GeneCircle {
 	public boolean animating = true;
 
 	public GeneCircle() {
-		chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
-		chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		tick(0f);
 		animating = true;
 	}
 
 	public void tick(float dt) { // TODO: Most of this logic should be pushed to individual AbstractChromosome instances.
+		float[] chromosomeBoundaries = new float[AbstractGenome.getNumChromosomes() + 1];
 		// 60% of the circle's circumference is divided evenly between chromosomes
 		// Remaining 40% according to relative chromosome sizes
 		minimumChromosomeSlice = 0.6f / AbstractGenome.getNumChromosomes();
@@ -52,9 +51,13 @@ public class GeneCircle {
 			else chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());
 		}
 
+		Vector2[] chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
 			chromosomeBoundariesPositions[i - 1] = getXYPosition(chromosomeBoundaries[i - 1]);
 		}
+
+		this.chromosomeBoundaries = chromosomeBoundaries;
+		this.chromosomeBoundariesPositions = chromosomeBoundariesPositions;
 	}
 
 	public void updatePosition(float pointerGenePosition) {
@@ -69,10 +72,8 @@ public class GeneCircle {
 
 	public ViewChromosome getChromosomeByRelativePosition(float relativePosition) {
 		for (int i = 1; i < chromosomeBoundaries.length; ++i) {
-			synchronized (tickdrawLock) {
-				if (chromosomeBoundaries[i] <= relativePosition) {
-					return AbstractGenome.getChromosome(i - 1);
-				}
+			if (chromosomeBoundaries[i] <= relativePosition) {
+				return AbstractGenome.getChromosome(i - 1);
 			}
 		}
 		return null;
@@ -112,9 +113,11 @@ public class GeneCircle {
 
 	public void setSize(float size) {
 		this.size = size;
+		Vector2[] chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
 		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
 			chromosomeBoundariesPositions[i - 1] = getXYPosition(chromosomeBoundaries[i - 1]);
 		}
+		this.chromosomeBoundariesPositions = chromosomeBoundariesPositions;
 
 	}
 

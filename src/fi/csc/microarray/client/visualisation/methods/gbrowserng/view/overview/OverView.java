@@ -221,11 +221,9 @@ public class OverView extends GenosideComponent {
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
 		for (ChromoName chromoName : chromoNames) {
 			if (chromoName.isOver(xx, yy)) {
-				synchronized (geneCircle.tickdrawLock) {
-					int id = chromoName.getChromosome().getChromosomeNumber();
-					float[] bounds = geneCircle.getChromosomeBoundaries();
-					pointerGenePosition = bounds[id - 1] + (bounds[id] - bounds[id - 1]) / 2 + 0.25f;
-				}
+				int id = chromoName.getChromosome().getChromosomeNumber();
+				float[] bounds = geneCircle.getChromosomeBoundaries();
+				pointerGenePosition = bounds[id - 1] + (bounds[id] - bounds[id - 1]) / 2 + 0.25f;
 			}
 		}
 
@@ -440,60 +438,56 @@ public class OverView extends GenosideComponent {
 		int i = 1;
 		float halfHeight = height / 2f;
 		float halfWidth = width / 2f;
-		synchronized (geneCircle.tickdrawLock) {
-			Vector2[] chromobounds = geneCircle.getChromosomeBoundariesPositions();
-			float lastBound = 0f;
-			float overlap = 1.04f;
-			boolean first = true;
-			for (Vector2 v : chromobounds) {
-				// Rotation needs to be done first because of coordinate modification.
-				Vector2 rotationv=new Vector2(v);
-				float angle = rotationv.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
-				rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
+		Vector2[] chromobounds = geneCircle.getChromosomeBoundariesPositions();
+		float lastBound = 0f;
+		float overlap = 1.04f;
+		boolean first = true;
+		for (Vector2 v : chromobounds) {
+			// Rotation needs to be done first because of coordinate modification.
+			Vector2 rotationv=new Vector2(v);
+			float angle = rotationv.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
+			rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 
-				// Convert to circlecoords using the rotated vector.
-				Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
-				String chromoname = AbstractGenome.getChromosome(i-1).getName();
+			// Convert to circlecoords using the rotated vector.
+			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
+			String chromoname = AbstractGenome.getChromosome(i-1).getName();
 
-				float bound = vv.relativeAngle(new Vector2(0f, 1f));
-				bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
-				if (first) {
-					first = false;
-					lastBound = bound;
+			float bound = vv.relativeAngle(new Vector2(0f, 1f));
+			bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
+			if (first) {
+				first = false;
+				lastBound = bound;
+			} else {
+				if (lastBound - bound > -0.1f) {
+					overlap += 0.04f;
 				} else {
-					if (lastBound - bound > -0.1f) {
-						overlap += 0.04f;
-					} else {
-						overlap = 1.04f;
-						lastBound = bound;
-					}
+					overlap = 1.04f;
+					lastBound = bound;
 				}
-
-				Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
-
-				ChromoName chromoBox = chromoNames.get(i - 1);
-				chromoBox.setPosition(vv.x * overlap, vv.y * overlap);
-				chromoBox.setSize((float)(rect.getWidth()*1.5f / halfWidth), (float)(rect.getHeight()*1.5f / halfHeight));
-				if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f); }
-				chromosomeNameRenderer.draw(
-						chromoname,
-						(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
-						(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
-
-				if (chromoBox.isActive()) {
-					chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
-				}
-				++i;
 			}
+
+			Rectangle2D rect = chromosomeNameRenderer.getBounds(chromoname);
+
+			ChromoName chromoBox = chromoNames.get(i - 1);
+			chromoBox.setPosition(vv.x * overlap, vv.y * overlap);
+			chromoBox.setSize((float)(rect.getWidth()*1.5f / halfWidth), (float)(rect.getHeight()*1.5f / halfHeight));
+			if (chromoBox.isActive()) { chromosomeNameRenderer.setColor(1.0f, 0.1f, 0.1f, 0.8f); }
+			chromosomeNameRenderer.draw(
+					chromoname,
+					(int) (halfWidth + (halfWidth * vv.x * overlap) - rect.getWidth() / 2f),
+					(int) (halfHeight + (halfHeight * vv.y * overlap) - rect.getHeight() / 2f));
+
+			if (chromoBox.isActive()) {
+				chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
+			}
+			++i;
 		}
 		chromosomeNameRenderer.endRendering();
 	}
 
 	private void fadeLinks(float dt) {
 		ViewChromosome thisChromo;
-		synchronized (geneCircle.tickdrawLock) {
-			thisChromo = geneCircle.getChromosome();
-		}
+		thisChromo = geneCircle.getChromosome();
 		for (GeneralLink link : links) {
 			if (!link.isMinimized()) {
 				if (linkSelection.inSelection(link)) {
@@ -512,11 +506,9 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public void userTick(float dt) {
-		synchronized (geneCircle.tickdrawLock) {
-			if (geneCircle.animating) {
-				geneCircle.tick(dt);
-				updateCircleSize();
-			}
+		if (geneCircle.animating) {
+			geneCircle.tick(dt);
+			updateCircleSize();
 		}
 		linkSelection.tick(dt, links);
 		geneCircleGFX.tick(dt);
