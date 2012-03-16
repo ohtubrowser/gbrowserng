@@ -18,15 +18,20 @@ public class LinkCollection {
 	public LinkCollection() {
 	}
 	
+	// TODO : maybe need to account for invalidation of existing iterators once this happens
 	public void syncAdditions(GeneCircle geneCircle) {
 		if(newLinksToAdd.isEmpty())
 			return;
 		synchronized(linkSyncLock) {
 			for(GeneralLink link : newLinksToAdd)
 				link.calculatePositions(geneCircle);
-			links.addAll(newLinksToAdd);
+
+			// Depending on the relative sizes of newLinksToAdd and links, this will often be faster than standard mergesort-like merge
+			for(GeneralLink link : newLinksToAdd) {
+				int insertIndex = Math.abs(Collections.binarySearch(links, link));
+				links.add(insertIndex-1, link);
+			}
 			newLinksToAdd.clear();
-			Collections.sort(links);
 		}
 	}
 	
