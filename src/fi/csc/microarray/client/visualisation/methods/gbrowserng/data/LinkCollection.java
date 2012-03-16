@@ -41,23 +41,26 @@ public class LinkCollection {
 		return links.get(index);
 	}
 	
-	public LinkRangeIterator getRangeIterator(ViewChromosome startChr, ViewChromosome endChr, long startPos, long endPos) {
-		GeneralLink tempA = new GeneralLink(startChr, endChr, startPos, endPos, true);
-		GeneralLink tempB = new GeneralLink(endChr, startChr, startPos, endPos, false);
+	public LinkRangeIterator getRangeIterator(float relativeStart, float relativeEnd) {
+		GeneralLink tempA = GeneralLink.createComparisonObject(relativeStart, relativeEnd, true);
+		GeneralLink tempB = GeneralLink.createComparisonObject(relativeStart, relativeEnd, false);
+
 		int startIndex = Math.abs(Collections.binarySearch(links, tempA));
 		int endIndex = Math.abs(Collections.binarySearch(links, tempB));
+
+		startIndex = Math.min(links.size()-1, startIndex);
+		endIndex = Math.min(links.size(), endIndex);
+		
+		System.out.println(startIndex + " -- " + endIndex);
+		
 		return new LinkRangeIterator(this, startIndex, endIndex);
 	}
 	
-	public LinkRangeIterator getRangeIterator(GeneCircle geneCircle, float relativeStart, float relativeEnd) {
-		ViewChromosome startChr = geneCircle.getChromosomeByRelativePosition(relativeStart),
-				endChr = geneCircle.getChromosomeByRelativePosition(relativeEnd);
-		long startPos = geneCircle.getChromosomePosition(startChr, relativeStart),
-				endPos = geneCircle.getChromosomePosition(endChr, relativeEnd);
-		return getRangeIterator(startChr, endChr, startPos, endPos);
-	}
-
 	public ArrayList<GeneralLink> getLinks() {
 		return links;
+	}
+	
+	public int numLinks() {
+		return links.size();
 	}
 }

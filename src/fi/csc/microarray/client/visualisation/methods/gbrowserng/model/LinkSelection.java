@@ -131,9 +131,10 @@ public class LinkSelection {
 		synchronized (linkSelectionLock) {
 			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-					currentSelection.increment();
+					currentSelection.increment(); 
+					if(currentSelection.currentIndex == currentSelection.endIndex) currentSelection.decrement();//  Not the most elegant solution, but it works
 				}
-				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT && currentSelection.currentIndex != currentSelection.startIndex) {
 					currentSelection.decrement();
 				}
 			}
@@ -178,24 +179,26 @@ public class LinkSelection {
 		if (link.isMinimized()) {
 			return false;
 		}
-		if(currentSelection == null || (link.compareTo(currentSelection.value(currentSelection.startIndex)) >= 0 && link.compareTo(currentSelection.value(currentSelection.endIndex-1)) <= 0))
+		if(currentSelection == null)
 			return true;
-		return false;
+		return currentSelection.inRange(link);
 	}
 
 	private void updateActiveLinks(LinkCollection linkCollection) {
 		synchronized (linkSelectionLock) {
-			currentSelection = linkCollection.getRangeIterator(geneCircle, end, begin);
+			currentSelection = linkCollection.getRangeIterator(begin, end);
 		}
 	}
 
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
 			if(currentSelection == null) return;
-			for (int i = currentSelection.startIndex; i < currentSelection.endIndex; ++i) {
-				if (i != currentSelection.currentIndex) {
-					currentSelection.value(i).draw(gl, 1.0f, 0.0f, 0.0f);
-				}
+			LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
+			rangeIterator.rewind();
+			while(rangeIterator.currentIndex != rangeIterator.endIndex) {
+				if(rangeIterator.currentIndex != currentSelection.currentIndex)
+					rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
+				rangeIterator.increment();
 			}
 			if (getActiveLink() != null) {
 				getActiveLink().draw(gl, 0.0f, 0.0f, 1.0f);

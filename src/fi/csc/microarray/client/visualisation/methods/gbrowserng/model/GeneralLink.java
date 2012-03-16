@@ -16,13 +16,23 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart;
-	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
+	public final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
 
+	private GeneralLink(float aCirclePos, float bCirclePos, boolean aOcc) { // Private constructor for creating temporary comparison objects
+		this.aOcc = aOcc;
+		this.aCirclePos = aCirclePos;
+		this.bCirclePos = bCirclePos;
+	}
+	
+	public static GeneralLink createComparisonObject(float aCirclePos, float bCirclePos, boolean aOcc) {
+		return new GeneralLink(aCirclePos, bCirclePos, aOcc);
+	}
+	
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
 		if (this.opacity > 1.0f) {
@@ -153,14 +163,10 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	@Override
 	public int compareTo(GeneralLink o) {
-		int thisChrNumber = aOcc ? aChromosome.getChromosomeNumber() : bChromosome.getChromosomeNumber(),
-			oChrNumber = o.aOcc ? o.aChromosome.getChromosomeNumber() : o.bChromosome.getChromosomeNumber();
+		float thisPos = aOcc ? aCirclePos : bCirclePos,
+				oPos = o.aOcc ? o.aCirclePos : o.bCirclePos;
 		
-		long thisPos = aOcc ? aStart : bStart,
-				oPos = o.aOcc ? o.aStart : o.bStart;
-		
-		long diff = thisChrNumber - oChrNumber;
-		if(diff == 0) diff = thisPos - oPos;
+		float diff = thisPos - oPos;
 		
 		// For type safety, maybe overkill
 		int ret = 0;
