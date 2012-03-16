@@ -16,7 +16,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart;
-	public final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
+	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r = 1.0f, g = 0.0f, b = 0.0f;
 	float aCirclePos, bCirclePos;

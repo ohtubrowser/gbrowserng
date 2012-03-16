@@ -51,8 +51,6 @@ public class LinkCollection {
 		startIndex = Math.min(links.size()-1, startIndex);
 		endIndex = Math.min(links.size(), endIndex);
 		
-		System.out.println(startIndex + " -- " + endIndex);
-		
 		return new LinkRangeIterator(this, startIndex, endIndex);
 	}
 	
