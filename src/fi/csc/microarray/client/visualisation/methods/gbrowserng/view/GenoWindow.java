@@ -3,7 +3,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 import com.jogamp.newt.awt.NewtCanvasAWT;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
-import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import java.awt.*;
@@ -18,8 +17,8 @@ public class GenoWindow {
 	private Animator animator;
 	private boolean isFullscreen = false;
 	public NewtCanvasAWT newtCanvasAWT;
-	Frame testFrame;
-	Container testContainer;
+	Frame frame;
+	Container container;
 	private boolean overviewVisible = true;
 
 	public GenoWindow(int width, int height) {
@@ -29,31 +28,33 @@ public class GenoWindow {
 		this.window.setTitle("GenomeBrowserNG");
 
 		newtCanvasAWT = new NewtCanvasAWT(window);
-		testFrame = new Frame("GenomeBrowserNG");
-		testFrame.setLayout(new BorderLayout());
+		frame = new Frame("GenomeBrowserNG");
+		frame.setVisible(false);
+		frame.setLayout(new BorderLayout());
 
-		testContainer = new Container();
-		testContainer.setLayout(new CardLayout());
+		container = new Container();
+		container.setLayout(new CardLayout());
 
-		testContainer.add(newtCanvasAWT, "TESTING!");
+		container.add(newtCanvasAWT, "TESTING!");
+		container.setVisible(false);
 
-		testFrame.add(testContainer, BorderLayout.CENTER);
-		testFrame.setSize(width, height);
+		frame.add(container, BorderLayout.CENTER);
+		frame.setSize(width, height);
 	}
 
 	public void open() {
 		this.window.setVisible(true);
-		testFrame.setVisible(true);
-		CardLayout cl = (CardLayout) testContainer.getLayout();
-		cl.next(testContainer);
+		frame.setVisible(true);
+		CardLayout cl = (CardLayout) container.getLayout();
+		cl.next(container);
 		this.animator = new Animator(this.window);
 		this.animator.start();
 	}
 
 	public void close() {
 		this.animator.stop();
-		testFrame.setVisible(false);
-		testFrame.dispose(); // This causes a sigsegv because of a jogl bug
+		frame.setVisible(false);
+		frame.dispose(); // This causes a sigsegv because of a jogl bug
 		this.window.destroy();
 	}
 
@@ -71,8 +72,8 @@ public class GenoWindow {
 
 	public void toggleVisible() {
 		overviewVisible = !overviewVisible;
-		CardLayout cl = (CardLayout) testContainer.getLayout();
-		cl.next(testContainer);
+		CardLayout cl = (CardLayout) container.getLayout();
+		cl.next(container);
 	}
 
 	public boolean isOverviewVisible() {
@@ -80,8 +81,10 @@ public class GenoWindow {
 	}
 
 	public void addContainer(Container swingContainer) {
-		testContainer.add(swingContainer, "2");
-		CardLayout cl = (CardLayout) testContainer.getLayout();
-		cl.next(testContainer);
+		container.setVisible(true);
+		frame.setVisible(true);
+		container.add(swingContainer, "2");
+		CardLayout cl = (CardLayout) container.getLayout();
+		cl.next(container);
 	}
 }
