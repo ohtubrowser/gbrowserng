@@ -21,6 +21,8 @@ public class LinkSelection {
 	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
 	public final Object linkSelectionLock = new Object();
 	private int activeLinkIndex = 0;
+	private float mouseX, mouseY;
+	private boolean mouseInsideCircle = false;
 
 	public LinkSelection() {
 		begin = 0.0f;
@@ -194,6 +196,12 @@ public class LinkSelection {
 		}
 	}
 
+	public void mouseMove(boolean insideCircle, float x, float y) {
+		synchronized (linkSelectionLock) {
+			mouseInsideCircle = insideCircle; mouseX = x; mouseY = y;
+		}
+	}
+
 	private void updateActiveLinks(ConcurrentLinkedQueue<GeneralLink> links) {
 		synchronized (linkSelectionLock) {
 			getActiveSelection().clear();
@@ -212,13 +220,20 @@ public class LinkSelection {
 
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
-			for (int i = 0; i < activeSelection.size(); ++i) {
-				if (i != activeLinkIndex) {
-					activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+			if (mouseInsideCircle) {
+				for (int i = 0; i < activeSelection.size(); ++i) {
+					activeSelection.get(i).draw(gl, mouseX, mouseY);
+					activeLinkIndex = i;
 				}
-			}
-			if (activeSelection.size() > activeLinkIndex) {
-				activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+			} else {
+				for (int i = 0; i < activeSelection.size(); ++i) {
+					if (i != activeLinkIndex) {
+						activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+					}
+				}
+				if (activeSelection.size() > activeLinkIndex) {
+				 activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+				}
 			}
 		}
 	}
