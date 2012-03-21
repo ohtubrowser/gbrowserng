@@ -4,6 +4,7 @@ import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.ChromoName;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.LinkSelection;
@@ -28,6 +29,17 @@ public class MouseEventHandler {
     boolean handle(MouseEvent event, float x, float y) {
         SessionViewCapsule hoverCapsule = overview.getHoverCapsule();
         GeneCircle geneCircle = overview.getGeneCircle();
+	ContextMenu contextMenu = overview.getContextMenu();
+	
+	if(contextMenu!=null) {
+		if(contextMenu.inComponent(x,y)) {
+			contextMenu.handle(event, x, y);
+			if(contextMenu.close()) {
+				overview.closeContextMenu();
+			}
+			return true;
+		}
+	}
         
         initializeGlobalVariables();
         checkIfLastMouseClickNull(x, y, event);
@@ -102,7 +114,15 @@ public class MouseEventHandler {
     private boolean showEvent(MouseEvent event, float x, float y, LinkSelection selection, float pointerGenePosition, GeneCircle geneCircle) {
         // then see if they actually want the event
         if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
-            if (event.getButton() == 1) {
+		if (event.getButton() == 1) {
+			ContextMenu contextMenu = overview.getContextMenu();
+			if(contextMenu!=null) {	    // context menu selection
+				if(contextMenu.handle(event, x, y)) {
+					contextMenu = null;
+					return true;
+				}
+				contextMenu = null;
+			}
                 for (SessionViewCapsule capsule : sessions) {
                     if (capsule.isDying()) {
                         continue;
@@ -151,7 +171,8 @@ public class MouseEventHandler {
                         return true;
                     }
                 }
-                ViewChromosome chromosome = geneCircle.getChromosome();
+		overview.openContextMenu(x, y);
+                /*ViewChromosome chromosome = geneCircle.getChromosome();
                 if (chromosome.isMinimized()) {
                     chromosome.setMinimized(false);
                 } else {
@@ -168,7 +189,7 @@ public class MouseEventHandler {
                         AbstractGenome.getChromosome(i).setMinimized(false);
                     }
                 }
-                geneCircle.animating = true;
+                geneCircle.animating = true;*/
                 lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
                 return true;
             }

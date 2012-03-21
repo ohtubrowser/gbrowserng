@@ -238,6 +238,12 @@ public class OverView extends GenosideComponent {
 		drawCapsules(gl);
 		int textValues[] = renderText();
 		renderChromosomeNames(gl, textValues[0], textValues[1]);
+		
+		drawNumbers();
+		
+		if(contextMenu!=null) {
+			contextMenu.draw(gl);
+		}
 	}
 	
 	private void drawCapsules(GL2 gl) {
@@ -265,11 +271,7 @@ public class OverView extends GenosideComponent {
 	
 	private void renderChromosomeNames(GL2 gl, int width, int height) {
 
-		drawNumbers();
-		
-		if(contextMenu!=null) {
-			contextMenu.draw(gl);
-		}
+
 	}
 
 	private void drawNumbers() {
@@ -558,6 +560,18 @@ public class OverView extends GenosideComponent {
 
 	TrackviewManager getTrackviewManager() {
 		return trackviewManager;
+	}
+	
+	public void openContextMenu(float x, float y) {
+		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y);
+	}
+	
+	public ContextMenu getContextMenu() {
+		return this.contextMenu;
+	}
+	
+	public void closeContextMenu() {
+		this.contextMenu = null;
 	}
 }
 

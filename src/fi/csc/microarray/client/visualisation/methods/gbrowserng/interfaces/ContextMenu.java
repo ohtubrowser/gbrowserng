@@ -67,10 +67,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		close = true;
 	}
 	
-	/*public int action() {
-		return selections.get(selected).action;
-	}*/
-	
 	public ViewChromosome getChromosome() {
 		return chromosome;
 	}
@@ -87,10 +83,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	
 	@Override
 	public boolean handle(MouseEvent event, float mx, float my) {
-		System.out.println("hiiri y:"+my);
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
-				System.out.println(i+" välillä "+(y - selectionHeight * 0.5f - selectionHeight*i) +" ja "+(y + selectionHeight * 0.5f - selectionHeight*i));
 				if(my > y - selectionHeight * 0.5f - selectionHeight*i && my < y + selectionHeight * 0.5f - selectionHeight*i) {
 					selected = i;
 					break;
@@ -115,7 +109,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			action(selected);
 			close=true;
 		}
-		System.out.println("Valinta "+selected);
 		return true;
 	}
 	
@@ -154,7 +147,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	public boolean inComponent(float mx, float my) {
 		if(mx < x - sizex * 0.5f || mx > x + sizex * 0.5f) return false;
 		if(my < y - selectionHeight * 0.5f - selectionHeight*(selections.size()-1) || my > y + selectionHeight * 0.5f) return false;
-		System.out.println("In component, valinta "+selected);
 		return true;
 	}
 	
