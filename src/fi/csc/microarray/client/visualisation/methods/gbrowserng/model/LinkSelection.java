@@ -221,9 +221,16 @@ public class LinkSelection {
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
 			if (mouseInsideCircle) {
+				boolean oneLinkSelected = false;
 				for (int i = 0; i < activeSelection.size(); ++i) {
-					activeSelection.get(i).draw(gl, mouseX, mouseY);
-					activeLinkIndex = i;
+					if (oneLinkSelected) {
+						activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+					}
+					else {
+						if (oneLinkSelected = activeSelection.get(i).draw(gl, mouseX, mouseY)) {
+							activeLinkIndex = i;
+						}
+					}
 				}
 			} else {
 				for (int i = 0; i < activeSelection.size(); ++i) {
