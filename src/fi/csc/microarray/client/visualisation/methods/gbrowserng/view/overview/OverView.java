@@ -29,34 +29,38 @@ import math.Vector2;
 
 public class OverView extends GenosideComponent {
 
-	GeneCircle geneCircle = new GeneCircle();
-	GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
-	GenoFPSCounter tickCounter = new GenoFPSCounter();
-	GenoFPSCounter drawCounter = new GenoFPSCounter();
+	private GeneCircle geneCircle = new GeneCircle();
+	private GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
+	private GenoFPSCounter tickCounter = new GenoFPSCounter();
+	private GenoFPSCounter drawCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
-	ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
-	ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
-	ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
-	LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
-	ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
+	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
+	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
+	private ConcurrentLinkedQueue<GeneralLink> links = new ConcurrentLinkedQueue<GeneralLink>();
+	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
+	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	private final Object textureUpdateListLock = new Object();
 	public boolean die = false, arcHighlightLocked = false;
-	OverViewState state = OverViewState.OVERVIEW_ACTIVE;
-	public TextRenderer chromosomeNameRenderer;
-	public TextRenderer textRenderer;
-	private SimpleMouseEvent lastMouseClick;
+	private OverViewState state = OverViewState.OVERVIEW_ACTIVE;
+	public TextRenderer chromosomeNameRenderer, textRenderer;
 	private LinkSelection linkSelection = new LinkSelection();
 	public TrackviewManager trackviewManager;
-        private ContextMenu contextMenu;
+	private ContextMenu contextMenu;
+	private MouseEventHandler mouseHandler;
 
-	public OverView(GenoWindow window) {
+	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
+		this.links = links;
+		for (GeneralLink l : links) {
+			l.calculatePositions(geneCircle);
+		}
 		initTextRenderers();
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
+		mouseHandler = new MouseEventHandler(this);
 	}
 
 	private void initTextRenderers() {
@@ -108,7 +112,7 @@ public class OverView extends GenosideComponent {
 		}		
 	}
 
-	private void showActiveSessions() {
+	public void showActiveSessions() {
 		SpaceDivider divider = new SpaceDivider(SpaceDivider.HORIZONTAL, 1.0f, 2.0f);
 		for (SessionViewCapsule capsule : activeSessions) {
 			divider.insertComponent(capsule.getSession());
@@ -164,186 +168,10 @@ public class OverView extends GenosideComponent {
 		}
 		activeSessions.clear();
 	}
-
-	private void openSession(SessionViewCapsule capsule) {
-		capsule.activate();
-		activeSessions.add(capsule);
-
-		showActiveSessions();
-		state = OverViewState.SESSIONVIEW_ACTIVE;
-
-		for (SessionViewCapsule otherCapsule : sessions) {
-			boolean found = false;
-			for (SessionViewCapsule activeCapsule : activeSessions) {
-				if (otherCapsule.getId() == activeCapsule.getId()) {
-					found = true;
-				}
-			}
-
-			if (!found) {
-				otherCapsule.hideBackground();
-			}
-		}
-	}
-
-	private void minimizeAllButOne(ViewChromosome chromosome) {
-		int chromosomes = AbstractGenome.getNumChromosomes();
-		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = AbstractGenome.getChromosome(i);
-			if (c != chromosome) {
-				c.setMinimized(true);
-			}
-		}
-	}
-
-	// TODO: This is becoming quite tedious. Consider writing separate input-handler classes.
 	@Override
 	public boolean handle(MouseEvent event, float x, float y) {
-		float xx=x;
-		float yy=y;
-		x=CoordinateManager.toCircleCoordsY(x);
-		y=CoordinateManager.toCircleCoordsX(y);
-
-		if (lastMouseClick == null) {
-			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
-		}
-		
-		if(contextMenu!=null) {
-			if(contextMenu.inComponent(xx,yy)) {
-				contextMenu.handle(event, xx, yy);
-				if(contextMenu.close()) {
-					/*if(contextMenu.action()==0) contextMenu.getChromosome().setMinimized(true);
-					if(contextMenu.action()==1) contextMenu.getChromosome().setMinimized(false);
-					if(contextMenu.action()==2) minimizeAllButOne(contextMenu.getChromosome());*/
-					contextMenu = null;
-				}
-				return true;
-			}
-		}
-		
-		this.hoverCapsule = null;
-		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
-			if (capsule.getSession().inComponent(xx, yy)) {
-				this.hoverCapsule = capsule;
-				break;
-			}
-		}
-		// if there is an active session, let it handle input.
-		if (!activeSessions.isEmpty() && hoverCapsule != null) {
-			return hoverCapsule.getSession().handle(event, xx, yy);
-		}
-
-		// note, x axis is negated to make tracking begin from the mathematical zero angle.
-		float pointerGenePosition = 1.0f - ((float) (Math.atan2(y, -x) / Math.PI) * 0.5f + 0.5f);
-		for (ChromoName chromoName : chromoNames) {
-			if (chromoName.isOver(xx, yy)) {
-				int id = chromoName.getChromosome().getChromosomeNumber();
-				float[] bounds = geneCircle.getChromosomeBoundaries();
-				pointerGenePosition = bounds[id - 1] + (bounds[id] - bounds[id - 1]) / 2 + 0.25f;
-			}
-		}
-
-		geneCircle.updatePosition(pointerGenePosition);
-		if (!arcHighlightLocked) {
-			if (pointOnCircle(x, y)) {
-				linkSelection.update(pointerGenePosition);
-			} else {
-				linkSelection.reset();
-			}
-		}
-
-		// allow capsules to update their states
-		for (SessionViewCapsule capsule : sessions) {
-			capsule.handle(event, xx, yy);
-		}
-		// then see if they actually want the event
-		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
-			if (event.getButton() == 1) {
-				if(contextMenu!=null) {	    // context menu selection
-				    if(contextMenu.handle(event, xx, yy)) {
-					contextMenu = null;
-					return true;
-				    }
-				    contextMenu = null;
-				}
-				for (SessionViewCapsule capsule : sessions) {
-					if (capsule.isDying()) {
-						continue;
-					}
-					if (capsule.handle(event, x, y)) {
-						openSession(capsule);
-						return true;
-					}
-				}
-				if (pointOnCircle(x, y)) //				 respond to mouse click
-				{
-					arcHighlightLocked = true;
-					linkSelection.update(pointerGenePosition);
-					linkSelection.updateArea(links);
-				} else {
-					if (arcHighlightLocked) {
-						arcHighlightLocked = false;
-						linkSelection.deactivate();
-					} else {
-						SessionViewCapsule capsule = new SessionViewCapsule(new SessionView(new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition()), this), pointerGenePosition, geneCircle);
-						capsule.getSession().setDimensions(0.4f, 0.2f);
-						capsule.getSession().setPosition(x, y);
-						sessions.add(capsule);
-						//openSession(capsule);
-						synchronized (textureUpdateListLock) {
-							textureUpdateList.add(capsule);
-							capsule.setNeedsTextureUpdate();
-						}
-					}
-				}
-			} else if (event.getButton() == 3) {
-				for (SessionViewCapsule capsule : sessions) {
-					if (capsule.isDying()) {
-						continue;
-					}
-					if (capsule.handle(event, xx, yy)) {
-						capsule.die();
-						capsule.deactivate();
-						return true;
-					}
-				}
-				ViewChromosome chromosome = geneCircle.getChromosome();
-				//chromosome.setMinimized(true);
-				contextMenu = new ContextMenu(chromosome, geneCircle, xx, yy);
-				/*if (chromosome.isMinimized()) {
-					chromosome.setMinimized(false);
-				} else {
-					chromosome.setMinimized(true);
-				}
-				if ((chromosome.isAnimating() && !chromosome.isMinimized())
-						&& lastMouseClick.getX() == x && lastMouseClick.getY() == y
-						&& lastMouseClick.getWhen() + 250 > event.getWhen()) {
-					minimizeAllButOne(chromosome);
-				} else if ((chromosome.isAnimating() && chromosome.isMinimized())
-						&& lastMouseClick.getX() == x && lastMouseClick.getY() == y
-						&& lastMouseClick.getWhen() + 250 > event.getWhen()) {
-					for (int i = 0; i < AbstractGenome.getNumChromosomes(); ++i) {
-						AbstractGenome.getChromosome(i).setMinimized(false);
-					}
-				}*/
-				lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
-				return true;
-			}
-		}
-
-		// Wheel
-		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
-			if (arcHighlightLocked) {
-				linkSelection.updateArea(0.001f * event.getWheelRotation(), links);
-			} else {
-				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
-				updateCircleSize();
-			}
-		}
-
-		mousePosition.x = x;
-		mousePosition.y = y;
-		return false;
+		boolean value = mouseHandler.handle(event, x, y);
+		return value;
 	}
 
 	@Override
@@ -375,15 +203,6 @@ public class OverView extends GenosideComponent {
 		} else if (KeyEvent.VK_A == event.getKeyCode()) {
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
 			updateCircleSize();
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
-			Random r = new Random();
-			for (int i = 0; i < 1000; ++i) {
-				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				GeneralLink newlink = new GeneralLink(begin, end, 0, r.nextInt((int) begin.length()), 0, r.nextInt((int) end.length()));
-				newlink.calculatePositions(geneCircle);
-				links.add(newlink);
-			}
 		}
 		return false;
 	}
@@ -400,7 +219,7 @@ public class OverView extends GenosideComponent {
 			linkSelection.draw(gl);
 		} else {
 			for (GeneralLink link : links) {
-				link.draw(gl, 1.0f, 0.0f, 0.0f);
+				link.draw(gl);
 			}
 		}
 		GeneralLink.endDrawing(gl);
@@ -409,6 +228,12 @@ public class OverView extends GenosideComponent {
 			linkSelection.draw(gl, geneCircle);
 		}
 
+		drawCapsules(gl);
+		int textValues[] = renderText();
+		renderChromosomeNames(gl, textValues[0], textValues[1]);
+	}
+	
+	private void drawCapsules(GL2 gl) {
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
 				capsule.drawToTexture(gl);
@@ -427,35 +252,11 @@ public class OverView extends GenosideComponent {
 				capsule.draw(gl);
 			}
 		}
-		int width = GlobalVariables.width, height = GlobalVariables.height;
-		textRenderer.beginRendering(width, height);
-		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
-		String fps = "Tick: " + tickCounter.getMillis() + "ms";
-		int stringHeight = (int) textRenderer.getBounds(fps).getHeight();
-		textRenderer.draw(fps, 20, height - stringHeight - 7);
-		String draw = "Draw: " + drawCounter.getMillis() + "ms";
-		textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
-		String arcs = "Arcs: " + links.size();
-		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
-
-		if (state == OverViewState.OVERVIEW_ACTIVE) {
-			// Mouse hover information
-			long position;
-			int chromosome;
-			if (hoverCapsule == null) {
-				position = this.geneCircle.getChromosomePosition();
-				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
-			} else {
-				position = (long) this.hoverCapsule.getSession().getSession().position;
-				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
-			}
-
-			String chrom = "Chromosome " + chromosome;
-			String pos = "Position: " + position;
-			textRenderer.draw(chrom, 20, stringHeight + 20);
-			textRenderer.draw(pos, 20, 10);
-		}
-		textRenderer.endRendering();
+		
+		int textValues[] = renderText();
+	}
+	
+	private void renderChromosomeNames(GL2 gl, int width, int height) {
 
 		drawNumbers();
 		
@@ -516,6 +317,42 @@ public class OverView extends GenosideComponent {
 			++i;
 		}
 		chromosomeNameRenderer.endRendering();
+	}
+
+	private int[] renderText() {
+
+		int width = GlobalVariables.width, height = GlobalVariables.height;
+		textRenderer.beginRendering(width, height);
+		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
+		String fps = "Tick: " + tickCounter.getMillis() + "ms";
+		int stringHeight = (int) textRenderer.getBounds(fps).getHeight();
+		textRenderer.draw(fps, 20, height - stringHeight - 7);
+		String draw = "Draw: " + drawCounter.getMillis() + "ms";
+		textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
+		String arcs = "Arcs: " + links.size();
+		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
+
+		if (state == OverViewState.OVERVIEW_ACTIVE) {
+			// Mouse hover information
+			long position;
+			int chromosome;
+			if (hoverCapsule == null) {
+				position = this.geneCircle.getChromosomePosition();
+				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
+			} else {
+				position = (long) this.hoverCapsule.getSession().getSession().position;
+				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
+			}
+
+			String chrom = "Chromosome " + chromosome;
+			String pos = "Position: " + position;
+			textRenderer.draw(chrom, 20, stringHeight + 20);
+			textRenderer.draw(pos, 20, 10);
+		}
+		textRenderer.endRendering();
+		int[] textValues = {width, height};
+		return textValues;
+
 	}
 
 	private void fadeLinks(float dt) {
@@ -613,7 +450,7 @@ public class OverView extends GenosideComponent {
 		return tickCounter;
 	}
 
-	private void updateCircleSize() {
+	public void updateCircleSize() {
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.updateGeneCirclePosition();
 		}
@@ -622,19 +459,92 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	private boolean pointOnCircle(float x, float y) {
+	public void setHoverCapsule(SessionViewCapsule capsule) {
+		this.hoverCapsule = capsule;
+	}
 
-		float xx = CoordinateManager.fromCircleCoordsY(x);
-		float yy = CoordinateManager.fromCircleCoordsX(y);
+	public ConcurrentLinkedQueue<SessionViewCapsule> getActiveSessions() {
+		return this.activeSessions;
+	}
 
+	public SessionViewCapsule getHoverCapsule() {
+		return this.hoverCapsule;
+	}
+
+	public ConcurrentLinkedQueue<SessionViewCapsule> getSessions() {
+		return this.sessions;
+	}
+
+	public ArrayList<ChromoName> getChromoNames() {
+		return this.chromoNames;
+	}
+
+	public GeneCircle getGeneCircle() {
+		return this.geneCircle;
+	}
+
+	public boolean isArcHighlightLocked() {
+		return this.arcHighlightLocked;
+	}
+
+	public void minimizeAllButOne(ViewChromosome chromosome) {
+		int chromosomes = AbstractGenome.getNumChromosomes();
+		for (int i = 0; i < chromosomes; ++i) {
+			ViewChromosome c = AbstractGenome.getChromosome(i);
+		}
+	}
+
+	public void openSession(SessionViewCapsule capsule) {
+		capsule.activate();
+		activeSessions.add(capsule);
+
+		showActiveSessions();
+		state = OverViewState.SESSIONVIEW_ACTIVE;
+
+		for (SessionViewCapsule otherCapsule : sessions) {
+			boolean found = false;
+			for (SessionViewCapsule activeCapsule : activeSessions) {
+				if (otherCapsule.getId() == activeCapsule.getId()) {
+					found = true;
+				}
+			}
+
+			if (!found) {
+				otherCapsule.hideBackground();
+			}
+		}
+	}
+
+	public LinkSelection getLinkSelection() {
+		return this.linkSelection;
+	}
+
+	public void setArcHighlightLocked(boolean b) {
+		this.arcHighlightLocked = b;
+	}
+
+	public ConcurrentLinkedQueue<GeneralLink> getLinks() {
+		return this.links;
+	}
+
+	public void setMousePositionX(float x, float y) {
+		this.mousePosition.x = x;
+		this.mousePosition.y = y;
+	}
+
+	public boolean pointOnCircle(float x, float y) {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);
-		float s = Math.abs(xx*xx/(a*a) + yy*yy/(b*b));
-		if (s < 1.0f && s > 0.8f)
-		{
-			return true;
-		}
-		return false;
+		float s = Math.abs(x*x/(a*a) + y*y/(b*b));
+		return (s < 1.0f && s > 0.8f);
+	}
+
+	LinkedList<SessionViewCapsule> getTextureUpdateListLock() {
+		return this.textureUpdateList;
+	}
+
+	void addCapsuleToTextureUpdateList(SessionViewCapsule capsule) {
+		this.textureUpdateList.add(capsule);
 	}
 }

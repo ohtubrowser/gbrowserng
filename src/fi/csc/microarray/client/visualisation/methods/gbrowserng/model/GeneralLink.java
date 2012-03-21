@@ -17,22 +17,15 @@ public class GeneralLink {
 	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
 	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
-	private float r = 1.0f, g = 0.0f, b = 0.0f;
+	private float r,g,b;
 	private final int drawMethod;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
-
-    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new ViewChromosome((int) readChr, readChrLength);
-                this.bChromosome = new ViewChromosome((int) mateChr, mateChrLength);
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
-		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
-    }
+	private void initLinkColor() {
+		this.r = ((float)Math.random()*0.3f + 0.7f);
+		this.g = this.b = 0.3f;
+	}
 
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
@@ -72,6 +65,7 @@ public class GeneralLink {
 		this.bStart = bEnd;
 		this.opacity = 1.0f;
 		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
+		initLinkColor();
 	}
 
 	public void calculatePositions(GeneCircle geneCircle) {
@@ -112,7 +106,7 @@ public class GeneralLink {
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
 
 	public static void endDrawing(GL2 gl) {
@@ -126,8 +120,7 @@ public class GeneralLink {
 		shader.stop(soulgl);
 	}
 
-
-	public void draw(GL2 gl, float f, float f0, float f1) {
+	private void draw(GL2 gl, float f, float f0, float f1) {
 		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
 		}
@@ -140,8 +133,12 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
-
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
+	}
+	
+	public void draw(GL2 gl)
+	{
+		this.draw(gl,r,g,b);
 	}
 
 	public boolean isMinimized() {
@@ -163,5 +160,4 @@ public class GeneralLink {
 	public long getbStart() {
 		return bStart;
 	}
-
 }

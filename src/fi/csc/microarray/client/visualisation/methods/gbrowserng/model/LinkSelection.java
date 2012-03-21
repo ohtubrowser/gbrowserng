@@ -136,13 +136,6 @@ public class LinkSelection {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 					activeLinkIndex--;
 				}
-				
-				if (activeLinkIndex >= activeSelection.size()) {
-					activeLinkIndex -= activeSelection.size();
-				}
-				if (activeLinkIndex < 0) {
-					activeLinkIndex += activeSelection.size();
-				}
 			}
 			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
 			    upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
@@ -214,11 +207,11 @@ public class LinkSelection {
 		synchronized (linkSelectionLock) {
 			for (int i = 0; i < activeSelection.size(); ++i) {
 				if (i != activeLinkIndex) {
-					activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+					activeSelection.get(i).draw(gl);
 				}
 			}
 			if (activeSelection.size() > activeLinkIndex) {
-				activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+				activeSelection.get(activeLinkIndex).draw(gl);
 			}
 		}
 	}
