@@ -225,6 +225,7 @@ public class LinkSelection {
 						}
 					}
 					rangeIterator.increment();
+
 				}
 			} else {
 				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
