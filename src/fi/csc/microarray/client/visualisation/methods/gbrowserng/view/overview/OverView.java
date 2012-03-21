@@ -531,15 +531,6 @@ public class OverView extends GenosideComponent {
 		this.mousePosition.x = x;
 		this.mousePosition.y = y;
 	}
-
-	public boolean pointOnCircle(float x, float y) {
-		float size = geneCircle.getSize();
-		float a = CoordinateManager.toCircleCoordsX(size);
-		float b = CoordinateManager.toCircleCoordsY(size);
-		float s = Math.abs(x*x/(a*a) + y*y/(b*b));
-		return (s < 1.0f && s > 0.8f);
-	}
-
 	LinkedList<SessionViewCapsule> getTextureUpdateListLock() {
 		return this.textureUpdateList;
 	}
@@ -547,4 +538,6 @@ public class OverView extends GenosideComponent {
 	void addCapsuleToTextureUpdateList(SessionViewCapsule capsule) {
 		this.textureUpdateList.add(capsule);
 	}
+
 }
+

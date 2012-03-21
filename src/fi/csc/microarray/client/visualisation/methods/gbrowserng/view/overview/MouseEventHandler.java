@@ -53,7 +53,7 @@ public class MouseEventHandler {
 
         LinkSelection selection = overview.getLinkSelection();
         if (!overview.isArcHighlightLocked()) {
-            if (overview.pointOnCircle(x, y)) {
+            if (pointOnCircle(geneCircle, x, y)) {
                 selection.update(pointerGenePosition);
             } else {
                 selection.reset();
@@ -112,7 +112,7 @@ public class MouseEventHandler {
                         return true;
                     }
                 }
-                if (overview.pointOnCircle(x, y)) //				 respond to mouse click
+                if (pointOnCircle(geneCircle, x, y)) //				 respond to mouse click
                 {
                     overview.setArcHighlightLocked(true);
                     selection.update(pointerGenePosition);
@@ -178,7 +178,29 @@ public class MouseEventHandler {
                 overview.updateCircleSize();
             }
         }
+		selection.mouseMove(pointInsideCircle(geneCircle, x, y), x, y);
         overview.setMousePositionX(CoordinateManager.toCircleCoordsY(x), CoordinateManager.toCircleCoordsX(y));
         return false;
     }
+
+	public boolean pointOnCircle(GeneCircle geneCircle, float x, float y) {
+		float size = geneCircle.getSize();
+		float a = CoordinateManager.toCircleCoordsX(size);
+		float b = CoordinateManager.toCircleCoordsY(size);
+		float s = Math.abs(x*x/(a*a) + y*y/(b*b));
+		return (s < 1.0f && s > 0.8f);
+	}
+
+
+	private boolean pointInsideCircle(GeneCircle geneCircle, float x, float y) {
+		float size = geneCircle.getSize();
+		float a = CoordinateManager.toCircleCoordsX(size);
+		float b = CoordinateManager.toCircleCoordsY(size);
+		float s = Math.abs(x*x/(a*a) + y*y/(b*b));
+		if (s < 0.9f)
+		{
+			return true;
+		}
+		return false;
+	}
 }

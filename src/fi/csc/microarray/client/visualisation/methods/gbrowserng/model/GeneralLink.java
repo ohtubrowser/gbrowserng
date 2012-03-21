@@ -16,9 +16,7 @@ public class GeneralLink {
 
 	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart, aEnd, bEnd;
-	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
 	private float r,g,b;
-	private final int drawMethod;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
@@ -64,7 +62,6 @@ public class GeneralLink {
 		this.aStart = aEnd;
 		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
 		initLinkColor();
 	}
 
@@ -120,7 +117,39 @@ public class GeneralLink {
 		shader.stop(soulgl);
 	}
 
-	private void draw(GL2 gl, float f, float f0, float f1) {
+	public float bezier(float t, float p1, float p2, float p3) {
+		return (1.0f-t)*((1.0f-t)*p1 + t*p2)+t*((1.0f-t)*p2+t*p3);
+	}
+
+	public float distance(float x1, float y1, float x2, float y2) {
+		return (float)Math.sqrt(Math.pow(x1-x2, 2f) + Math.pow(y1-y2, 2f));
+	}
+
+	public boolean isHit(float x, float y) {
+		boolean hit = false;
+		for (float i = 1; i <= 100; i++) {
+			float bezierX = bezier(i/100, aX, 0, bX);
+			float bezierY = bezier(i/100, aY, 0, bY);
+			float dist = distance(x, y, bezierX, bezierY);
+			if (dist < 0.01f) {
+				hit = true;
+				break;
+			}
+		}
+		return hit;
+	}
+
+	public boolean draw(GL2 gl, float x, float y) {
+		boolean hit = isHit(x, y);
+		if (hit) {
+			draw(gl, 0f, 0f, 1f);
+		} else {
+			draw(gl,r,g,b);
+		}
+		return hit;
+	}
+
+	public void draw(GL2 gl, float f, float f0, float f1) {
 		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
 		}
