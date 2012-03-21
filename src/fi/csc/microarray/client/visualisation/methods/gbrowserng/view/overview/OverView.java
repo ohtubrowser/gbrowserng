@@ -282,6 +282,10 @@ public class OverView extends GenosideComponent {
 					arcHighlightLocked = true;
 					linkSelection.update(pointerGenePosition);
 					linkSelection.updateArea(linkCollection);
+				} else if (arcHighlightLocked && pointInsideCircle(x, y)) {
+					trackviewManager.clearContainer();
+					trackviewManager.openLinkSession(linkSelection.getActiveLink());
+					trackviewManager.toggleVisible();
 				} else {
 					if (arcHighlightLocked) {
 						arcHighlightLocked = false;
@@ -343,6 +347,7 @@ public class OverView extends GenosideComponent {
 			}
 		}
 
+		linkSelection.mouseMove(pointInsideCircle(x, y), xx, yy);
 		mousePosition.x = x;
 		mousePosition.y = y;
 		return false;
@@ -643,4 +648,21 @@ public class OverView extends GenosideComponent {
 		}
 		return false;
 	}
+
+	private boolean pointInsideCircle(float x, float y) {
+
+		float xx = CoordinateManager.fromCircleCoordsY(x);
+		float yy = CoordinateManager.fromCircleCoordsX(y);
+
+		float size = geneCircle.getSize();
+		float a = CoordinateManager.toCircleCoordsX(size);
+		float b = CoordinateManager.toCircleCoordsY(size);
+		float s = Math.abs(xx*xx/(a*a) + yy*yy/(b*b));
+		if (s < 0.9f)
+		{
+			return true;
+		}
+		return false;
+	}
 }
+

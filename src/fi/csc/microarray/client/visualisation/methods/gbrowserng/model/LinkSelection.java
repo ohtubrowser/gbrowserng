@@ -22,6 +22,8 @@ public class LinkSelection {
 	float begin, end, area;
 	private boolean upKeyDown = false, downKeyDown = false;
 	public final Object linkSelectionLock = new Object();
+	private float mouseX, mouseY;
+	private boolean mouseInsideCircle = false;
 
 	public LinkSelection(GeneCircle geneCircle) {
 		this.geneCircle = geneCircle;
@@ -122,7 +124,7 @@ public class LinkSelection {
 
 		shader.stop(soulgl);
 	}
-	
+
 	public GeneralLink getActiveLink() {
 		return currentSelection == null ? null : currentSelection.value();
 	}
@@ -131,18 +133,20 @@ public class LinkSelection {
 		synchronized (linkSelectionLock) {
 			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-					currentSelection.increment(); 
-					if(currentSelection.currentIndex == currentSelection.endIndex) currentSelection.decrement();//  Not the most elegant solution, but it works
+					currentSelection.increment();
+					if (currentSelection.currentIndex == currentSelection.endIndex) {
+						currentSelection.decrement();//  Not the most elegant solution, but it works
+					}
 				}
 				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT && currentSelection.currentIndex != currentSelection.startIndex) {
 					currentSelection.decrement();
 				}
 			}
-			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
-			    upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
-			} 
-			if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) { 
-			    downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+				upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+			}
+			if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+				downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
 			}
 		}
 	}
@@ -154,8 +158,12 @@ public class LinkSelection {
 	}
 
 	public void tick(float dt, LinkCollection linkCollection) {
-	    if(upKeyDown) updateArea(-0.01f*dt, linkCollection); 
-	    if(downKeyDown) updateArea(0.01f*dt, linkCollection);
+		if (upKeyDown) {
+			updateArea(-0.01f * dt, linkCollection);
+		}
+		if (downKeyDown) {
+			updateArea(0.01f * dt, linkCollection);
+		}
 	}
 
 	public void move(float value, LinkCollection linkCollection) {
@@ -179,8 +187,9 @@ public class LinkSelection {
 		if (link.isMinimized()) {
 			return false;
 		}
-		if(currentSelection == null)
+		if (currentSelection == null) {
 			return true;
+		}
 		return currentSelection.inRange(link);
 	}
 
@@ -190,18 +199,45 @@ public class LinkSelection {
 		}
 	}
 
+	public void mouseMove(boolean insideCircle, float x, float y) {
+		synchronized (linkSelectionLock) {
+			mouseInsideCircle = insideCircle;
+			mouseX = x;
+			mouseY = y;
+		}
+	}
+
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
-			if(currentSelection == null) return;
-			LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
-			rangeIterator.rewind();
-			while(rangeIterator.currentIndex != rangeIterator.endIndex) {
-				if(rangeIterator.currentIndex != currentSelection.currentIndex)
-					rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
-				rangeIterator.increment();
+			if (currentSelection == null) {
+				return;
 			}
-			if (getActiveLink() != null) {
-				getActiveLink().draw(gl, 0.0f, 0.0f, 1.0f);
+			if (mouseInsideCircle) {
+				boolean oneLinkSelected = false;
+				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
+				rangeIterator.rewind();
+				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
+					if (oneLinkSelected) {
+						rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
+					} else {
+						if (oneLinkSelected = rangeIterator.value().draw(gl, mouseX, mouseY)) {
+							currentSelection.currentIndex = rangeIterator.currentIndex;
+						}
+					}
+					rangeIterator.increment();
+				}
+			} else {
+				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
+				rangeIterator.rewind();
+				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
+					if (rangeIterator.currentIndex != currentSelection.currentIndex) {
+						rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
+					}
+					rangeIterator.increment();
+				}
+				if (getActiveLink() != null) {
+					getActiveLink().draw(gl, 0.0f, 0.0f, 1.0f);
+				}
 			}
 		}
 	}
