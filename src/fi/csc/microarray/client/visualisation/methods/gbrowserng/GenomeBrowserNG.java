@@ -7,6 +7,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyb
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
@@ -63,7 +64,7 @@ public class GenomeBrowserNG {
 		AbstractGenome.addChromosome(new ViewChromosome(23, 155000000));
 	}
 
-	public static void useChipsterDataRat() {
+	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 //				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
@@ -73,15 +74,15 @@ public class GenomeBrowserNG {
 
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
-
+		return ChipsterInterface.getConnections(chromosomeData);
 	}
 
-	public static void useChipsterDataHuman() {
+	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataHuman() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -94,9 +95,8 @@ public class GenomeBrowserNG {
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
+		return ChipsterInterface.getConnections(chromosomeData);
 	}
-
-
 
 	public GenomeBrowserNG(int width, int height) {
 
@@ -104,13 +104,14 @@ public class GenomeBrowserNG {
 		//useSmallData();
 		//useBigData();
 		//useChipsterData();
-		//useChipsterDataHuman();
-		useChipsterDataRat();
+		//useChipsterDataRat();
+
+		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 
 		this.genoWindow = new GenoWindow(width, height);
-		OverView overView = new OverView(this.genoWindow);
+		OverView overView = new OverView(this.genoWindow, links);
 		this.genoWindow.addContainer(overView.trackviewManager);
 
 		this.glListener = new GenoGLListener(overView);

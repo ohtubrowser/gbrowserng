@@ -9,7 +9,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
-import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
@@ -17,7 +16,6 @@ import soulaim.DesktopGL2;
 
 public class LinkSelection {
 
-	GeneCircle geneCircle;
 	LinkRangeIterator currentSelection;
 	float begin, end, area;
 	private boolean upKeyDown = false, downKeyDown = false;
@@ -25,8 +23,7 @@ public class LinkSelection {
 	private float mouseX, mouseY;
 	private boolean mouseInsideCircle = false;
 
-	public LinkSelection(GeneCircle geneCircle) {
-		this.geneCircle = geneCircle;
+	public LinkSelection() {
 		begin = 0.0f;
 		end = 1.0f;
 		area = GlobalVariables.selectSize;
@@ -218,7 +215,7 @@ public class LinkSelection {
 				rangeIterator.rewind();
 				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
 					if (oneLinkSelected) {
-						rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
+						rangeIterator.value().draw(gl);
 					} else {
 						if (oneLinkSelected = rangeIterator.value().draw(gl, mouseX, mouseY)) {
 							currentSelection.currentIndex = rangeIterator.currentIndex;
@@ -232,7 +229,7 @@ public class LinkSelection {
 				rangeIterator.rewind();
 				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
 					if (rangeIterator.currentIndex != currentSelection.currentIndex) {
-						rangeIterator.value().draw(gl, 1.0f, 0.0f, 0.0f);
+						rangeIterator.value().draw(gl);
 					}
 					rangeIterator.increment();
 				}
@@ -243,3 +240,4 @@ public class LinkSelection {
 		}
 	}
 }
+

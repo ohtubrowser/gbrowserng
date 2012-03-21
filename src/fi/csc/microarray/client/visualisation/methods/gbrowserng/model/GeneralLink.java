@@ -17,11 +17,20 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	private ViewChromosome aChromosome, bChromosome;
 	private long aStart, bStart;
 	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
-	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
-	private float r = 1.0f, g = 0.0f, b = 0.0f;
+	private float r,g,b;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
+
+	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
+		this.aChromosome = aChromosome;
+		this.bChromosome = bChromosome;
+		this.aStart = aStart;
+		this.bStart = bStart;
+		this.opacity = 1.0f;
+		this.aOcc = aOcc;
+		initLinkColor();
+	}
 
 	private GeneralLink(float aCirclePos, float bCirclePos, boolean aOcc) { // Private constructor for creating temporary comparison objects
 		this.aOcc = aOcc;
@@ -33,6 +42,11 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		return new GeneralLink(aCirclePos, bCirclePos, aOcc);
 	}
 	
+	private void initLinkColor() {
+		this.r = ((float)Math.random()*0.3f + 0.7f);
+		this.g = this.b = 0.3f;
+	}
+
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
 		if (this.opacity > 1.0f) {
@@ -61,16 +75,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	public float getEndPos() {
 		return bCirclePos;
 	}
-
-	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
-		this.aChromosome = aChromosome;
-		this.bChromosome = bChromosome;
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.opacity = 1.0f;
-		this.aOcc = aOcc;
-	}
-
+	
 	public void calculatePositions(GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
@@ -109,7 +114,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
 
 	public static void endDrawing(GL2 gl) {
@@ -150,7 +155,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		if (hit) {
 			draw(gl, 0f, 0f, 1f);
 		} else {
-			draw(gl, 1f, 0f, 0f);
+			draw(gl,r,g,b);
 		}
 		return hit;
 	}
@@ -168,8 +173,12 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
-
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
+	}
+	
+	public void draw(GL2 gl)
+	{
+		this.draw(gl,r,g,b);
 	}
 
 	public boolean isMinimized() {
@@ -191,7 +200,6 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	public long getbStart() {
 		return bStart;
 	}
-
 	@Override
 	public int compareTo(GeneralLink o) {
 		float thisPos = aOcc ? aCirclePos : bCirclePos,

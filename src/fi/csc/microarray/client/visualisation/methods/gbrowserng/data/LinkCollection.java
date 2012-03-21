@@ -21,25 +21,24 @@ public class LinkCollection {
 	}
 	
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
-	public void syncAdditions() {
+	public void syncAdditions(GeneCircle geneCircle) {
 		if(newLinksToAdd.isEmpty())
 			return;
 		synchronized(linkSyncLock) {
 			// Depending on the relative sizes of newLinksToAdd and links, this will often be faster than standard mergesort-like merge
 			for(GeneralLink link : newLinksToAdd) {
+				link.calculatePositions(geneCircle);
 				int insertIndex = Math.abs(Collections.binarySearch(links, link));
-				links.add(insertIndex-1, link);
+				links.add(Math.max(insertIndex-1, 0), link);
 			}
 			newLinksToAdd.clear();
 		}
 	}
 	
-	public void addToQueue(GeneCircle geneCircle, ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart) {
+	public void addToQueue(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart) {
 		synchronized(linkSyncLock) {
 			GeneralLink a = new GeneralLink(aChromosome, bChromosome, aStart, bStart, true);
 			GeneralLink b = new GeneralLink(aChromosome, bChromosome, aStart, bStart, false);
-			a.calculatePositions(geneCircle);
-			b.calculatePositions(geneCircle);
 			newLinksToAdd.add(a);
 			newLinksToAdd.add(b);
 		}
@@ -70,11 +69,15 @@ public class LinkCollection {
 		return links.size();
 	}
 
-	public void tick(float dt) {
+	public void tick(float dt, GeneCircle geneCircle) {
 		timeUntilSync -= dt;
 		if(timeUntilSync < 0) {
 			timeUntilSync = GlobalVariables.linkSyncInterval;
-			syncAdditions();
+			syncAdditions(geneCircle);
 		}
+	}
+
+	public void addToQueue(GeneralLink l) {
+		addToQueue(l.getAChromosome(), l.getBChromosome(), l.getaStart(), l.getbStart());
 	}
 }
