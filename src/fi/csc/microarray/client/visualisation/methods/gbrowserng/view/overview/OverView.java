@@ -9,6 +9,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
@@ -47,6 +48,7 @@ public class OverView extends GenosideComponent {
 	private SimpleMouseEvent lastMouseClick;
 	private LinkSelection linkSelection = new LinkSelection();
 	public TrackviewManager trackviewManager;
+        private ContextMenu contextMenu;
 
 	public OverView(GenoWindow window) {
 		super(null);
@@ -205,6 +207,20 @@ public class OverView extends GenosideComponent {
 		if (lastMouseClick == null) {
 			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
 		}
+		
+		if(contextMenu!=null) {
+			if(contextMenu.inComponent(xx,yy)) {
+				contextMenu.handle(event, xx, yy);
+				if(contextMenu.close()) {
+					/*if(contextMenu.action()==0) contextMenu.getChromosome().setMinimized(true);
+					if(contextMenu.action()==1) contextMenu.getChromosome().setMinimized(false);
+					if(contextMenu.action()==2) minimizeAllButOne(contextMenu.getChromosome());*/
+					contextMenu = null;
+				}
+				return true;
+			}
+		}
+		
 		this.hoverCapsule = null;
 		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
 			if (capsule.getSession().inComponent(xx, yy)) {
@@ -243,6 +259,13 @@ public class OverView extends GenosideComponent {
 		// then see if they actually want the event
 		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
 			if (event.getButton() == 1) {
+				if(contextMenu!=null) {	    // context menu selection
+				    if(contextMenu.handle(event, xx, yy)) {
+					contextMenu = null;
+					return true;
+				    }
+				    contextMenu = null;
+				}
 				for (SessionViewCapsule capsule : sessions) {
 					if (capsule.isDying()) {
 						continue;
@@ -285,7 +308,9 @@ public class OverView extends GenosideComponent {
 					}
 				}
 				ViewChromosome chromosome = geneCircle.getChromosome();
-				if (chromosome.isMinimized()) {
+				//chromosome.setMinimized(true);
+				contextMenu = new ContextMenu(chromosome, geneCircle, xx, yy);
+				/*if (chromosome.isMinimized()) {
 					chromosome.setMinimized(false);
 				} else {
 					chromosome.setMinimized(true);
@@ -300,8 +325,7 @@ public class OverView extends GenosideComponent {
 					for (int i = 0; i < AbstractGenome.getNumChromosomes(); ++i) {
 						AbstractGenome.getChromosome(i).setMinimized(false);
 					}
-				}
-				geneCircle.animating = true;
+				}*/
 				lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
 				return true;
 			}
@@ -324,6 +348,11 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public boolean handle(KeyEvent event) {
+		if(contextMenu!=null&&(event.getKeyCode()==KeyEvent.VK_DOWN||event.getKeyCode()==KeyEvent.VK_UP||event.getKeyCode()==KeyEvent.VK_ENTER)) {
+			contextMenu.handle(event);
+			if(contextMenu.close()) contextMenu = null;
+			return true;
+		}
 		if (!activeSessions.isEmpty()) {
 			for (SessionViewCapsule capsule : activeSessions) {
 				if (capsule.inComponent(mousePosition.x, mousePosition.y)) {
@@ -429,6 +458,10 @@ public class OverView extends GenosideComponent {
 		textRenderer.endRendering();
 
 		drawNumbers();
+		
+		if(contextMenu!=null) {
+			contextMenu.draw(gl);
+		}
 	}
 
 	private void drawNumbers() {
