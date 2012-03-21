@@ -42,8 +42,8 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	public void fadeDim(float fadespeed) {
 		this.opacity -= fadespeed;
-		if (this.opacity < 0.2f) {
-			this.opacity = 0.2f;
+		if (this.opacity < 0.05f) {
+			this.opacity = 0.05f;
 		}
 	}
 
