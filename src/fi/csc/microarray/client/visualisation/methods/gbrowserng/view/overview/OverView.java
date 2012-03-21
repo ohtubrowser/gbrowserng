@@ -353,9 +353,8 @@ public class OverView extends GenosideComponent {
 			for (int i = 0; i < 1000; ++i) {
 				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
 				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
+				linkCollection.addToQueue(geneCircle, begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
 			}
-			linkCollection.syncAdditions(geneCircle);
 		}
 		return false;
 	}
@@ -518,6 +517,7 @@ public class OverView extends GenosideComponent {
 			updateCircleSize();
 		}
 		linkSelection.tick(dt, linkCollection);
+		linkCollection.tick(dt);
 		geneCircleGFX.tick(dt);
 
 		fadeLinks(dt);

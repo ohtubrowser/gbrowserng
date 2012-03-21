@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import java.util.ArrayList;
@@ -14,18 +15,16 @@ public class LinkCollection {
 	private ArrayList<GeneralLink> newLinksToAdd = new ArrayList<GeneralLink>(), links = new ArrayList<GeneralLink>();
 	
 	public final Object linkSyncLock = new Object();
-	
+	private float timeUntilSync = GlobalVariables.linkSyncInterval;
+
 	public LinkCollection() {
 	}
 	
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
-	public void syncAdditions(GeneCircle geneCircle) {
+	public void syncAdditions() {
 		if(newLinksToAdd.isEmpty())
 			return;
 		synchronized(linkSyncLock) {
-			for(GeneralLink link : newLinksToAdd)
-				link.calculatePositions(geneCircle);
-
 			// Depending on the relative sizes of newLinksToAdd and links, this will often be faster than standard mergesort-like merge
 			for(GeneralLink link : newLinksToAdd) {
 				int insertIndex = Math.abs(Collections.binarySearch(links, link));
@@ -35,10 +34,14 @@ public class LinkCollection {
 		}
 	}
 	
-	public void addToQueue(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart) {
+	public void addToQueue(GeneCircle geneCircle, ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart) {
 		synchronized(linkSyncLock) {
-			newLinksToAdd.add(new GeneralLink(aChromosome, bChromosome, aStart, bStart, true));
-			newLinksToAdd.add(new GeneralLink(aChromosome, bChromosome, aStart, bStart, false));
+			GeneralLink a = new GeneralLink(aChromosome, bChromosome, aStart, bStart, true);
+			GeneralLink b = new GeneralLink(aChromosome, bChromosome, aStart, bStart, false);
+			a.calculatePositions(geneCircle);
+			b.calculatePositions(geneCircle);
+			newLinksToAdd.add(a);
+			newLinksToAdd.add(b);
 		}
 	}
 	
@@ -65,5 +68,13 @@ public class LinkCollection {
 	
 	public int numLinks() {
 		return links.size();
+	}
+
+	public void tick(float dt) {
+		timeUntilSync -= dt;
+		if(timeUntilSync < 0) {
+			timeUntilSync = GlobalVariables.linkSyncInterval;
+			syncAdditions();
+		}
 	}
 }
