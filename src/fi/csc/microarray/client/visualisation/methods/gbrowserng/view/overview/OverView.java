@@ -36,6 +36,7 @@ public class OverView extends GenosideComponent {
 	private GenoFPSCounter drawCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
+	private GenoWindow window;
 
 	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
@@ -53,6 +54,8 @@ public class OverView extends GenosideComponent {
 
 	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
+		
+		this.window = window;
 		
 		initTextRenderers();
 		initChromoNames();
@@ -219,7 +222,7 @@ public class OverView extends GenosideComponent {
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
-		GeneralLink.beginDrawing(gl, geneCircle.getSize());
+		/*GeneralLink.beginDrawing(gl, geneCircle.getSize());
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl);
 		} else {
@@ -229,7 +232,7 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
-		GeneralLink.endDrawing(gl);
+		GeneralLink.endDrawing(gl);*/
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl, geneCircle);
@@ -563,7 +566,7 @@ public class OverView extends GenosideComponent {
 	}
 	
 	public void openContextMenu(float x, float y) {
-		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y);
+		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y, window);
 	}
 	
 	public ContextMenu getContextMenu() {

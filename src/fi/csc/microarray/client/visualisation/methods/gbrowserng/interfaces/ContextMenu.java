@@ -17,12 +17,14 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
 import soulaim.DesktopGL2;
 
 public class ContextMenu implements InteractiveComponent, VisualComponent {
+	GenoWindow window;
 	ViewChromosome chromosome;
 	GeneCircle geneCircle;
 	float x, y, sizex, sizey, selectionHeight;
@@ -36,7 +38,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	private Color selectColor = new Color(0.9f,0.9f,0.9f,255);
 
 	
-	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my) {
+	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, GenoWindow window) {
+		this.window = window;
 		close = false;
 		this.chromosome = chromosome;
 		x = mx;
@@ -45,9 +48,13 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		sizex = 0.2f;
 		selectionHeight = 0.06f; // todo: säädä sopiva koko
 		selections = new ArrayList<Selection>();
+		
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
+		if(window.isFullscreen()) selections.add(new Selection("Windowed mode",3));
+		else selections.add(new Selection("Fullscreen",3));
+		
 		selected = 0;
 		sizey = selectionHeight * selections.size();
 		initTextRenderers();
@@ -63,6 +70,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		} else if(selections.get(selected).action==2) {
 			minimizeAllButOne(chromosome);
 			geneCircle.animating = true;
+		} else if(selections.get(selected).action==3) {
+			window.toggleFullscreen();
 		}
 		close = true;
 	}
