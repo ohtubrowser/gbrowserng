@@ -40,9 +40,9 @@ public class VisualComponentTest {
 	@Test
 	public void testDraw() {
 		System.out.println("draw");
-		GL2 gl = null;
-		VisualComponent instance = new VisualComponentImpl();
-		instance.draw(gl);
+//		GL2 gl = null;
+//		VisualComponent instance = new VisualComponentImpl();
+//		instance.draw(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class VisualComponentTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		VisualComponent instance = new VisualComponentImpl();
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		VisualComponent instance = new VisualComponentImpl();
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

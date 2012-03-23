@@ -66,10 +66,10 @@ public class GenomeGeneratorTest {
 	@Test
 	public void testGenerateRead() {
 		System.out.println("generateRead");
-		ReferenceSequence referenceSequence = null;
-		Read expResult = null;
-		Read result = GenomeGenerator.generateRead(referenceSequence);
-		assertEquals(expResult, result);
+//		ReferenceSequence referenceSequence = null;
+//		Read expResult = null;
+//		Read result = GenomeGenerator.generateRead(referenceSequence);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

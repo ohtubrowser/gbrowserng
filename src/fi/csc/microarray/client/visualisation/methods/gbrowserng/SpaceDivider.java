@@ -13,18 +13,33 @@ public class SpaceDivider {
 	private final float maximumSize;
 	private final float minimumSize;
 	private final int myDirection;
+	private ArrayList<CascadingComponent> components;
+	
+	public ArrayList<CascadingComponent> getComponents() {
+		return components;
+	}
 
-	ArrayList<CascadingComponent> components = new ArrayList<CascadingComponent>();
+	public float getMaximumSize() {
+		return maximumSize;
+	}
+
+	public float getMinimumSize() {
+		return minimumSize;
+	}
+
+	public int getMyDirection() {
+		return myDirection;
+	}
 
 	public SpaceDivider(int direction, float minimumSize, float maximumSize) {
 		this.myDirection = direction;
 		this.minimumSize = minimumSize;
 		this.maximumSize = maximumSize;
+		components = new ArrayList<CascadingComponent>();
 	}
 
 	public void insertComponent(CascadingComponent component) {
 		components.add(component);
-	
 	}
 
 	public void calculate() {

@@ -39,10 +39,10 @@ public class ReadTest {
 	@Test
 	public void testToString() {
 		System.out.println("toString");
-		Read instance = null;
-		String expResult = "";
-		String result = instance.toString();
-		assertEquals(expResult, result);
+//		Read instance = null;
+//		String expResult = "";
+//		String result = instance.toString();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

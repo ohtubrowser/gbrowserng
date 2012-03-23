@@ -19,4 +19,9 @@ public class GlobalVariables {
 		m.put('A', Color.BLUE); m.put('G', Color.CYAN); m.put('C', Color.ORANGE); m.put('T', Color.MAGENTA);
 		return Collections.unmodifiableMap(m);
 	}
+		
+	public Map<Character, Color> getGenomeColors() {
+		return genomeColors;
+	}
+	
 }
