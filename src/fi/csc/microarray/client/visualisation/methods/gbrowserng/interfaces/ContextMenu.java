@@ -18,6 +18,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import gles.Color;
 import gles.SoulGL2;
 import gles.renderer.PrimitiveRenderer;
@@ -27,12 +28,15 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	GenoWindow window;
 	ViewChromosome chromosome;
 	GeneCircle geneCircle;
+	int width, selHeight;
 	float x, y, sizex, sizey, selectionHeight;
 	Vector2 position, dimensions;
 	TextRenderer textRenderer;
 	ArrayList<Selection> selections;
 	int selected;
 	boolean close;
+
+	CoordinateManager c = new CoordinateManager();
 
 	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 255);
 	private Color selectColor = new Color(0.9f,0.9f,0.9f,255);
@@ -45,6 +49,9 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		x = mx;
 		y = my;
 		this.geneCircle = geneCircle;
+		
+		width = 200;
+		selHeight = 26;
 		sizex = 0.2f;
 		selectionHeight = 0.06f; // todo: säädä sopiva koko
 		selections = new ArrayList<Selection>();
@@ -94,7 +101,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	public boolean handle(MouseEvent event, float mx, float my) {
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
-				if(my > y - selectionHeight * 0.5f - selectionHeight*i && my < y + selectionHeight * 0.5f - selectionHeight*i) {
+				if(my > y - c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*i && my < y + c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*i) {
 					selected = i;
 					break;
 				}
@@ -134,7 +141,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		for(int i = 0; i<selections.size(); i++) {
 			Color color = menuColor;
 			if(i==selected) color = selectColor;
-			PrimitiveRenderer.drawRectangle(x, y - i*selectionHeight, sizex * 0.5f, selectionHeight * 0.5f / GlobalVariables.aspectRatio, soulgl, color);
+			PrimitiveRenderer.drawRectangle(x+c.convertW(width)*.5f, y - i*c.convertH(selHeight), c.convertW(width)*.5f, c.convertH(selHeight)*.5f / GlobalVariables.aspectRatio, soulgl, color);
                 }
                 gl.glDisable(SoulGL2.GL_BLEND);
 
@@ -143,7 +150,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		int hw = width/2, hh = height/2;
 		for(int i = 0; i<selections.size(); i++) {
 			textRenderer.setColor(0f, 0f, 0f, 1f);
-			textRenderer.draw(selections.get(i).name, (int)(hw+(hw*(x-sizex/2))), (int)(hh+(hh*(y-selectionHeight/2+0.01f-i*selectionHeight))));
+			textRenderer.draw(selections.get(i).name, c.convertX(x)+5, c.convertY(y)-i*selHeight-5);
 		}
 		textRenderer.endRendering();
 	}
@@ -154,8 +161,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	}
 	
 	public boolean inComponent(float mx, float my) {
-		if(mx < x - sizex * 0.5f || mx > x + sizex * 0.5f) return false;
-		if(my < y - selectionHeight * 0.5f - selectionHeight*(selections.size()-1) || my > y + selectionHeight * 0.5f) return false;
+		if(mx < x || mx > x + c.convertW(width)) return false;
+		if(my < y - c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*(selections.size()-1) || my > y + c.convertH(selHeight) * 0.5f) return false;
 		return true;
 	}
 	
@@ -171,7 +178,46 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		}
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 	}
-
+	
+	/*private float convertW(int c) {
+		int hw = GlobalVariables.width/2;
+		return ((float)c)/hw;
+	}
+	
+	private float convertH(int c) {
+		int hh = GlobalVariables.height/2;
+		return ((float)c)/hh;
+	}
+	
+	private int convertW(float c) {
+		int hw = GlobalVariables.width/2;
+		return (int)(hw*c);
+	}
+	
+	private int convertH(float c) {
+		int hh = GlobalVariables.height/2;
+		return (int)(hh*c);
+	}
+	
+	private int convertX(float c) {
+		int hw = GlobalVariables.width/2;
+		return (int)(hw+(hw*c));
+	}
+	
+	private int convertY(float c) {
+		int hh = GlobalVariables.height/2;
+		return (int)(hh+(hh*c));
+	}
+	
+	private float convertX(int c) {
+		int hw = GlobalVariables.width/2;
+		return ((float)c)/hw+1f;
+	}
+	
+	private float convertY(int c) {
+		int hh = GlobalVariables.height/2;
+		return ((float)c)/hh+1f;
+	}*/
 }
 
 class Selection {
