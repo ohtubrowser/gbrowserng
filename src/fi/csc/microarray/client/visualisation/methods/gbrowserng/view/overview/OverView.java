@@ -52,8 +52,12 @@ public class OverView extends GenosideComponent {
 	private ContextMenu contextMenu;
 	private MouseEventHandler mouseHandler;
 
+	private boolean drawArcs;
+
 	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
+		
+		drawArcs = false;
 		
 		this.window = window;
 		
@@ -198,7 +202,9 @@ public class OverView extends GenosideComponent {
 			linkSelection.handle(event);
 		}
 
-		if (KeyEvent.VK_Z == event.getKeyCode()) {
+		if (KeyEvent.VK_D == event.getKeyCode()) {
+			drawArcs = !drawArcs;
+		} else if (KeyEvent.VK_Z == event.getKeyCode()) {
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
 			updateCircleSize();
 		} else if (KeyEvent.VK_A == event.getKeyCode()) {
@@ -222,17 +228,20 @@ public class OverView extends GenosideComponent {
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
-		GeneralLink.beginDrawing(gl, geneCircle.getSize());
-		if (arcHighlightLocked) {
-			linkSelection.draw(gl);
-		} else {
-			synchronized (linkCollection.linkSyncLock) {
-				for (GeneralLink link : linkCollection.getLinks()) {
-					link.draw(gl);
+		
+		if(drawArcs==true) {
+			GeneralLink.beginDrawing(gl, geneCircle.getSize());
+			if (arcHighlightLocked) {
+				linkSelection.draw(gl);
+			} else {
+				synchronized (linkCollection.linkSyncLock) {
+					for (GeneralLink link : linkCollection.getLinks()) {
+						link.draw(gl);
+					}
 				}
 			}
+			GeneralLink.endDrawing(gl);
 		}
-		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl, geneCircle);
