@@ -243,10 +243,12 @@ public class OverView extends GenosideComponent {
 			GeneralLink.endDrawing(gl);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if (arcHighlightLocked) {
-			linkSelection.draw(gl, geneCircle);
+		if(drawArcs==true) {
+			if (arcHighlightLocked) {
+				linkSelection.draw(gl, geneCircle);
+			}
 		}
-
+		
 		drawCapsules(gl);
 		int textValues[] = renderText();
 		renderChromosomeNames(gl, textValues[0], textValues[1]);
