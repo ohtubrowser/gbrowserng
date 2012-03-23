@@ -117,11 +117,14 @@ public class MouseEventHandler {
 		if (event.getButton() == 1) {
 			ContextMenu contextMenu = overview.getContextMenu();
 			if(contextMenu!=null) {	    // context menu selection
-				if(contextMenu.handle(event, x, y)) {
-					contextMenu = null;
-					return true;
+				if(contextMenu.inComponent(x,y)) {
+					if(contextMenu.handle(event, x, y)) {
+						overview.closeContextMenu();
+						return true;
+					}
 				}
-				contextMenu = null;
+				overview.closeContextMenu();
+				return true;
 			}
                 for (SessionViewCapsule capsule : sessions) {
                     if (capsule.isDying()) {
