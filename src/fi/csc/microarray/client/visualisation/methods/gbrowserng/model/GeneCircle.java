@@ -61,13 +61,18 @@ public class GeneCircle {
 	}
 
 	public void updatePosition(float pointerGenePosition) {
-		// TODO : clean
-		float relativePosition = pointerGenePosition-0.25f;
+		float relativePosition = pointerGenePosition - 0.25f; // Rotate 90 degrees counter-clockwise
 		if(relativePosition < 0.0f)
-			relativePosition += 1.0f;
+			relativePosition += 1.0f; // If negative add one full turn
 		chromosome = getChromosomeByRelativePosition(relativePosition);
-		chromosomePosition = (long) (getChromosome().length() * (relativePosition - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1])
-				/ (chromosomeBoundaries[chromosome.getChromosomeNumber()] - chromosomeBoundaries[chromosome.getChromosomeNumber() - 1]));
+		long length = chromosome.length();
+		float thisChromoBound = chromosomeBoundaries[chromosome.getChromosomeNumber()];
+		float prevChromoBound = chromosomeBoundaries[chromosome.getChromosomeNumber() - 1];
+		float relPosInChromosome = (prevChromoBound - relativePosition - chromosomeSeperatorSize);
+		// Clamps to 1*10^-9 as minimum, because minimized chromosomes are shorter than 2 * chromosomeSeperatorSize
+		float relChromoLength = Math.max(1e-9f, prevChromoBound - thisChromoBound - 2 * chromosomeSeperatorSize);
+		// Clamps values between 0 and chromosome's length
+		chromosomePosition = Math.max(0l, Math.min(length, (long) (length * (relPosInChromosome / relChromoLength))));
 	}
 
 	public ViewChromosome getChromosomeByRelativePosition(float relativePosition) {
