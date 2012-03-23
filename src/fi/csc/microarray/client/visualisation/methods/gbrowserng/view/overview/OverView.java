@@ -222,7 +222,7 @@ public class OverView extends GenosideComponent {
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
-		/*GeneralLink.beginDrawing(gl, geneCircle.getSize());
+		GeneralLink.beginDrawing(gl, geneCircle.getSize());
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl);
 		} else {
@@ -232,7 +232,7 @@ public class OverView extends GenosideComponent {
 				}
 			}
 		}
-		GeneralLink.endDrawing(gl);*/
+		GeneralLink.endDrawing(gl);
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 		if (arcHighlightLocked) {
 			linkSelection.draw(gl, geneCircle);
