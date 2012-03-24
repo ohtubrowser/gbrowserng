@@ -66,7 +66,7 @@ public class MouseEventHandler {
         LinkSelection selection = overview.getLinkSelection();
         if (!overview.isArcHighlightLocked()) {
             if (pointOnCircle(geneCircle, x, y)) {
-                selection.update(pointerGenePosition);
+                selection.update(pointerGenePosition, overview.getLinkCollection());
             } else {
                 selection.reset();
             }
@@ -138,8 +138,7 @@ public class MouseEventHandler {
                 if (pointOnCircle(geneCircle, x, y)) //				 respond to mouse click
                 {
                     overview.setArcHighlightLocked(true);
-                    selection.update(pointerGenePosition);
-                    selection.updateArea(overview.getLinkCollection());
+                    selection.update(pointerGenePosition, overview.getLinkCollection());
                 } else if(overview.isArcHighlightLocked() && pointInsideCircle(geneCircle, x, y)) {
 					overview.getTrackviewManager().clearContainer();
 					overview.getTrackviewManager().openLinkSession(overview.getLinkSelection().getActiveLink());
