@@ -12,27 +12,40 @@ import math.Matrix4;
 import math.Vector2;
 import soulaim.DesktopGL2;
 
-public class GeneralLink {
+public class GeneralLink implements Comparable<GeneralLink> {
 
 	private ViewChromosome aChromosome, bChromosome;
-	private long aStart, bStart, aEnd, bEnd;
-	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
-	private float r = 1.0f, g = 0.0f, b = 0.0f;
-	private final int drawMethod;
+	private long aStart, bStart;
+	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
+	private float r,g,b;
 	float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
 
-    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new ViewChromosome((int) readChr, readChrLength);
-                this.bChromosome = new ViewChromosome((int) mateChr, mateChrLength);
+	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
+		this.aChromosome = aChromosome;
+		this.bChromosome = bChromosome;
 		this.aStart = aStart;
 		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
-    }
+		this.aOcc = aOcc;
+		initLinkColor();
+	}
+
+	private GeneralLink(float aCirclePos, float bCirclePos, boolean aOcc) { // Private constructor for creating temporary comparison objects
+		this.aOcc = aOcc;
+		this.aCirclePos = aCirclePos;
+		this.bCirclePos = bCirclePos;
+	}
+	
+	public static GeneralLink createComparisonObject(float aCirclePos, float bCirclePos, boolean aOcc) {
+		return new GeneralLink(aCirclePos, bCirclePos, aOcc);
+	}
+	
+	private void initLinkColor() {
+		this.r = ((float)Math.random()*0.3f + 0.7f);
+		this.g = this.b = 0.3f;
+	}
 
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
@@ -62,18 +75,7 @@ public class GeneralLink {
 	public float getEndPos() {
 		return bCirclePos;
 	}
-
-	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
-		this.aChromosome = aChromosome;
-		this.bChromosome = bChromosome;
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
-		this.opacity = 1.0f;
-		drawMethod = SoulGL2.GL_TRIANGLE_STRIP;
-	}
-
+	
 	public void calculatePositions(GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
@@ -107,19 +109,19 @@ public class GeneralLink {
 		ShaderMemory.setUniformMat4(soulgl, shader, "projectionMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(soulgl, shader, "modelMatrix", identityMatrix);
 
-		gl.glDisable(gl.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
+		gl.glDisable(GL2.GL_CULL_FACE); // TODO : maybe just change the vertex ordering so this isn't necessary
 		gl.glEnable(SoulGL2.GL_BLEND);
 
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
 
 	public static void endDrawing(GL2 gl) {
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
 
-		gl.glEnable(gl.GL_CULL_FACE);
+		gl.glEnable(GL2.GL_CULL_FACE);
 		gl.glDisable(SoulGL2.GL_BLEND);
 		Shader shader = ShaderManager.getProgram(GenoShaders.GenoShaderID.BEZIER);
 		SoulGL2 soulgl = new DesktopGL2(gl);
@@ -153,7 +155,7 @@ public class GeneralLink {
 		if (hit) {
 			draw(gl, 0f, 0f, 1f);
 		} else {
-			draw(gl, 1f, 0f, 0f);
+			draw(gl,r,g,b);
 		}
 		return hit;
 	}
@@ -171,8 +173,12 @@ public class GeneralLink {
 		ShaderMemory.setUniformVec2(soulgl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(soulgl, shader, "color", f, f0, f1);
 
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
-
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
+	}
+	
+	public void draw(GL2 gl)
+	{
+		this.draw(gl,r,g,b);
 	}
 
 	public boolean isMinimized() {
@@ -193,6 +199,22 @@ public class GeneralLink {
 
 	public long getbStart() {
 		return bStart;
+	}
+	@Override
+	public int compareTo(GeneralLink o) {
+		float thisPos = aOcc ? aCirclePos : bCirclePos,
+				oPos = o.aOcc ? o.aCirclePos : o.bCirclePos;
+		
+		float diff = thisPos - oPos;
+		
+		// For type safety, maybe overkill
+		int ret = 0;
+		if(diff > 0)
+			ret = 1;
+		if(diff < 0)
+			ret = -1;
+		
+		return ret;
 	}
 
 }

@@ -2,13 +2,13 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import gles.SoulGL2;
 import gles.shaders.Shader;
 import gles.shaders.ShaderMemory;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 import managers.ShaderManager;
 import math.Matrix4;
@@ -16,11 +16,10 @@ import soulaim.DesktopGL2;
 
 public class LinkSelection {
 
+	LinkRangeIterator currentSelection;
 	float begin, end, area;
 	private boolean upKeyDown = false, downKeyDown = false;
-	private ArrayList<GeneralLink> activeSelection = new ArrayList<GeneralLink>();
 	public final Object linkSelectionLock = new Object();
-	private int activeLinkIndex = 0;
 	private float mouseX, mouseY;
 	private boolean mouseInsideCircle = false;
 
@@ -33,22 +32,23 @@ public class LinkSelection {
 	public void reset() {
 		begin = 0.0f;
 		end = 1.0f;
-		activeLinkIndex = 0;
+		currentSelection = null;
 	}
 
-	public void update(float pointerGenePosition) {
+	public void update(float pointerGenePosition, LinkCollection linkCollection) {
 		begin = pointerGenePosition - 0.25f - area / 2;
 		end = pointerGenePosition - 0.25f + area / 2;
 		clamp();
+		updateActiveLinks(linkCollection);
 	}
 
-	public void updateArea(ConcurrentLinkedQueue<GeneralLink> links) {
+	public void updateArea(LinkCollection linkCollection) {
 		float oldArea = getCurrentArea();
 		float change = (area - oldArea) / 2;
 		begin -= change;
 		end += change;
 		clamp();
-		updateActiveLinks(links);
+		updateActiveLinks(linkCollection);
 	}
 
 	private void clamp() {
@@ -122,35 +122,29 @@ public class LinkSelection {
 
 		shader.stop(soulgl);
 	}
-	
+
 	public GeneralLink getActiveLink() {
-		if(activeLinkIndex >= activeSelection.size())
-			return null;
-		return activeSelection.get(activeLinkIndex);
+		return currentSelection == null ? null : currentSelection.value();
 	}
 
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
 			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-					activeLinkIndex++;
+					currentSelection.increment();
+					if (currentSelection.currentIndex == currentSelection.endIndex) {
+						currentSelection.decrement();//  Not the most elegant solution, but it works
+					}
 				}
-				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-					activeLinkIndex--;
-				}
-				
-				if (activeLinkIndex >= activeSelection.size()) {
-					activeLinkIndex -= activeSelection.size();
-				}
-				if (activeLinkIndex < 0) {
-					activeLinkIndex += activeSelection.size();
+				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT && currentSelection.currentIndex != currentSelection.startIndex) {
+					currentSelection.decrement();
 				}
 			}
-			if(keyEvent.getKeyCode() == KeyEvent.VK_UP) { 
-			    upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
-			} 
-			if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) { 
-			    downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED); 
+			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+				upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+			}
+			if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+				downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
 			}
 		}
 	}
@@ -161,87 +155,90 @@ public class LinkSelection {
 		reset();
 	}
 
-	public void tick(float dt, ConcurrentLinkedQueue<GeneralLink> links) {
-	    if(upKeyDown) updateArea(-0.01f*dt, links); 
-	    if(downKeyDown) updateArea(0.01f*dt, links);
+	public void tick(float dt, LinkCollection linkCollection) {
+		if (upKeyDown) {
+			updateArea(-0.01f * dt, linkCollection);
+		}
+		if (downKeyDown) {
+			updateArea(0.01f * dt, linkCollection);
+		}
 	}
 
-	public void move(float value, ConcurrentLinkedQueue<GeneralLink> links) {
+	public void move(float value, LinkCollection linkCollection) {
 		begin += value;
 		end += value;
 		clamp();
-		updateActiveLinks(links);
+		updateActiveLinks(linkCollection);
 	}
 
 	public void resetArea() {
 		area = GlobalVariables.selectSize;
 	}
 
-	public void updateArea(float f, ConcurrentLinkedQueue<GeneralLink> links) {
+	public void updateArea(float f, LinkCollection linkCollection) {
 		area += f;
 		area = Math.min(0.9f, Math.max(area, 0.001f));
-		updateArea(links);
+		updateArea(linkCollection);
 	}
 
 	public boolean inSelection(GeneralLink link) {
 		if (link.isMinimized()) {
 			return false;
 		}
-		if (begin < end) {
-			return (link.aCirclePos >= begin && link.aCirclePos <= end)
-					|| (link.bCirclePos >= begin && link.bCirclePos <= end);
-		} else {
-			return (link.aCirclePos >= begin || link.aCirclePos <= end)
-					|| (link.bCirclePos >= begin || link.bCirclePos <= end);
+		if (currentSelection == null) {
+			return true;
+		}
+		return currentSelection.inRange(link);
+	}
+
+	private void updateActiveLinks(LinkCollection linkCollection) {
+		synchronized (linkSelectionLock) {
+			currentSelection = linkCollection.getRangeIterator(begin, end);
 		}
 	}
 
 	public void mouseMove(boolean insideCircle, float x, float y) {
 		synchronized (linkSelectionLock) {
-			mouseInsideCircle = insideCircle; mouseX = x; mouseY = y;
+			mouseInsideCircle = insideCircle;
+			mouseX = x;
+			mouseY = y;
 		}
-	}
-
-	private void updateActiveLinks(ConcurrentLinkedQueue<GeneralLink> links) {
-		synchronized (linkSelectionLock) {
-			getActiveSelection().clear();
-			for (GeneralLink link : links) {
-				if (inSelection(link)) {
-					getActiveSelection().add(link);
-				}
-			}
-			activeLinkIndex = 0;
-		}
-	}
-
-	public ArrayList<GeneralLink> getActiveSelection() {
-		return activeSelection;
 	}
 
 	public void draw(GL2 gl) {
 		synchronized (linkSelectionLock) {
+			if (currentSelection == null) {
+				return;
+			}
 			if (mouseInsideCircle) {
 				boolean oneLinkSelected = false;
-				for (int i = 0; i < activeSelection.size(); ++i) {
+				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
+				rangeIterator.rewind();
+				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
 					if (oneLinkSelected) {
-						activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
-					}
-					else {
-						if (oneLinkSelected = activeSelection.get(i).draw(gl, mouseX, mouseY)) {
-							activeLinkIndex = i;
+						rangeIterator.value().draw(gl);
+					} else {
+						if (oneLinkSelected = rangeIterator.value().draw(gl, mouseX, mouseY)) {
+							currentSelection.currentIndex = rangeIterator.currentIndex;
 						}
 					}
+					rangeIterator.increment();
+
 				}
 			} else {
-				for (int i = 0; i < activeSelection.size(); ++i) {
-					if (i != activeLinkIndex) {
-						activeSelection.get(i).draw(gl, 1.0f, 0.0f, 0.0f);
+				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
+				rangeIterator.rewind();
+				while (rangeIterator.currentIndex != rangeIterator.endIndex) {
+					if (rangeIterator.currentIndex != currentSelection.currentIndex) {
+						rangeIterator.value().draw(gl);
 					}
+					rangeIterator.increment();
 				}
-				if (activeSelection.size() > activeLinkIndex) {
-				 activeSelection.get(activeLinkIndex).draw(gl, 0.0f, 0.0f, 1.0f);
+				if (getActiveLink() != null) {
+					getActiveLink().draw(gl, 0.0f, 0.0f, 1.0f);
 				}
 			}
 		}
 	}
 }
+

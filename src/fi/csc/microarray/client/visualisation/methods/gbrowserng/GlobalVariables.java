@@ -13,6 +13,7 @@ public class GlobalVariables {
 	public static final float selectSize = 0.02f;
 	public static int width;
 	public static int height;
+	public static final float linkSyncInterval = 3.0f;
 
 	private static Map<Character, Color>initializeGenomeColors() {
 		Map<Character, Color> m = new HashMap<Character, Color>();

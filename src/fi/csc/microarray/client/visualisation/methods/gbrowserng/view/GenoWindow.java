@@ -69,6 +69,10 @@ public class GenoWindow {
 			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
 	}
+	
+	public boolean isFullscreen() {
+		return isFullscreen;
+	}
 
 	public void toggleVisible() {
 		overviewVisible = !overviewVisible;
