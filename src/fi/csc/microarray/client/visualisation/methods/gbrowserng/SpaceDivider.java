@@ -49,8 +49,10 @@ public class SpaceDivider {
 		for(CascadingComponent component : components) {
 			if(myDirection == VERTICAL) {
 				component.setPosition(0, pos);
+				System.out.println("Vertical");
 				component.setDimensions(2, componentSize);
 			} else {
+				System.out.println("Horizontal");
 				component.setPosition(pos, 0);
 				component.setDimensions(componentSize, 2);
 			}

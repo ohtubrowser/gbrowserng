@@ -131,28 +131,13 @@ public class GenomeBrowserNGTest {
 	}
 
 	/**
-	 * Test of run method, tests whether program can be started without error
-	 */
-	@Test
-	public void testRun() throws Exception {
-		System.out.println("run");
-		fail("not yet implemented");
-//		GenomeBrowserNG instance = new GenomeBrowserNG(500, 500);	// size does not matter, as not testing appearance of window
-//		instance.run();
-//		assertTrue(true);
-//		instance.close();
-	}
-
-	/**
 	 * Test of main method, whether main can be run without errors
 	 */
 	@Test
 	public void testMain() throws Exception {
 		System.out.println("main");
-		fail("not yet implemented");
-
-//		String[] s = null;
-//		GenomeBrowserNG.main(s);
-//		assertTrue(true);
+		String[] empty = {""};
+		GenomeBrowserNG.main(empty);
+		assertTrue(true);
 	}
 }

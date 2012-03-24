@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * 
+ *
  * @author Kristiina Paloheimo
  */
 public class GenomeBrowserNG {
@@ -23,6 +23,7 @@ public class GenomeBrowserNG {
 	private GenoWindowListener windowListener;
 	private GenoGLListener glListener;
 	private GenoWindow genoWindow;
+	private EventHandler eventHandler;
 
 	public EventHandler getEventHandler() {
 		return eventHandler;
@@ -43,7 +44,6 @@ public class GenomeBrowserNG {
 	public GenoWindowListener getWindowListener() {
 		return windowListener;
 	}
-	private EventHandler eventHandler;
 
 	public static void useSmallData() {
 		AbstractGenome.setName("Bogus Genome");
@@ -93,7 +93,7 @@ public class GenomeBrowserNG {
 
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
@@ -111,14 +111,12 @@ public class GenomeBrowserNG {
 //               
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
 		return true;
 	}
-
-
 
 	public GenomeBrowserNG(int width, int height) {
 
@@ -139,7 +137,7 @@ public class GenomeBrowserNG {
 
 		addListeners();
 	}
-	
+
 	public void addListeners() {
 		this.windowListener = new GenoWindowListener(eventQueue);
 		this.genoWindow.window.addKeyListener(new Keyboard(eventQueue));
@@ -164,8 +162,5 @@ public class GenomeBrowserNG {
 		double fraction = 0.8d;
 		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction)).run();
 	}
-	
-	public void close() {
-		this.genoWindow.close();
-	}
+
 }
