@@ -39,11 +39,11 @@ public class AnimatedValuesTest {
 	@Test
 	public void testGetAnimatedValue() {
 		System.out.println("getAnimatedValue");
-		String name = "";
-		AnimatedValues instance = new AnimatedValues();
-		float expResult = 0.0F;
-		float result = instance.getAnimatedValue(name);
-		assertEquals(expResult, result, 0.0);
+//		String name = "";
+//		AnimatedValues instance = new AnimatedValues();
+//		float expResult = 0.0F;
+//		float result = instance.getAnimatedValue(name);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -54,10 +54,10 @@ public class AnimatedValuesTest {
 	@Test
 	public void testSetAnimatedValue() {
 		System.out.println("setAnimatedValue");
-		String name = "";
-		float value = 0.0F;
-		AnimatedValues instance = new AnimatedValues();
-		instance.setAnimatedValue(name, value);
+//		String name = "";
+//		float value = 0.0F;
+//		AnimatedValues instance = new AnimatedValues();
+//		instance.setAnimatedValue(name, value);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -68,9 +68,9 @@ public class AnimatedValuesTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		AnimatedValues instance = new AnimatedValues();
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		AnimatedValues instance = new AnimatedValues();
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -41,12 +41,12 @@ public class ChromoNameTest {
 	@Test
 	public void testIsOver() {
 		System.out.println("isOver");
-		float x = 0.0F;
-		float y = 0.0F;
-		ChromoName instance = null;
-		boolean expResult = false;
-		boolean result = instance.isOver(x, y);
-		assertEquals(expResult, result);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		ChromoName instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.isOver(x, y);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -57,10 +57,10 @@ public class ChromoNameTest {
 	@Test
 	public void testGetChromosome() {
 		System.out.println("getChromosome");
-		ChromoName instance = null;
-		ViewChromosome expResult = null;
-		ViewChromosome result = instance.getChromosome();
-		assertEquals(expResult, result);
+//		ChromoName instance = null;
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = instance.getChromosome();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -71,10 +71,10 @@ public class ChromoNameTest {
 	@Test
 	public void testSetPosition() {
 		System.out.println("setPosition");
-		float x = 0.0F;
-		float y = 0.0F;
-		ChromoName instance = null;
-		instance.setPosition(x, y);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		ChromoName instance = null;
+//		instance.setPosition(x, y);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -85,10 +85,10 @@ public class ChromoNameTest {
 	@Test
 	public void testGetPosition() {
 		System.out.println("getPosition");
-		ChromoName instance = null;
-		Vector2 expResult = null;
-		Vector2 result = instance.getPosition();
-		assertEquals(expResult, result);
+//		ChromoName instance = null;
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getPosition();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -99,11 +99,11 @@ public class ChromoNameTest {
 	@Test
 	public void testGetSize() {
 		System.out.println("getSize");
-		ChromoName instance = null;
-		Vector2 expResult = null;
-		Vector2 result = instance.getSize();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
+//		ChromoName instance = null;
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getSize();
+//		assertEquals(expResult, result);
+//		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
 
@@ -113,10 +113,10 @@ public class ChromoNameTest {
 	@Test
 	public void testSetSize() {
 		System.out.println("setSize");
-		float w = 0.0F;
-		float h = 0.0F;
-		ChromoName instance = null;
-		instance.setSize(w, h);
+//		float w = 0.0F;
+//		float h = 0.0F;
+//		ChromoName instance = null;
+//		instance.setSize(w, h);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -127,10 +127,10 @@ public class ChromoNameTest {
 	@Test
 	public void testIsActive() {
 		System.out.println("isActive");
-		ChromoName instance = null;
-		boolean expResult = false;
-		boolean result = instance.isActive();
-		assertEquals(expResult, result);
+//		ChromoName instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.isActive();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

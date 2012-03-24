@@ -41,8 +41,8 @@ public class ConnectionsLoaderTest {
 	@Test
 	public void testRequestData() {
 		System.out.println("requestData");
-		ConnectionsLoader instance = null;
-		instance.requestData();
+//		ConnectionsLoader instance = null;
+//		instance.requestData();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,11 +53,11 @@ public class ConnectionsLoaderTest {
 	@Test
 	public void testBpToDisplay() {
 		System.out.println("bpToDisplay");
-		long bp = 0L;
-		ConnectionsLoader instance = null;
-		int expResult = 0;
-		int result = instance.bpToDisplay(bp);
-		assertEquals(expResult, result);
+//		long bp = 0L;
+//		ConnectionsLoader instance = null;
+//		int expResult = 0;
+//		int result = instance.bpToDisplay(bp);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -68,8 +68,8 @@ public class ConnectionsLoaderTest {
 	@Test
 	public void testMain() {
 		System.out.println("main");
-		String[] arg = null;
-		ConnectionsLoader.main(arg);
+//		String[] arg = null;
+//		ConnectionsLoader.main(arg);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -80,10 +80,10 @@ public class ConnectionsLoaderTest {
 	@Test
 	public void testGetConnections() {
 		System.out.println("getConnections");
-		ConnectionsLoader instance = null;
-		ConcurrentLinkedQueue expResult = null;
-		ConcurrentLinkedQueue result = instance.getConnections();
-		assertEquals(expResult, result);
+//		ConnectionsLoader instance = null;
+//		ConcurrentLinkedQueue expResult = null;
+//		ConcurrentLinkedQueue result = instance.getConnections();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -94,9 +94,9 @@ public class ConnectionsLoaderTest {
 	@Test
 	public void testProcessAreaResult() {
 		System.out.println("processAreaResult");
-		AreaResult areaResult = null;
-		ConnectionsLoader instance = null;
-		instance.processAreaResult(areaResult);
+//		AreaResult areaResult = null;
+//		ConnectionsLoader instance = null;
+//		instance.processAreaResult(areaResult);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

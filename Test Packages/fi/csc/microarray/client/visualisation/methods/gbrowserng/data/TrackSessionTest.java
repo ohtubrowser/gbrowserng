@@ -40,11 +40,11 @@ public class TrackSessionTest {
 	@Test
 	public void testGetHeatMap() {
 		System.out.println("getHeatMap");
-		TrackSession instance = null;
-		HeatMap expResult = null;
-		HeatMap result = instance.getHeatMap();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
+//		TrackSession instance = null;
+//		HeatMap expResult = null;
+//		HeatMap result = instance.getHeatMap();
+//		assertEquals(expResult, result);
+//		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
 
@@ -54,10 +54,10 @@ public class TrackSessionTest {
 	@Test
 	public void testGetReads() {
 		System.out.println("getReads");
-		TrackSession instance = null;
-		ArrayList expResult = null;
-		ArrayList result = instance.getReads();
-		assertEquals(expResult, result);
+//		TrackSession instance = null;
+//		ArrayList expResult = null;
+//		ArrayList result = instance.getReads();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

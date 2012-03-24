@@ -40,8 +40,8 @@ public class GenoTexIDTest {
 	@Test
 	public void testCreateTextures() {
 		System.out.println("createTextures");
-		SoulGL2 gl = null;
-		GenoTexID.createTextures(gl);
+//		SoulGL2 gl = null;
+//		GenoTexID.createTextures(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

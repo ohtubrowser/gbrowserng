@@ -40,12 +40,12 @@ public class ChipsterInterfaceTest {
 	@Test
 	public void testGetChromosomes() {
 		System.out.println("getChromosomes");
-		String karyotype = "";
-		String seq = "";
-		String[] chromosomes = null;
-		ConcurrentLinkedQueue expResult = null;
-		ConcurrentLinkedQueue result = ChipsterInterface.getChromosomes(karyotype, seq, chromosomes);
-		assertEquals(expResult, result);
+//		String karyotype = "";
+//		String seq = "";
+//		String[] chromosomes = null;
+//		ConcurrentLinkedQueue expResult = null;
+//		ConcurrentLinkedQueue result = ChipsterInterface.getChromosomes(karyotype, seq, chromosomes);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -56,9 +56,9 @@ public class ChipsterInterfaceTest {
 	@Test
 	public void testGetConnectionsBetweenChrs() {
 		System.out.println("getConnectionsBetweenChrs");
-		ConcurrentLinkedQueue expResult = null;
-		ConcurrentLinkedQueue result = ChipsterInterface.getConnectionsBetweenChrs();
-		assertEquals(expResult, result);
+//		ConcurrentLinkedQueue expResult = null;
+//		ConcurrentLinkedQueue result = ChipsterInterface.getConnectionsBetweenChrs();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

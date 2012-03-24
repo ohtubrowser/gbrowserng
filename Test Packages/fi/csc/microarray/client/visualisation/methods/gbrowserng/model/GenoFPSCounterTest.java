@@ -39,9 +39,9 @@ public class GenoFPSCounterTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		GenoFPSCounter instance = new GenoFPSCounter();
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		GenoFPSCounter instance = new GenoFPSCounter();
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -52,10 +52,10 @@ public class GenoFPSCounterTest {
 	@Test
 	public void testGetFps() {
 		System.out.println("getFps");
-		GenoFPSCounter instance = new GenoFPSCounter();
-		String expResult = "";
-		String result = instance.getFps();
-		assertEquals(expResult, result);
+//		GenoFPSCounter instance = new GenoFPSCounter();
+//		String expResult = "";
+//		String result = instance.getFps();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -66,9 +66,9 @@ public class GenoFPSCounterTest {
 	@Test
 	public void testAddNano() {
 		System.out.println("addNano");
-		long nano = 0L;
-		GenoFPSCounter instance = new GenoFPSCounter();
-		instance.addNano(nano);
+//		long nano = 0L;
+//		GenoFPSCounter instance = new GenoFPSCounter();
+//		instance.addNano(nano);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -79,10 +79,10 @@ public class GenoFPSCounterTest {
 	@Test
 	public void testGetMillis() {
 		System.out.println("getMillis");
-		GenoFPSCounter instance = new GenoFPSCounter();
-		String expResult = "";
-		String result = instance.getMillis();
-		assertEquals(expResult, result);
+//		GenoFPSCounter instance = new GenoFPSCounter();
+//		String expResult = "";
+//		String result = instance.getMillis();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

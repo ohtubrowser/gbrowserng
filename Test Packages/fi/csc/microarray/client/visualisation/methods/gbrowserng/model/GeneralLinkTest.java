@@ -41,9 +41,9 @@ public class GeneralLinkTest {
 	@Test
 	public void testFadeIn() {
 		System.out.println("fadeIn");
-		float fadespeed = 0.0F;
-		GeneralLink instance = null;
-		instance.fadeIn(fadespeed);
+//		float fadespeed = 0.0F;
+//		GeneralLink instance = null;
+//		instance.fadeIn(fadespeed);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -54,9 +54,9 @@ public class GeneralLinkTest {
 	@Test
 	public void testFadeDim() {
 		System.out.println("fadeDim");
-		float fadespeed = 0.0F;
-		GeneralLink instance = null;
-		instance.fadeDim(fadespeed);
+//		float fadespeed = 0.0F;
+//		GeneralLink instance = null;
+//		instance.fadeDim(fadespeed);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -67,9 +67,9 @@ public class GeneralLinkTest {
 	@Test
 	public void testFadeOut() {
 		System.out.println("fadeOut");
-		float fadespeed = 0.0F;
-		GeneralLink instance = null;
-		instance.fadeOut(fadespeed);
+//		float fadespeed = 0.0F;
+//		GeneralLink instance = null;
+//		instance.fadeOut(fadespeed);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -80,10 +80,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetStartPos() {
 		System.out.println("getStartPos");
-		GeneralLink instance = null;
-		float expResult = 0.0F;
-		float result = instance.getStartPos();
-		assertEquals(expResult, result, 0.0);
+//		GeneralLink instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.getStartPos();
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -94,10 +94,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetEndPos() {
 		System.out.println("getEndPos");
-		GeneralLink instance = null;
-		float expResult = 0.0F;
-		float result = instance.getEndPos();
-		assertEquals(expResult, result, 0.0);
+//		GeneralLink instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.getEndPos();
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -108,9 +108,9 @@ public class GeneralLinkTest {
 	@Test
 	public void testCalculatePositions() {
 		System.out.println("calculatePositions");
-		GeneCircle geneCircle = null;
-		GeneralLink instance = null;
-		instance.calculatePositions(geneCircle);
+//		GeneCircle geneCircle = null;
+//		GeneralLink instance = null;
+//		instance.calculatePositions(geneCircle);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -121,9 +121,9 @@ public class GeneralLinkTest {
 	@Test
 	public void testBeginDrawing() {
 		System.out.println("beginDrawing");
-		GL2 gl = null;
-		float zoomLevel = 0.0F;
-		GeneralLink.beginDrawing(gl, zoomLevel);
+//		GL2 gl = null;
+//		float zoomLevel = 0.0F;
+//		GeneralLink.beginDrawing(gl, zoomLevel);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -134,8 +134,8 @@ public class GeneralLinkTest {
 	@Test
 	public void testEndDrawing() {
 		System.out.println("endDrawing");
-		GL2 gl = null;
-		GeneralLink.endDrawing(gl);
+//		GL2 gl = null;
+//		GeneralLink.endDrawing(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -146,14 +146,14 @@ public class GeneralLinkTest {
 	@Test
 	public void testBezier() {
 		System.out.println("bezier");
-		float t = 0.0F;
-		float p1 = 0.0F;
-		float p2 = 0.0F;
-		float p3 = 0.0F;
-		GeneralLink instance = null;
-		float expResult = 0.0F;
-		float result = instance.bezier(t, p1, p2, p3);
-		assertEquals(expResult, result, 0.0);
+//		float t = 0.0F;
+//		float p1 = 0.0F;
+//		float p2 = 0.0F;
+//		float p3 = 0.0F;
+//		GeneralLink instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.bezier(t, p1, p2, p3);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -164,14 +164,14 @@ public class GeneralLinkTest {
 	@Test
 	public void testDistance() {
 		System.out.println("distance");
-		float x1 = 0.0F;
-		float y1 = 0.0F;
-		float x2 = 0.0F;
-		float y2 = 0.0F;
-		GeneralLink instance = null;
-		float expResult = 0.0F;
-		float result = instance.distance(x1, y1, x2, y2);
-		assertEquals(expResult, result, 0.0);
+//		float x1 = 0.0F;
+//		float y1 = 0.0F;
+//		float x2 = 0.0F;
+//		float y2 = 0.0F;
+//		GeneralLink instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.distance(x1, y1, x2, y2);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -182,12 +182,12 @@ public class GeneralLinkTest {
 	@Test
 	public void testIsHit() {
 		System.out.println("isHit");
-		float x = 0.0F;
-		float y = 0.0F;
-		GeneralLink instance = null;
-		boolean expResult = false;
-		boolean result = instance.isHit(x, y);
-		assertEquals(expResult, result);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		GeneralLink instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.isHit(x, y);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -198,13 +198,13 @@ public class GeneralLinkTest {
 	@Test
 	public void testDraw_3args() {
 		System.out.println("draw");
-		GL2 gl = null;
-		float x = 0.0F;
-		float y = 0.0F;
-		GeneralLink instance = null;
-		boolean expResult = false;
-		boolean result = instance.draw(gl, x, y);
-		assertEquals(expResult, result);
+//		GL2 gl = null;
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		GeneralLink instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.draw(gl, x, y);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -215,12 +215,12 @@ public class GeneralLinkTest {
 	@Test
 	public void testDraw_4args() {
 		System.out.println("draw");
-		GL2 gl = null;
-		float f = 0.0F;
-		float f0 = 0.0F;
-		float f1 = 0.0F;
-		GeneralLink instance = null;
-		instance.draw(gl, f, f0, f1);
+//		GL2 gl = null;
+//		float f = 0.0F;
+//		float f0 = 0.0F;
+//		float f1 = 0.0F;
+//		GeneralLink instance = null;
+//		instance.draw(gl, f, f0, f1);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -231,10 +231,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testIsMinimized() {
 		System.out.println("isMinimized");
-		GeneralLink instance = null;
-		boolean expResult = false;
-		boolean result = instance.isMinimized();
-		assertEquals(expResult, result);
+//		GeneralLink instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.isMinimized();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -245,10 +245,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetAChromosome() {
 		System.out.println("getAChromosome");
-		GeneralLink instance = null;
-		ViewChromosome expResult = null;
-		ViewChromosome result = instance.getAChromosome();
-		assertEquals(expResult, result);
+//		GeneralLink instance = null;
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = instance.getAChromosome();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -259,10 +259,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetBChromosome() {
 		System.out.println("getBChromosome");
-		GeneralLink instance = null;
-		ViewChromosome expResult = null;
-		ViewChromosome result = instance.getBChromosome();
-		assertEquals(expResult, result);
+//		GeneralLink instance = null;
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = instance.getBChromosome();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -273,10 +273,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetaStart() {
 		System.out.println("getaStart");
-		GeneralLink instance = null;
-		long expResult = 0L;
-		long result = instance.getaStart();
-		assertEquals(expResult, result);
+//		GeneralLink instance = null;
+//		long expResult = 0L;
+//		long result = instance.getaStart();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -287,10 +287,10 @@ public class GeneralLinkTest {
 	@Test
 	public void testGetbStart() {
 		System.out.println("getbStart");
-		GeneralLink instance = null;
-		long expResult = 0L;
-		long result = instance.getbStart();
-		assertEquals(expResult, result);
+//		GeneralLink instance = null;
+//		long expResult = 0L;
+//		long result = instance.getbStart();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

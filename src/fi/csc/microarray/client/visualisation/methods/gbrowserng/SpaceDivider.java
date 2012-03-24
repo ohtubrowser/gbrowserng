@@ -13,18 +13,33 @@ public class SpaceDivider {
 	private final float maximumSize;
 	private final float minimumSize;
 	private final int myDirection;
+	private ArrayList<CascadingComponent> components;
+	
+	public ArrayList<CascadingComponent> getComponents() {
+		return components;
+	}
 
-	ArrayList<CascadingComponent> components = new ArrayList<CascadingComponent>();
+	public float getMaximumSize() {
+		return maximumSize;
+	}
+
+	public float getMinimumSize() {
+		return minimumSize;
+	}
+
+	public int getMyDirection() {
+		return myDirection;
+	}
 
 	public SpaceDivider(int direction, float minimumSize, float maximumSize) {
 		this.myDirection = direction;
 		this.minimumSize = minimumSize;
 		this.maximumSize = maximumSize;
+		components = new ArrayList<CascadingComponent>();
 	}
 
 	public void insertComponent(CascadingComponent component) {
 		components.add(component);
-	
 	}
 
 	public void calculate() {
@@ -34,8 +49,10 @@ public class SpaceDivider {
 		for(CascadingComponent component : components) {
 			if(myDirection == VERTICAL) {
 				component.setPosition(0, pos);
+				System.out.println("Vertical");
 				component.setDimensions(2, componentSize);
 			} else {
+				System.out.println("Horizontal");
 				component.setPosition(pos, 0);
 				component.setDimensions(componentSize, 2);
 			}

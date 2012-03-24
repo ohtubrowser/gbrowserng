@@ -40,8 +40,8 @@ public class OpenGLBuffersTest {
 	@Test
 	public void testInitBuffers() {
 		System.out.println("initBuffers");
-		GL2 gl = null;
-		OpenGLBuffers.initBuffers(gl);
+//		GL2 gl = null;
+//		OpenGLBuffers.initBuffers(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -43,10 +43,10 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testChildComponentCall() {
 		System.out.println("childComponentCall");
-		String who = "";
-		String what = "";
-		GenoVisualBorder instance = null;
-		instance.childComponentCall(who, what);
+//		String who = "";
+//		String what = "";
+//		GenoVisualBorder instance = null;
+//		instance.childComponentCall(who, what);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -57,13 +57,13 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testHandle_3args() {
 		System.out.println("handle");
-		MouseEvent event = null;
-		float screen_x = 0.0F;
-		float screen_y = 0.0F;
-		GenoVisualBorder instance = null;
-		boolean expResult = false;
-		boolean result = instance.handle(event, screen_x, screen_y);
-		assertEquals(expResult, result);
+//		MouseEvent event = null;
+//		float screen_x = 0.0F;
+//		float screen_y = 0.0F;
+//		GenoVisualBorder instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.handle(event, screen_x, screen_y);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -74,11 +74,11 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testHandle_KeyEvent() {
 		System.out.println("handle");
-		KeyEvent event = null;
-		GenoVisualBorder instance = null;
-		boolean expResult = false;
-		boolean result = instance.handle(event);
-		assertEquals(expResult, result);
+//		KeyEvent event = null;
+//		GenoVisualBorder instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.handle(event);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -89,9 +89,9 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testDraw_GL2() {
 		System.out.println("draw");
-		GL2 gl = null;
-		GenoVisualBorder instance = null;
-		instance.draw(gl);
+//		GL2 gl = null;
+//		GenoVisualBorder instance = null;
+//		instance.draw(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -102,9 +102,9 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testUserTick() {
 		System.out.println("userTick");
-		float dt = 0.0F;
-		GenoVisualBorder instance = null;
-		instance.userTick(dt);
+//		float dt = 0.0F;
+//		GenoVisualBorder instance = null;
+//		instance.userTick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -115,10 +115,10 @@ public class GenoVisualBorderTest {
 	@Test
 	public void testDraw_GL2_Color() {
 		System.out.println("draw");
-		GL2 gl = null;
-		Color tempcolor = null;
-		GenoVisualBorder instance = null;
-		instance.draw(gl, tempcolor);
+//		GL2 gl = null;
+//		Color tempcolor = null;
+//		GenoVisualBorder instance = null;
+//		instance.draw(gl, tempcolor);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

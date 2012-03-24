@@ -40,8 +40,8 @@ public class TrackviewManagerTest {
 	@Test
 	public void testClearContainer() {
 		System.out.println("clearContainer");
-		TrackviewManager instance = null;
-		instance.clearContainer();
+//		TrackviewManager instance = null;
+//		instance.clearContainer();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -52,9 +52,9 @@ public class TrackviewManagerTest {
 	@Test
 	public void testOpenLinkSession() {
 		System.out.println("openLinkSession");
-		GeneralLink l = null;
-		TrackviewManager instance = null;
-		instance.openLinkSession(l);
+//		GeneralLink l = null;
+//		TrackviewManager instance = null;
+//		instance.openLinkSession(l);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -65,8 +65,8 @@ public class TrackviewManagerTest {
 	@Test
 	public void testToggleVisible() {
 		System.out.println("toggleVisible");
-		TrackviewManager instance = null;
-		instance.toggleVisible();
+//		TrackviewManager instance = null;
+//		instance.toggleVisible();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -77,9 +77,9 @@ public class TrackviewManagerTest {
 	@Test
 	public void testPaint() {
 		System.out.println("paint");
-		Graphics g = null;
-		TrackviewManager instance = null;
-		instance.paint(g);
+//		Graphics g = null;
+//		TrackviewManager instance = null;
+//		instance.paint(g);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

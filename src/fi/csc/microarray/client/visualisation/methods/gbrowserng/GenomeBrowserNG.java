@@ -1,16 +1,11 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
 import com.jogamp.newt.event.NEWTEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.EventHandler;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.GenoWindowListener;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Keyboard;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.Mouse;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
 import java.awt.*;
@@ -18,13 +13,37 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ *
+ * @author Kristiina Paloheimo
+ */
 public class GenomeBrowserNG {
 
-	BlockingQueue<NEWTEvent> eventQueue;
-	GenoWindowListener windowListener;
-	GenoGLListener glListener;
-	GenoWindow genoWindow;
-	EventHandler eventHandler;
+	private BlockingQueue<NEWTEvent> eventQueue;
+	private GenoWindowListener windowListener;
+	private GenoGLListener glListener;
+	private GenoWindow genoWindow;
+	private EventHandler eventHandler;
+
+	public EventHandler getEventHandler() {
+		return eventHandler;
+	}
+
+	public BlockingQueue<NEWTEvent> getEventQueue() {
+		return eventQueue;
+	}
+
+	public GenoWindow getGenoWindow() {
+		return genoWindow;
+	}
+
+	public GenoGLListener getGlListener() {
+		return glListener;
+	}
+
+	public GenoWindowListener getWindowListener() {
+		return windowListener;
+	}
 
 	public static void useSmallData() {
 		AbstractGenome.setName("Bogus Genome");
@@ -91,7 +110,7 @@ public class GenomeBrowserNG {
 //               
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-						"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
+					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
@@ -109,15 +128,18 @@ public class GenomeBrowserNG {
 		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
-
 		this.genoWindow = new GenoWindow(width, height);
 		OverView overView = new OverView(this.genoWindow, links);
 		this.genoWindow.addContainer(overView.trackviewManager);
 
 		this.glListener = new GenoGLListener(overView);
 		this.eventHandler = new EventHandler(this.genoWindow, this.glListener.getRoot(), eventQueue, width, height);
-		this.windowListener = new GenoWindowListener(eventQueue);
 
+		addListeners();
+	}
+
+	public void addListeners() {
+		this.windowListener = new GenoWindowListener(eventQueue);
 		this.genoWindow.window.addKeyListener(new Keyboard(eventQueue));
 		this.genoWindow.window.addMouseListener(new Mouse(eventQueue));
 		this.genoWindow.window.addWindowListener(windowListener);
@@ -140,4 +162,5 @@ public class GenomeBrowserNG {
 		double fraction = 0.8d;
 		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction)).run();
 	}
+
 }

@@ -39,10 +39,10 @@ public class SimpleMouseEventTest {
 	@Test
 	public void testGetX() {
 		System.out.println("getX");
-		SimpleMouseEvent instance = null;
-		float expResult = 0.0F;
-		float result = instance.getX();
-		assertEquals(expResult, result, 0.0);
+//		SimpleMouseEvent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.getX();
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,10 +53,10 @@ public class SimpleMouseEventTest {
 	@Test
 	public void testGetY() {
 		System.out.println("getY");
-		SimpleMouseEvent instance = null;
-		float expResult = 0.0F;
-		float result = instance.getY();
-		assertEquals(expResult, result, 0.0);
+//		SimpleMouseEvent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.getY();
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -67,10 +67,10 @@ public class SimpleMouseEventTest {
 	@Test
 	public void testGetWhen() {
 		System.out.println("getWhen");
-		SimpleMouseEvent instance = null;
-		long expResult = 0L;
-		long result = instance.getWhen();
-		assertEquals(expResult, result);
+//		SimpleMouseEvent instance = null;
+//		long expResult = 0L;
+//		long result = instance.getWhen();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
