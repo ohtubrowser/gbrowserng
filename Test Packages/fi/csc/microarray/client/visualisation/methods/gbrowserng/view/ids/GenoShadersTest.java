@@ -40,8 +40,8 @@ public class GenoShadersTest {
 	@Test
 	public void testCreateShaders() {
 		System.out.println("createShaders");
-		SoulGL2 gl = null;
-		GenoShaders.createShaders(gl);
+//		SoulGL2 gl = null;
+//		GenoShaders.createShaders(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

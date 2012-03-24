@@ -4,6 +4,8 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
+import gles.Color;
+import java.util.Map;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -34,8 +36,17 @@ public class GlobalVariablesTest {
 	}
 
 	@Test
-	public void testSomeMethod() {
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+	public void testGlobalVariables() {
+		System.out.println("initialize global variables");
+		GlobalVariables variables = new GlobalVariables();
+		assertNotNull(variables);
+	}
+	
+	@Test
+	public void testGenomeColors() {
+		System.out.println("genome colors");
+		GlobalVariables variables = new GlobalVariables();
+		Map<Character, Color> colors = variables.getGenomeColors();
+		assertNotNull(colors);
 	}
 }

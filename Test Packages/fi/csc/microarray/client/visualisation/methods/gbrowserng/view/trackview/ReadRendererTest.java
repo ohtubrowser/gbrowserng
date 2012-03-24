@@ -40,9 +40,9 @@ public class ReadRendererTest {
 	@Test
 	public void testDraw() {
 		System.out.println("draw");
-		GL2 gl = null;
-		ReadRenderer instance = null;
-		instance.draw(gl);
+//		GL2 gl = null;
+//		ReadRenderer instance = null;
+//		instance.draw(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class ReadRendererTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		ReadRenderer instance = null;
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		ReadRenderer instance = null;
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

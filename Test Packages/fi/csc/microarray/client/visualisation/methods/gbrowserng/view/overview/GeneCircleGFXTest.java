@@ -42,11 +42,11 @@ public class GeneCircleGFXTest {
 	@Test
 	public void testDraw() {
 		System.out.println("draw");
-		GL2 gl = null;
-		Matrix4 modelMatrix = null;
-		Vector2 mousePosition = null;
-		GeneCircleGFX instance = null;
-		instance.draw(gl, modelMatrix, mousePosition);
+//		GL2 gl = null;
+//		Matrix4 modelMatrix = null;
+//		Vector2 mousePosition = null;
+//		GeneCircleGFX instance = null;
+//		instance.draw(gl, modelMatrix, mousePosition);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -57,9 +57,9 @@ public class GeneCircleGFXTest {
 	@Test
 	public void testDrawChromosomeSeparators() {
 		System.out.println("drawChromosomeSeparators");
-		GL2 gl = null;
-		GeneCircleGFX instance = null;
-		instance.drawChromosomeSeparators(gl);
+//		GL2 gl = null;
+//		GeneCircleGFX instance = null;
+//		instance.drawChromosomeSeparators(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -70,9 +70,9 @@ public class GeneCircleGFXTest {
 	@Test
 	public void testDrawCentromeres() {
 		System.out.println("drawCentromeres");
-		GL2 gl = null;
-		GeneCircleGFX instance = null;
-		instance.drawCentromeres(gl);
+//		GL2 gl = null;
+//		GeneCircleGFX instance = null;
+//		instance.drawCentromeres(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -83,9 +83,9 @@ public class GeneCircleGFXTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		GeneCircleGFX instance = null;
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		GeneCircleGFX instance = null;
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -96,9 +96,9 @@ public class GeneCircleGFXTest {
 	@Test
 	public void testSetHilight() {
 		System.out.println("setHilight");
-		float value = 0.0F;
-		GeneCircleGFX instance = null;
-		instance.setHilight(value);
+//		float value = 0.0F;
+//		GeneCircleGFX instance = null;
+//		instance.setHilight(value);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

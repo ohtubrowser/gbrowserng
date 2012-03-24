@@ -40,12 +40,12 @@ public class CascadingComponentTest {
 	@Test
 	public void testInComponent() {
 		System.out.println("inComponent");
-		float x = 0.0F;
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		boolean expResult = false;
-		boolean result = instance.inComponent(x, y);
-		assertEquals(expResult, result);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.inComponent(x, y);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -56,10 +56,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testInScreen() {
 		System.out.println("inScreen");
-		CascadingComponent instance = null;
-		boolean expResult = false;
-		boolean result = instance.inScreen();
-		assertEquals(expResult, result);
+//		CascadingComponent instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.inScreen();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -70,10 +70,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testGetParent() {
 		System.out.println("getParent");
-		CascadingComponent instance = null;
-		CascadingComponent expResult = null;
-		CascadingComponent result = instance.getParent();
-		assertEquals(expResult, result);
+//		CascadingComponent instance = null;
+//		CascadingComponent expResult = null;
+//		CascadingComponent result = instance.getParent();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -84,9 +84,9 @@ public class CascadingComponentTest {
 	@Test
 	public void testCascadingTick() {
 		System.out.println("cascadingTick");
-		float dt = 0.0F;
-		CascadingComponent instance = null;
-		instance.cascadingTick(dt);
+//		float dt = 0.0F;
+//		CascadingComponent instance = null;
+//		instance.cascadingTick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -97,10 +97,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testGetPosition() {
 		System.out.println("getPosition");
-		CascadingComponent instance = null;
-		Vector2 expResult = null;
-		Vector2 result = instance.getPosition();
-		assertEquals(expResult, result);
+//		CascadingComponent instance = null;
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getPosition();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -111,10 +111,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testGetDimensions() {
 		System.out.println("getDimensions");
-		CascadingComponent instance = null;
-		Vector2 expResult = null;
-		Vector2 result = instance.getDimensions();
-		assertEquals(expResult, result);
+//		CascadingComponent instance = null;
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getDimensions();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -125,10 +125,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testGetTargetDimensions() {
 		System.out.println("getTargetDimensions");
-		CascadingComponent instance = null;
-		Vector2 expResult = null;
-		Vector2 result = instance.getTargetDimensions();
-		assertEquals(expResult, result);
+//		CascadingComponent instance = null;
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getTargetDimensions();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -139,11 +139,11 @@ public class CascadingComponentTest {
 	@Test
 	public void testGlx() {
 		System.out.println("glx");
-		float x = 0.0F;
-		CascadingComponent instance = null;
-		float expResult = 0.0F;
-		float result = instance.glx(x);
-		assertEquals(expResult, result, 0.0);
+//		float x = 0.0F;
+//		CascadingComponent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.glx(x);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -154,11 +154,11 @@ public class CascadingComponentTest {
 	@Test
 	public void testGly() {
 		System.out.println("gly");
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		float expResult = 0.0F;
-		float result = instance.gly(y);
-		assertEquals(expResult, result, 0.0);
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.gly(y);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -169,11 +169,11 @@ public class CascadingComponentTest {
 	@Test
 	public void testGlySize() {
 		System.out.println("glySize");
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		float expResult = 0.0F;
-		float result = instance.glySize(y);
-		assertEquals(expResult, result, 0.0);
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.glySize(y);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -184,11 +184,11 @@ public class CascadingComponentTest {
 	@Test
 	public void testGlxSize() {
 		System.out.println("glxSize");
-		float x = 0.0F;
-		CascadingComponent instance = null;
-		float expResult = 0.0F;
-		float result = instance.glxSize(x);
-		assertEquals(expResult, result, 0.0);
+//		float x = 0.0F;
+//		CascadingComponent instance = null;
+//		float expResult = 0.0F;
+//		float result = instance.glxSize(x);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -199,10 +199,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testSetPosition() {
 		System.out.println("setPosition");
-		float x = 0.0F;
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		instance.setPosition(x, y);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		instance.setPosition(x, y);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -213,10 +213,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testSetDimensions() {
 		System.out.println("setDimensions");
-		float w = 0.0F;
-		float h = 0.0F;
-		CascadingComponent instance = null;
-		instance.setDimensions(w, h);
+//		float w = 0.0F;
+//		float h = 0.0F;
+//		CascadingComponent instance = null;
+//		instance.setDimensions(w, h);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -227,10 +227,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testModifyPosition() {
 		System.out.println("modifyPosition");
-		float x = 0.0F;
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		instance.modifyPosition(x, y);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		instance.modifyPosition(x, y);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -241,10 +241,10 @@ public class CascadingComponentTest {
 	@Test
 	public void testModifyDimensions() {
 		System.out.println("modifyDimensions");
-		float x = 0.0F;
-		float y = 0.0F;
-		CascadingComponent instance = null;
-		instance.modifyDimensions(x, y);
+//		float x = 0.0F;
+//		float y = 0.0F;
+//		CascadingComponent instance = null;
+//		instance.modifyDimensions(x, y);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

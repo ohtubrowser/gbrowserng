@@ -41,10 +41,10 @@ public class CytobandLoaderTest {
 	@Test
 	public void testGetChromosomes() {
 		System.out.println("getChromosomes");
-		CytobandLoader instance = null;
-		ConcurrentLinkedQueue expResult = null;
-		ConcurrentLinkedQueue result = instance.getChromosomes();
-		assertEquals(expResult, result);
+//		CytobandLoader instance = null;
+//		ConcurrentLinkedQueue expResult = null;
+//		ConcurrentLinkedQueue result = instance.getChromosomes();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -55,9 +55,9 @@ public class CytobandLoaderTest {
 	@Test
 	public void testProcessAreaResult() {
 		System.out.println("processAreaResult");
-		AreaResult areaResult = null;
-		CytobandLoader instance = null;
-		instance.processAreaResult(areaResult);
+//		AreaResult areaResult = null;
+//		CytobandLoader instance = null;
+//		instance.processAreaResult(areaResult);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -68,8 +68,8 @@ public class CytobandLoaderTest {
 	@Test
 	public void testMain() {
 		System.out.println("main");
-		String[] args = null;
-		CytobandLoader.main(args);
+//		String[] args = null;
+//		CytobandLoader.main(args);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

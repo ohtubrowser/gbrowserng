@@ -40,9 +40,9 @@ public class MouseTest {
 	@Test
 	public void testMouseClicked() {
 		System.out.println("mouseClicked");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseClicked(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseClicked(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class MouseTest {
 	@Test
 	public void testMouseEntered() {
 		System.out.println("mouseEntered");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseEntered(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseEntered(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -66,9 +66,9 @@ public class MouseTest {
 	@Test
 	public void testMouseExited() {
 		System.out.println("mouseExited");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseExited(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseExited(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -79,9 +79,9 @@ public class MouseTest {
 	@Test
 	public void testMousePressed() {
 		System.out.println("mousePressed");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mousePressed(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mousePressed(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -92,9 +92,9 @@ public class MouseTest {
 	@Test
 	public void testMouseReleased() {
 		System.out.println("mouseReleased");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseReleased(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseReleased(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -105,9 +105,9 @@ public class MouseTest {
 	@Test
 	public void testMouseDragged() {
 		System.out.println("mouseDragged");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseDragged(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseDragged(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -118,9 +118,9 @@ public class MouseTest {
 	@Test
 	public void testMouseMoved() {
 		System.out.println("mouseMoved");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseMoved(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseMoved(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -131,9 +131,9 @@ public class MouseTest {
 	@Test
 	public void testMouseWheelMoved() {
 		System.out.println("mouseWheelMoved");
-		MouseEvent e = null;
-		Mouse instance = null;
-		instance.mouseWheelMoved(e);
+//		MouseEvent e = null;
+//		Mouse instance = null;
+//		instance.mouseWheelMoved(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

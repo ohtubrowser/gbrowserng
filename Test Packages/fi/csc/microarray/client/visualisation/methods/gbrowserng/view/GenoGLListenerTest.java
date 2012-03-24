@@ -41,8 +41,8 @@ public class GenoGLListenerTest {
 	@Test
 	public void testRun() {
 		System.out.println("run");
-		GenoGLListener instance = null;
-		instance.run();
+//		GenoGLListener instance = null;
+//		instance.run();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class GenoGLListenerTest {
 	@Test
 	public void testDisplay() {
 		System.out.println("display");
-		GLAutoDrawable drawable = null;
-		GenoGLListener instance = null;
-		instance.display(drawable);
+//		GLAutoDrawable drawable = null;
+//		GenoGLListener instance = null;
+//		instance.display(drawable);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -66,9 +66,9 @@ public class GenoGLListenerTest {
 	@Test
 	public void testDispose() {
 		System.out.println("dispose");
-		GLAutoDrawable drawable = null;
-		GenoGLListener instance = null;
-		instance.dispose(drawable);
+//		GLAutoDrawable drawable = null;
+//		GenoGLListener instance = null;
+//		instance.dispose(drawable);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -79,9 +79,9 @@ public class GenoGLListenerTest {
 	@Test
 	public void testInit() {
 		System.out.println("init");
-		GLAutoDrawable drawable = null;
-		GenoGLListener instance = null;
-		instance.init(drawable);
+//		GLAutoDrawable drawable = null;
+//		GenoGLListener instance = null;
+//		instance.init(drawable);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -92,13 +92,13 @@ public class GenoGLListenerTest {
 	@Test
 	public void testReshape() {
 		System.out.println("reshape");
-		GLAutoDrawable drawable = null;
-		int x = 0;
-		int y = 0;
-		int width = 0;
-		int height = 0;
-		GenoGLListener instance = null;
-		instance.reshape(drawable, x, y, width, height);
+//		GLAutoDrawable drawable = null;
+//		int x = 0;
+//		int y = 0;
+//		int width = 0;
+//		int height = 0;
+//		GenoGLListener instance = null;
+//		instance.reshape(drawable, x, y, width, height);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -109,10 +109,10 @@ public class GenoGLListenerTest {
 	@Test
 	public void testGetRoot() {
 		System.out.println("getRoot");
-		GenoGLListener instance = null;
-		GenosideComponent expResult = null;
-		GenosideComponent result = instance.getRoot();
-		assertEquals(expResult, result);
+//		GenoGLListener instance = null;
+//		GenosideComponent expResult = null;
+//		GenosideComponent result = instance.getRoot();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -123,8 +123,8 @@ public class GenoGLListenerTest {
 	@Test
 	public void testDie() {
 		System.out.println("die");
-		GenoGLListener instance = null;
-		instance.die();
+//		GenoGLListener instance = null;
+//		instance.die();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

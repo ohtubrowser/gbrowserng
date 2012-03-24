@@ -40,9 +40,9 @@ public class LinkGFXTest {
 	@Test
 	public void testDraw() {
 		System.out.println("draw");
-		GL2 gl = null;
-		LinkGFX instance = null;
-		instance.draw(gl);
+//		GL2 gl = null;
+//		LinkGFX instance = null;
+//		instance.draw(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class LinkGFXTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		LinkGFX instance = null;
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		LinkGFX instance = null;
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -66,8 +66,8 @@ public class LinkGFXTest {
 	@Test
 	public void testHide() {
 		System.out.println("hide");
-		LinkGFX instance = null;
-		instance.hide();
+//		LinkGFX instance = null;
+//		instance.hide();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -78,8 +78,8 @@ public class LinkGFXTest {
 	@Test
 	public void testShow() {
 		System.out.println("show");
-		LinkGFX instance = null;
-		instance.show();
+//		LinkGFX instance = null;
+//		instance.show();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

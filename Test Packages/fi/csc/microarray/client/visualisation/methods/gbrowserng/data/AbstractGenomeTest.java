@@ -92,10 +92,10 @@ public class AbstractGenomeTest {
 	@Test
 	public void testGetEndPoint() {
 		System.out.println("getEndPoint");
-		int id = 0;
-		long expResult = 0L;
-		long result = AbstractGenome.getEndPoint(id);
-		assertEquals(expResult, result);
+//		int id = 0;
+//		long expResult = 0L;
+//		long result = AbstractGenome.getEndPoint(id);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -131,10 +131,10 @@ public class AbstractGenomeTest {
 	@Test
 	public void testGetChromosomeByPosition() {
 		System.out.println("getChromosomeByPosition");
-		long position = 0L;
-		ViewChromosome expResult = null;
-		ViewChromosome result = AbstractGenome.getChromosomeByPosition(position);
-		assertEquals(expResult, result);
+//		long position = 0L;
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = AbstractGenome.getChromosomeByPosition(position);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
