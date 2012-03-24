@@ -40,9 +40,9 @@ public class KeyboardTest {
 	@Test
 	public void testKeyPressed() {
 		System.out.println("keyPressed");
-		KeyEvent keyEvent = null;
-		Keyboard instance = null;
-		instance.keyPressed(keyEvent);
+//		KeyEvent keyEvent = null;
+//		Keyboard instance = null;
+//		instance.keyPressed(keyEvent);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -53,9 +53,9 @@ public class KeyboardTest {
 	@Test
 	public void testKeyReleased() {
 		System.out.println("keyReleased");
-		KeyEvent keyEvent = null;
-		Keyboard instance = null;
-		instance.keyReleased(keyEvent);
+//		KeyEvent keyEvent = null;
+//		Keyboard instance = null;
+//		instance.keyReleased(keyEvent);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -66,9 +66,9 @@ public class KeyboardTest {
 	@Test
 	public void testKeyTyped() {
 		System.out.println("keyTyped");
-		KeyEvent keyEvent = null;
-		Keyboard instance = null;
-		instance.keyTyped(keyEvent);
+//		KeyEvent keyEvent = null;
+//		Keyboard instance = null;
+//		instance.keyTyped(keyEvent);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

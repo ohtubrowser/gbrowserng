@@ -39,9 +39,9 @@ public class OverViewStateTest {
 	@Test
 	public void testValues() {
 		System.out.println("values");
-		OverViewState[] expResult = null;
-		OverViewState[] result = OverViewState.values();
-		assertEquals(expResult, result);
+//		OverViewState[] expResult = null;
+//		OverViewState[] result = OverViewState.values();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -52,10 +52,10 @@ public class OverViewStateTest {
 	@Test
 	public void testValueOf() {
 		System.out.println("valueOf");
-		String name = "";
-		OverViewState expResult = null;
-		OverViewState result = OverViewState.valueOf(name);
-		assertEquals(expResult, result);
+//		String name = "";
+//		OverViewState expResult = null;
+//		OverViewState result = OverViewState.valueOf(name);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -41,9 +41,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowDestroyNotify() {
 		System.out.println("windowDestroyNotify");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowDestroyNotify(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowDestroyNotify(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -54,9 +54,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowDestroyed() {
 		System.out.println("windowDestroyed");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowDestroyed(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowDestroyed(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -67,9 +67,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowGainedFocus() {
 		System.out.println("windowGainedFocus");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowGainedFocus(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowGainedFocus(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -80,9 +80,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowLostFocus() {
 		System.out.println("windowLostFocus");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowLostFocus(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowLostFocus(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -93,9 +93,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowMoved() {
 		System.out.println("windowMoved");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowMoved(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowMoved(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -106,9 +106,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowRepaint() {
 		System.out.println("windowRepaint");
-		WindowUpdateEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowRepaint(e);
+//		WindowUpdateEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowRepaint(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -119,9 +119,9 @@ public class GenoWindowListenerTest {
 	@Test
 	public void testWindowResized() {
 		System.out.println("windowResized");
-		WindowEvent e = null;
-		GenoWindowListener instance = null;
-		instance.windowResized(e);
+//		WindowEvent e = null;
+//		GenoWindowListener instance = null;
+//		instance.windowResized(e);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

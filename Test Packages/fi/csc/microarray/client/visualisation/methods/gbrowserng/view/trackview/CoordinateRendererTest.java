@@ -42,10 +42,10 @@ public class CoordinateRendererTest {
 	@Test
 	public void testChildComponentCall() {
 		System.out.println("childComponentCall");
-		String who = "";
-		String what = "";
-		CoordinateRenderer instance = null;
-		instance.childComponentCall(who, what);
+//		String who = "";
+//		String what = "";
+//		CoordinateRenderer instance = null;
+//		instance.childComponentCall(who, what);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -56,9 +56,9 @@ public class CoordinateRendererTest {
 	@Test
 	public void testDraw() {
 		System.out.println("draw");
-		GL2 gl = null;
-		CoordinateRenderer instance = null;
-		instance.draw(gl);
+//		GL2 gl = null;
+//		CoordinateRenderer instance = null;
+//		instance.draw(gl);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -69,13 +69,13 @@ public class CoordinateRendererTest {
 	@Test
 	public void testHandle_3args() {
 		System.out.println("handle");
-		MouseEvent event = null;
-		float screenX = 0.0F;
-		float screenY = 0.0F;
-		CoordinateRenderer instance = null;
-		boolean expResult = false;
-		boolean result = instance.handle(event, screenX, screenY);
-		assertEquals(expResult, result);
+//		MouseEvent event = null;
+//		float screenX = 0.0F;
+//		float screenY = 0.0F;
+//		CoordinateRenderer instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.handle(event, screenX, screenY);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -86,11 +86,11 @@ public class CoordinateRendererTest {
 	@Test
 	public void testHandle_KeyEvent() {
 		System.out.println("handle");
-		KeyEvent event = null;
-		CoordinateRenderer instance = null;
-		boolean expResult = false;
-		boolean result = instance.handle(event);
-		assertEquals(expResult, result);
+//		KeyEvent event = null;
+//		CoordinateRenderer instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.handle(event);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -101,9 +101,9 @@ public class CoordinateRendererTest {
 	@Test
 	public void testUserTick() {
 		System.out.println("userTick");
-		float dt = 0.0F;
-		CoordinateRenderer instance = null;
-		instance.userTick(dt);
+//		float dt = 0.0F;
+//		CoordinateRenderer instance = null;
+//		instance.userTick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

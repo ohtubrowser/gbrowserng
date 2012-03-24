@@ -40,8 +40,8 @@ public class GenoWindowTest {
 	@Test
 	public void testOpen() {
 		System.out.println("open");
-		GenoWindow instance = null;
-		instance.open();
+//		GenoWindow instance = null;
+//		instance.open();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -52,8 +52,8 @@ public class GenoWindowTest {
 	@Test
 	public void testClose() {
 		System.out.println("close");
-		GenoWindow instance = null;
-		instance.close();
+//		GenoWindow instance = null;
+//		instance.close();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -64,8 +64,8 @@ public class GenoWindowTest {
 	@Test
 	public void testToggleFullscreen() {
 		System.out.println("toggleFullscreen");
-		GenoWindow instance = null;
-		instance.toggleFullscreen();
+//		GenoWindow instance = null;
+//		instance.toggleFullscreen();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -76,8 +76,8 @@ public class GenoWindowTest {
 	@Test
 	public void testToggleVisible() {
 		System.out.println("toggleVisible");
-		GenoWindow instance = null;
-		instance.toggleVisible();
+//		GenoWindow instance = null;
+//		instance.toggleVisible();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -88,10 +88,10 @@ public class GenoWindowTest {
 	@Test
 	public void testIsOverviewVisible() {
 		System.out.println("isOverviewVisible");
-		GenoWindow instance = null;
-		boolean expResult = false;
-		boolean result = instance.isOverviewVisible();
-		assertEquals(expResult, result);
+//		GenoWindow instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.isOverviewVisible();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -102,9 +102,9 @@ public class GenoWindowTest {
 	@Test
 	public void testAddContainer() {
 		System.out.println("addContainer");
-		Container swingContainer = null;
-		GenoWindow instance = null;
-		instance.addContainer(swingContainer);
+//		Container swingContainer = null;
+//		GenoWindow instance = null;
+//		instance.addContainer(swingContainer);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -41,9 +41,9 @@ public class GeneCircleTest {
 	@Test
 	public void testTick() {
 		System.out.println("tick");
-		float dt = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		instance.tick(dt);
+//		float dt = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		instance.tick(dt);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -54,9 +54,9 @@ public class GeneCircleTest {
 	@Test
 	public void testUpdatePosition() {
 		System.out.println("updatePosition");
-		float pointerGenePosition = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		instance.updatePosition(pointerGenePosition);
+//		float pointerGenePosition = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		instance.updatePosition(pointerGenePosition);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -67,11 +67,11 @@ public class GeneCircleTest {
 	@Test
 	public void testGetChromosomeByRelativePosition() {
 		System.out.println("getChromosomeByRelativePosition");
-		float relativePosition = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		ViewChromosome expResult = null;
-		ViewChromosome result = instance.getChromosomeByRelativePosition(relativePosition);
-		assertEquals(expResult, result);
+//		float relativePosition = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = instance.getChromosomeByRelativePosition(relativePosition);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -82,10 +82,10 @@ public class GeneCircleTest {
 	@Test
 	public void testGetChromosome() {
 		System.out.println("getChromosome");
-		GeneCircle instance = new GeneCircle();
-		ViewChromosome expResult = null;
-		ViewChromosome result = instance.getChromosome();
-		assertEquals(expResult, result);
+//		GeneCircle instance = new GeneCircle();
+//		ViewChromosome expResult = null;
+//		ViewChromosome result = instance.getChromosome();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -96,10 +96,10 @@ public class GeneCircleTest {
 	@Test
 	public void testGetChromosomePosition() {
 		System.out.println("getChromosomePosition");
-		GeneCircle instance = new GeneCircle();
-		long expResult = 0L;
-		long result = instance.getChromosomePosition();
-		assertEquals(expResult, result);
+//		GeneCircle instance = new GeneCircle();
+//		long expResult = 0L;
+//		long result = instance.getChromosomePosition();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -110,11 +110,11 @@ public class GeneCircleTest {
 	@Test
 	public void testGetChromosomeBoundaries() {
 		System.out.println("getChromosomeBoundaries");
-		GeneCircle instance = new GeneCircle();
-		float[] expResult = null;
-		float[] result = instance.getChromosomeBoundaries();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
+//		GeneCircle instance = new GeneCircle();
+//		float[] expResult = null;
+//		float[] result = instance.getChromosomeBoundaries();
+//		assertEquals(expResult, result);
+//		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
 
@@ -124,10 +124,10 @@ public class GeneCircleTest {
 	@Test
 	public void testGetChromosomeBoundariesPositions() {
 		System.out.println("getChromosomeBoundariesPositions");
-		GeneCircle instance = new GeneCircle();
-		Vector2[] expResult = null;
-		Vector2[] result = instance.getChromosomeBoundariesPositions();
-		assertEquals(expResult, result);
+//		GeneCircle instance = new GeneCircle();
+//		Vector2[] expResult = null;
+//		Vector2[] result = instance.getChromosomeBoundariesPositions();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -138,12 +138,12 @@ public class GeneCircleTest {
 	@Test
 	public void testGetRelativePosition() {
 		System.out.println("getRelativePosition");
-		int chromosome = 0;
-		float relativeChromosomePosition = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		float expResult = 0.0F;
-		float result = instance.getRelativePosition(chromosome, relativeChromosomePosition);
-		assertEquals(expResult, result, 0.0);
+//		int chromosome = 0;
+//		float relativeChromosomePosition = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		float expResult = 0.0F;
+//		float result = instance.getRelativePosition(chromosome, relativeChromosomePosition);
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -154,11 +154,11 @@ public class GeneCircleTest {
 	@Test
 	public void testGetXYPosition() {
 		System.out.println("getXYPosition");
-		float relativeCirclePos = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		Vector2 expResult = null;
-		Vector2 result = instance.getXYPosition(relativeCirclePos);
-		assertEquals(expResult, result);
+//		float relativeCirclePos = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		Vector2 expResult = null;
+//		Vector2 result = instance.getXYPosition(relativeCirclePos);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -169,10 +169,10 @@ public class GeneCircleTest {
 	@Test
 	public void testGetSize() {
 		System.out.println("getSize");
-		GeneCircle instance = new GeneCircle();
-		float expResult = 0.0F;
-		float result = instance.getSize();
-		assertEquals(expResult, result, 0.0);
+//		GeneCircle instance = new GeneCircle();
+//		float expResult = 0.0F;
+//		float result = instance.getSize();
+//		assertEquals(expResult, result, 0.0);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -183,9 +183,9 @@ public class GeneCircleTest {
 	@Test
 	public void testSetSize() {
 		System.out.println("setSize");
-		float size = 0.0F;
-		GeneCircle instance = new GeneCircle();
-		instance.setSize(size);
+//		float size = 0.0F;
+//		GeneCircle instance = new GeneCircle();
+//		instance.setSize(size);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

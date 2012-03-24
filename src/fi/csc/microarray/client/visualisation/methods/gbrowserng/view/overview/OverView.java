@@ -515,13 +515,6 @@ public class OverView extends GenosideComponent {
 		return this.arcHighlightLocked;
 	}
 
-	public void minimizeAllButOne(ViewChromosome chromosome) {
-		int chromosomes = AbstractGenome.getNumChromosomes();
-		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = AbstractGenome.getChromosome(i);
-		}
-	}
-
 	public void openSession(SessionViewCapsule capsule) {
 		capsule.activate();
 		activeSessions.add(capsule);

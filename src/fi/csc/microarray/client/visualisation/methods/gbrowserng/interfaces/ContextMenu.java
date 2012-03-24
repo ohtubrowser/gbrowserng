@@ -28,19 +28,18 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	GenoWindow window;
 	ViewChromosome chromosome;
 	GeneCircle geneCircle;
-	int width, selHeight;
-	float x, y, sizex, sizey, selectionHeight;
+	int width, selHeight, border, shadow;
+	float x, y;
 	Vector2 position, dimensions;
 	TextRenderer textRenderer;
 	ArrayList<Selection> selections;
 	int selected;
 	boolean close;
 
-	CoordinateManager c = new CoordinateManager();
-
-	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 255);
-	private Color selectColor = new Color(0.9f,0.9f,0.9f,255);
-
+	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 0.9f);
+	private Color selectColor = new Color(0.9f,0.9f,0.9f,0.95f);
+	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.8f);
+	private Color shadowColor = new Color(0.2f,0.2f,0.2f,0.7f);
 	
 	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, GenoWindow window) {
 		this.window = window;
@@ -52,8 +51,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		
 		width = 200;
 		selHeight = 26;
-		sizex = 0.2f;
-		selectionHeight = 0.06f; // todo: säädä sopiva koko
+		border = 4;
+		shadow = 6;
 		selections = new ArrayList<Selection>();
 		
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
@@ -63,7 +62,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		else selections.add(new Selection("Fullscreen",3));
 		
 		selected = 0;
-		sizey = selectionHeight * selections.size();
 		initTextRenderers();
         }
 	
@@ -101,7 +99,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	public boolean handle(MouseEvent event, float mx, float my) {
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
-				if(my > y - c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*i && my < y + c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*i) {
+				if(my > y - convertH(selHeight) * 0.5f - convertH(selHeight)*i && my < y + convertH(selHeight) * 0.5f - convertH(selHeight)*i) {
 					selected = i;
 					break;
 				}
@@ -137,11 +135,19 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		gl.glEnable(SoulGL2.GL_BLEND);
 
 		SoulGL2 soulgl = new DesktopGL2(gl);
+
+		if(shadow>0) {
+			PrimitiveRenderer.drawRectangle(x+convertW(width+shadow)*.5f, y - convertH(selHeight*(selections.size()-1)+shadow)*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / GlobalVariables.aspectRatio, soulgl, shadowColor);
+		}
+		
+		if(border>0) {
+			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - convertH(selHeight*(selections.size()-1))*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / GlobalVariables.aspectRatio, soulgl, borderColor);
+		}
                 
 		for(int i = 0; i<selections.size(); i++) {
 			Color color = menuColor;
 			if(i==selected) color = selectColor;
-			PrimitiveRenderer.drawRectangle(x+c.convertW(width)*.5f, y - i*c.convertH(selHeight), c.convertW(width)*.5f, c.convertH(selHeight)*.5f / GlobalVariables.aspectRatio, soulgl, color);
+			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - i*convertH(selHeight), convertW(width)*.5f, convertH(selHeight)*.5f / GlobalVariables.aspectRatio, soulgl, color);
                 }
                 gl.glDisable(SoulGL2.GL_BLEND);
 
@@ -150,7 +156,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		int hw = width/2, hh = height/2;
 		for(int i = 0; i<selections.size(); i++) {
 			textRenderer.setColor(0f, 0f, 0f, 1f);
-			textRenderer.draw(selections.get(i).name, c.convertX(x)+5, c.convertY(y)-i*selHeight-5);
+			textRenderer.draw(selections.get(i).name, convertX(x)+5, convertY(y)-i*selHeight-5);
 		}
 		textRenderer.endRendering();
 	}
@@ -161,8 +167,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	}
 	
 	public boolean inComponent(float mx, float my) {
-		if(mx < x || mx > x + c.convertW(width)) return false;
-		if(my < y - c.convertH(selHeight) * 0.5f - c.convertH(selHeight)*(selections.size()-1) || my > y + c.convertH(selHeight) * 0.5f) return false;
+		if(mx < x || mx > x + convertW(width)) return false;
+		if(my < y - convertH(selHeight) * 0.5f - convertH(selHeight)*(selections.size()-1) || my > y + convertH(selHeight) * 0.5f) return false;
 		return true;
 	}
 	
@@ -179,7 +185,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 	}
 	
-	/*private float convertW(int c) {
+	private float convertW(int c) {
 		int hw = GlobalVariables.width/2;
 		return ((float)c)/hw;
 	}
@@ -217,7 +223,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	private float convertY(int c) {
 		int hh = GlobalVariables.height/2;
 		return ((float)c)/hh+1f;
-	}*/
+	}
 }
 
 class Selection {
