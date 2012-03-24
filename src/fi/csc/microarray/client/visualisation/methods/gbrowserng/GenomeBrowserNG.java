@@ -6,8 +6,9 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGe
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.*;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
-
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -15,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
- * @author Kristiina Paloheimo
+ * 
  */
 public class GenomeBrowserNG {
 
