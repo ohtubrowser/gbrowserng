@@ -35,10 +35,11 @@ public class LinkSelection {
 		currentSelection = null;
 	}
 
-	public void update(float pointerGenePosition) {
+	public void update(float pointerGenePosition, LinkCollection linkCollection) {
 		begin = pointerGenePosition - 0.25f - area / 2;
 		end = pointerGenePosition - 0.25f + area / 2;
 		clamp();
+		updateActiveLinks(linkCollection);
 	}
 
 	public void updateArea(LinkCollection linkCollection) {
