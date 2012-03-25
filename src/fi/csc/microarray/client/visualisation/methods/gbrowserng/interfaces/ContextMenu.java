@@ -38,8 +38,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 
 	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 0.9f);
 	private Color selectColor = new Color(0.9f,0.9f,0.9f,0.95f);
-	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.8f);
-	private Color shadowColor = new Color(0.2f,0.2f,0.2f,0.7f);
+	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.9f);
+	private Color shadowColor = new Color(0f,0f,0f,0.7f);
 	
 	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, GenoWindow window) {
 		this.window = window;
@@ -58,8 +58,8 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
-		if(window.isFullscreen()) selections.add(new Selection("Windowed mode",3));
-		else selections.add(new Selection("Fullscreen",3));
+		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",3));
+		else selections.add(new Selection("Fullscreen","F",3));
 		
 		selected = 0;
 		initTextRenderers();
@@ -151,12 +151,14 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
                 }
                 gl.glDisable(SoulGL2.GL_BLEND);
 
-		int width = GlobalVariables.width, height = GlobalVariables.height;
-		textRenderer.beginRendering(width, height);
-		int hw = width/2, hh = height/2;
+		int swidth = GlobalVariables.width, sheight = GlobalVariables.height;
+		textRenderer.beginRendering(swidth, sheight);
+		int hw = swidth/2, hh = sheight/2;
 		for(int i = 0; i<selections.size(); i++) {
 			textRenderer.setColor(0f, 0f, 0f, 1f);
 			textRenderer.draw(selections.get(i).name, convertX(x)+5, convertY(y)-i*selHeight-5);
+			textRenderer.setColor(0.2f, 0.2f, 0.2f, 1f);
+			textRenderer.draw(selections.get(i).shortcut, convertX(x)+width-20, convertY(y)-i*selHeight-5);
 		}
 		textRenderer.endRendering();
 	}
@@ -228,9 +230,16 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 
 class Selection {
 	String name;
-	int action;
+	String shortcut;
+	int action;	
 	public Selection(String name, int action) {
 		this.name = name;
+		this.shortcut = "";
+		this.action = action;
+	}
+	public Selection(String name, String shortcut, int action) {
+		this.name = name;
+		this.shortcut = shortcut;
 		this.action = action;
 	}
 }
