@@ -18,7 +18,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	private long aStart, bStart;
 	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
 	private float r,g,b;
-	float aCirclePos, bCirclePos;
+	private float aCirclePos, bCirclePos;
 	private float aX, aY, bX, bY;
 	private float opacity;
 

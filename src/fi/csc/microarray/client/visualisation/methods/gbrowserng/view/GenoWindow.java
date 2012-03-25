@@ -47,6 +47,7 @@ public class GenoWindow {
 		frame.setVisible(true);
 		CardLayout cl = (CardLayout) container.getLayout();
 		cl.next(container);
+		newtCanvasAWT.requestFocus();
 		this.animator = new Animator(this.window);
 		this.animator.start();
 	}
