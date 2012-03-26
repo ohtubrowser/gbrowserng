@@ -1,15 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
 import com.jogamp.newt.event.NEWTEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.EventHandler;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.GenoWindowListener;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -115,8 +114,8 @@ public class GenomeBrowserNGTest {
 	@Test
 	public void testUseChipsterDataRat() {
 		System.out.println("useChipsterDataRat");
-		boolean successful = GenomeBrowserNG.useChipsterDataRat();
-		assertTrue(successful);
+		ConcurrentLinkedQueue<GeneralLink> links = GenomeBrowserNG.useChipsterDataHuman();
+		assertNotNull(links);
 	}
 
 	/**
@@ -126,8 +125,8 @@ public class GenomeBrowserNGTest {
 	@Test
 	public void testUseChipsterDataHuman() {
 		System.out.println("useChipsterDataHuman");
-		boolean successful = GenomeBrowserNG.useChipsterDataHuman();
-		assertTrue(successful);
+		ConcurrentLinkedQueue<GeneralLink> links = GenomeBrowserNG.useChipsterDataHuman();
+		assertNotNull(links);
 	}
 
 	/**

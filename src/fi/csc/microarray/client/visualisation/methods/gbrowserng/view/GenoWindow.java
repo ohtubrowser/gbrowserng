@@ -49,6 +49,7 @@ public class GenoWindow {
 		cl.next(container);
 		this.animator = new Animator(this.window);
 		this.animator.start();
+		newtCanvasAWT.requestFocusInWindow();
 	}
 
 	public void close() {

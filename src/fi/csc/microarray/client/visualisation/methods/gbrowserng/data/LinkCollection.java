@@ -88,4 +88,19 @@ public class LinkCollection {
 	public void addToQueue(GeneralLink l) {
 		addToQueue(l.getAChromosome(), l.getBChromosome(), l.getaStart(), l.getbStart());
 	}
+
+	private boolean isSorted() {
+		for(int i = 1; i < links.size(); ++i) {
+			if(links.get(i).compareTo(links.get(i-1)) < 0)
+				return false;
+		}
+		return true;
+	}
+	
+	public void updateLinkPositions(GeneCircle geneCircle) {
+		synchronized(linkSyncLock) {
+			for(GeneralLink link : links)
+				link.calculatePositions(geneCircle);
+		}
+	}
 }
