@@ -229,7 +229,7 @@ public class OverView extends GenosideComponent {
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 		
-		if(drawArcs==true) {
+		if(drawArcs) {
 			GeneralLink.beginDrawing(gl, geneCircle.getSize());
 			if (arcHighlightLocked) {
 				linkSelection.draw(gl);
@@ -243,7 +243,7 @@ public class OverView extends GenosideComponent {
 			GeneralLink.endDrawing(gl);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if(drawArcs==true) {
+		if(drawArcs) {
 			if (arcHighlightLocked) {
 				linkSelection.draw(gl, geneCircle);
 			}
