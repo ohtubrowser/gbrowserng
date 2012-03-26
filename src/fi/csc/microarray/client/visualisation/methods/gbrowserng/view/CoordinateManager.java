@@ -5,32 +5,27 @@ import math.Matrix4;
 import math.Vector2;
 
 public class CoordinateManager {
-
-	public static final float XASPECT=4.0f/4.0f;
-	public static final float scale=1.0f;
-
 	public static Matrix4 getCircleMatrix() {
 		Matrix4 ret = new Matrix4();
-		ret.makeScaleMatrix(scale*XASPECT, scale*GlobalVariables.aspectRatio, 1.0f);
+		ret.makeScaleMatrix(1.0f, GlobalVariables.aspectRatio, 1.0f);
 		return ret;
 	}
 	public static Vector2 toCircleCoords(Vector2 v) {
 		Vector2 ret=new Vector2(v);
-		ret.x = ret.x * scale * XASPECT;
-		ret.y = ret.y * scale * GlobalVariables.aspectRatio;
+		ret.y = ret.y * GlobalVariables.aspectRatio;
 		return ret;
 	}
 	public static float toCircleCoordsX(float x) {
-		return (x * scale * XASPECT);
+		return x;
 	}
 	public static float toCircleCoordsY(float y) {
-		return (y * scale * GlobalVariables.aspectRatio);
+		return (y * GlobalVariables.aspectRatio);
 	}
 	public static float fromCircleCoordsX(float x) {
-		return (x / scale / XASPECT);
+		return x;
 	}
 	public static float fromCircleCoordsY(float y) {
-		return (y / scale / GlobalVariables.aspectRatio);
+		return y / GlobalVariables.aspectRatio;
 	}
 	
 	public float convertW(int c) {
