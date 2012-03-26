@@ -4,6 +4,10 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Casc
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Kristiina Paloheimo
+ */
 public class SpaceDivider {
 
 	public static final int HORIZONTAL = 0;
