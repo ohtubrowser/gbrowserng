@@ -56,15 +56,15 @@ public class OverView extends GenosideComponent {
 
 	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
-		
+
 		drawArcs = false;
-		
+
 		this.window = window;
-		
+
 		initTextRenderers();
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);
-		
+
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 		for (GeneralLink l : links) {
@@ -228,7 +228,7 @@ public class OverView extends GenosideComponent {
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
-		
+
 		if(drawArcs) {
 			GeneralLink.beginDrawing(gl, geneCircle.getSize());
 			if (arcHighlightLocked) {
@@ -248,18 +248,16 @@ public class OverView extends GenosideComponent {
 				linkSelection.draw(gl, geneCircle);
 			}
 		}
-		
+
 		drawCapsules(gl);
-		int textValues[] = renderText();
-		renderChromosomeNames(gl, textValues[0], textValues[1]);
-		
-		drawNumbers();
-		
+		renderText(GlobalVariables.width, GlobalVariables.height);
+		drawNumbers(GlobalVariables.width, GlobalVariables.height);
+
 		if(contextMenu!=null) {
 			contextMenu.draw(gl);
 		}
 	}
-	
+
 	private void drawCapsules(GL2 gl) {
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
@@ -279,17 +277,9 @@ public class OverView extends GenosideComponent {
 				capsule.draw(gl);
 			}
 		}
-		
-		int textValues[] = renderText();
-	}
-	
-	private void renderChromosomeNames(GL2 gl, int width, int height) {
-
-
 	}
 
-	private void drawNumbers() {
-		int width = GlobalVariables.width, height = GlobalVariables.height;
+	private void drawNumbers(int width, int height) {
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int i = 1;
@@ -344,9 +334,7 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.endRendering();
 	}
 
-	private int[] renderText() {
-
-		int width = GlobalVariables.width, height = GlobalVariables.height;
+	private void renderText(int width, int height) {
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		String fps = "Tick: " + tickCounter.getMillis() + "ms";
@@ -375,9 +363,6 @@ public class OverView extends GenosideComponent {
 			textRenderer.draw(pos, 20, 10);
 		}
 		textRenderer.endRendering();
-		int[] textValues = {width, height};
-		return textValues;
-
 	}
 
 	private void fadeLinks(float dt) {
@@ -568,15 +553,15 @@ public class OverView extends GenosideComponent {
 	TrackviewManager getTrackviewManager() {
 		return trackviewManager;
 	}
-	
+
 	public void openContextMenu(float x, float y) {
 		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y, window);
 	}
-	
+
 	public ContextMenu getContextMenu() {
 		return this.contextMenu;
 	}
-	
+
 	public void closeContextMenu() {
 		this.contextMenu = null;
 	}
