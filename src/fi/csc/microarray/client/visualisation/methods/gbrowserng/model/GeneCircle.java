@@ -65,14 +65,18 @@ public class GeneCircle {
 		if(relativePosition < 0.0f)
 			relativePosition += 1.0f; // If negative add one full turn
 		chromosome = getChromosomeByRelativePosition(relativePosition);
-		long length = chromosome.length();
-		float thisChromoBound = chromosomeBoundaries[chromosome.getChromosomeNumber()];
-		float prevChromoBound = chromosomeBoundaries[chromosome.getChromosomeNumber() - 1];
+		chromosomePosition = getPositionInChr(chromosome, relativePosition);
+	}
+
+	public long getPositionInChr(ViewChromosome chr, float relativePosition) {
+		long length = chr.length();
+		float thisChromoBound = chromosomeBoundaries[chr.getChromosomeNumber()];
+		float prevChromoBound = chromosomeBoundaries[chr.getChromosomeNumber() - 1];
 		float relPosInChromosome = (prevChromoBound - relativePosition - chromosomeSeperatorSize);
 		// Clamps to 1*10^-9 as minimum, because minimized chromosomes are shorter than 2 * chromosomeSeperatorSize
 		float relChromoLength = Math.max(1e-9f, prevChromoBound - thisChromoBound - 2 * chromosomeSeperatorSize);
 		// Clamps values between 0 and chromosome's length
-		chromosomePosition = Math.max(0l, Math.min(length, (long) (length * (relPosInChromosome / relChromoLength))));
+		return Math.max(0l, Math.min(length, (long) (length * (relPosInChromosome / relChromoLength))));
 	}
 
 	public ViewChromosome getChromosomeByRelativePosition(float relativePosition) {

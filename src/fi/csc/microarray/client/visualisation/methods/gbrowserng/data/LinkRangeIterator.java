@@ -60,4 +60,10 @@ public class LinkRangeIterator {
 		}
 		return a >= 0 && b <= 0;
 	}
+
+	public boolean inRange(int index) {
+		if(startIndex >= endIndex)
+			return index >= startIndex || index <= endIndex;
+		return index >= startIndex && index <= endIndex;
+	}
 }

@@ -191,9 +191,16 @@ public class LinkSelection {
 		return currentSelection.inRange(link);
 	}
 
+	public boolean inSelection(int index) {
+		if (currentSelection == null) {
+			return true;
+		}
+		return currentSelection.inRange(index);
+	}
+
 	private void updateActiveLinks(LinkCollection linkCollection) {
 		synchronized (linkSelectionLock) {
-			currentSelection = linkCollection.getRangeIterator(begin, end);
+			currentSelection = linkCollection.getRangeIterator(end, begin);
 		}
 	}
 

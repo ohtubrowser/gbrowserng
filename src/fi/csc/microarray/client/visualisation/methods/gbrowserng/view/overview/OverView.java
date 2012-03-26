@@ -48,7 +48,7 @@ public class OverView extends GenosideComponent {
 	public TextRenderer chromosomeNameRenderer, textRenderer;
 	private LinkSelection linkSelection = new LinkSelection();
 	public TrackviewManager trackviewManager;
-	private LinkCollection linkCollection = new LinkCollection();
+	private LinkCollection linkCollection;
 	private ContextMenu contextMenu;
 	private MouseEventHandler mouseHandler;
 
@@ -64,7 +64,8 @@ public class OverView extends GenosideComponent {
 		initTextRenderers();
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);
-		
+
+		linkCollection = new LinkCollection(geneCircle);
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 		for (GeneralLink l : links) {
@@ -384,9 +385,11 @@ public class OverView extends GenosideComponent {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
 		synchronized (linkCollection.linkSyncLock) {
-			for (GeneralLink link : linkCollection.getLinks()) {
+			for(int i = 0; i < linkCollection.numLinks(); ++i)
+			{
+				GeneralLink link = linkCollection.valueAt(i);
 				if (!link.isMinimized()) {
-					if (linkSelection.inSelection(link)) {
+					if (linkSelection.inSelection(i)) {
 						link.fadeIn(dt * 16);
 					} else if (!arcHighlightLocked
 							&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
@@ -408,7 +411,7 @@ public class OverView extends GenosideComponent {
 			updateCircleSize();
 		}
 		linkSelection.tick(dt, linkCollection);
-		linkCollection.tick(dt, geneCircle);
+		linkCollection.tick(dt);
 		geneCircleGFX.tick(dt);
 
 		fadeLinks(dt);

@@ -15,12 +15,14 @@ public class LinkCollection {
 	private ArrayList<GeneralLink> newLinksToAdd = new ArrayList<GeneralLink>(), links = new ArrayList<GeneralLink>();
 	public final Object linkSyncLock = new Object();
 	private float timeUntilSync = GlobalVariables.linkSyncInterval;
+	private GeneCircle geneCircle;
 
-	public LinkCollection() {
+	public LinkCollection(GeneCircle geneCircle) {
+		this.geneCircle = geneCircle;
 	}
 
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
-	public void syncAdditions(GeneCircle geneCircle) {
+	public void syncAdditions() {
 		if (newLinksToAdd.isEmpty()) return;
 
 		synchronized (linkSyncLock) {
@@ -55,8 +57,13 @@ public class LinkCollection {
 	}
 
 	public LinkRangeIterator getRangeIterator(float relativeStart, float relativeEnd) {
-		GeneralLink tempA = GeneralLink.createComparisonObject(relativeStart, relativeEnd, true);
-		GeneralLink tempB = GeneralLink.createComparisonObject(relativeStart, relativeEnd, false);
+		ViewChromosome a = geneCircle.getChromosomeByRelativePosition(relativeStart);
+		ViewChromosome b = geneCircle.getChromosomeByRelativePosition(relativeEnd);
+		long posA = geneCircle.getPositionInChr(a, relativeStart);
+		long posB = geneCircle.getPositionInChr(b, relativeEnd);
+
+		GeneralLink tempA = GeneralLink.createComparisonObject(a,b,posA,posB, true);
+		GeneralLink tempB = GeneralLink.createComparisonObject(a,b,posA,posB, false);
 
 		int startIndex = Collections.binarySearch(links, tempA);
 		if(startIndex < 0) startIndex = -(startIndex + 1);
@@ -77,11 +84,11 @@ public class LinkCollection {
 		return links.size();
 	}
 
-	public void tick(float dt, GeneCircle geneCircle) {
+	public void tick(float dt) {
 		timeUntilSync -= dt;
 		if (timeUntilSync < 0) {
 			timeUntilSync = GlobalVariables.linkSyncInterval;
-			syncAdditions(geneCircle);
+			syncAdditions();
 		}
 	}
 
