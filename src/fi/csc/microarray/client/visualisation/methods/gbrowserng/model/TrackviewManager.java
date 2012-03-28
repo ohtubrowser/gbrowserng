@@ -6,6 +6,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosom
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -34,13 +35,10 @@ public class TrackviewManager extends Container {
 //ftp://ftp.ensembl.org/pub/release-65/gtf/homo_sapiens/Homo_sapiens.GRCh37.65.gtf.gz
 		GTF_ANNOTATION_FILE = new File(dataPath + "Homo_sapiens.GRCh37.65.gtf");
 	}
-	
 	private GenoWindow genoWindow;
 	private PreviewManager previewManager = new PreviewManager();
 	private GBrowserPreview sessionA, sessionB;
-	private Region regionA=new Region(0l, 1l, new Chromosome("1")), regionB = new Region(0l, 1l, new Chromosome("1")); // TODO : need some good defaults
-	
-	
+	private Region regionA = new Region(0l, 1l, new Chromosome("1")), regionB = new Region(0l, 1l, new Chromosome("1")); // TODO : need some good defaults
 	public final Object switchLock = new Object();
 
 	public TrackviewManager(GenoWindow window) {
@@ -64,8 +62,17 @@ public class TrackviewManager extends Container {
 			regionB = new Region(l.getbStart(), l.getbStart() + 10000, new Chromosome(b.getName()));
 			sessionA.setRegion(regionA);
 			sessionB.setRegion(regionB);
-			
+
 			add(previewManager.getSplitJComponent(sessionA, sessionB), BorderLayout.CENTER);
+			validate();
+		}
+	}
+
+	public void openAreaSession(ViewChromosome c, long start, long end) {
+		synchronized (switchLock) {
+			regionA = new Region(start, end, new Chromosome(c.getName()));
+			sessionA.setRegion(regionA);
+			add(sessionA.getJComponent(), BorderLayout.CENTER);
 			validate();
 		}
 	}
