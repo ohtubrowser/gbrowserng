@@ -2,19 +2,18 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
+import com.soulaim.tech.gles.Color;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
-import gles.Color;
-import gles.SoulGL2;
-import gles.TextureID;
-import gles.renderer.PrimitiveRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
+
 import javax.media.opengl.GL2;
-import math.Vector2;
-import soulaim.DesktopGL2;
 
 public class GenoButton extends GenosideComponent {
 
-	private final TextureID myTexture;
+	private final GenoTexID.TextureID myTexture;
 	private Color myColor = new Color(1, 1, 1, 1);
 
 	private float xpos = 1;
@@ -26,7 +25,7 @@ public class GenoButton extends GenosideComponent {
 	private String buttonName;
 	private float buttonLock = 0;
 
-	public GenoButton(GenosideComponent parent, String name, float x, float y, float x_offset, float y_offset, TextureID textureID) {
+	public GenoButton(GenosideComponent parent, String name, float x, float y, float x_offset, float y_offset, GenoTexID.TextureID textureID) {
 		super(parent);
 		setDimensions(0.05f, 0.05f);
 
@@ -77,13 +76,12 @@ public class GenoButton extends GenosideComponent {
 	public void draw(GL2 gl) {
 		Vector2 position=new Vector2(xpos+x_offset, ypos+y_offset);
 		Vector2 dimensions=getTargetDimensions();
-		gl.glEnable(SoulGL2.GL_BLEND);
+		gl.glEnable(GL2.GL_BLEND);
 		myColor.g = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		myColor.b = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float myScale = 0.02f + this.getAnimatedValues().getAnimatedValue("MOUSEHOVER") * 0.01f;
-                SoulGL2 soulgl = new DesktopGL2(gl);
-		PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x*0.5f, soulgl, myColor, myTexture);
-		gl.glDisable(SoulGL2.GL_BLEND);
+		//PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x * 0.5f, gl, myColor, myTexture);
+		gl.glDisable(GL2.GL_BLEND);
 	}
 
 	@Override

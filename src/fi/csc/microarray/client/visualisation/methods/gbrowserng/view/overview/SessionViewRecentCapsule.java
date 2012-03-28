@@ -2,25 +2,23 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
-import gles.Color;
-import gles.SoulGL2;
-import gles.renderer.PrimitiveRenderer;
-import math.Vector2;
 
+import com.soulaim.tech.gles.Color;
+import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import javax.media.opengl.GL2;
-import soulaim.DesktopGL2;
 
 public class SessionViewRecentCapsule extends GenosideComponent {
 
 	private int	id;
 	private Session	session;
 	private SessionView	sessionView;
-	private Vector2	oldPosition;
+	private Vector2 oldPosition;
 	private Vector2	oldGeneCirclePosition;
 	private GenoVisualBorder border;
 	private float posy;
@@ -102,11 +100,10 @@ public class SessionViewRecentCapsule extends GenosideComponent {
 	public void draw(GL2 gl) {
 		float r=this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		Color c=new Color(r,r,r);
-		gl.glEnable(SoulGL2.GL_BLEND);
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		PrimitiveRenderer.drawRectangle(this.sessionView.getPosition().x, this.sessionView.getPosition().y, 0.05f, 0.05f/GlobalVariables.aspectRatio, soulgl, c);
+		gl.glEnable(GL2.GL_BLEND);
+		PrimitiveRenderer.drawRectangle(this.sessionView.getPosition().x, this.sessionView.getPosition().y, 0.05f, 0.05f / GlobalVariables.aspectRatio, gl, c);
 		border.draw(gl);
-		gl.glDisable(SoulGL2.GL_BLEND);
+		gl.glDisable(GL2.GL_BLEND);
 	}
 
 	@Override

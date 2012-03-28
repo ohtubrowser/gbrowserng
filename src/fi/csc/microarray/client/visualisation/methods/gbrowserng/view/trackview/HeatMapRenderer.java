@@ -1,11 +1,10 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
+import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.HeatMap;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.VisualComponent;
-import gles.Color;
-import gles.renderer.PrimitiveRenderer;
 import javax.media.opengl.GL2;
 
 public class HeatMapRenderer extends CascadingComponent implements VisualComponent {

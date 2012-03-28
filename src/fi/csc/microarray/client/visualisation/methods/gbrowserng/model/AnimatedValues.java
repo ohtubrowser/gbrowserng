@@ -1,7 +1,8 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.soulaim.tech.math.Vector2;
+
 import java.util.concurrent.ConcurrentHashMap;
-import math.Vector2;
 
 public class AnimatedValues {
 

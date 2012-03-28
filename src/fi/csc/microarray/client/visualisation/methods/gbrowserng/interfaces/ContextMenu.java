@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import math.Vector2;
+import com.soulaim.tech.math.Vector2;
 import javax.media.opengl.GL2;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -17,42 +17,54 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
-import gles.Color;
-import gles.SoulGL2;
-import gles.renderer.PrimitiveRenderer;
-import soulaim.DesktopGL2;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import com.soulaim.tech.gles.Color;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 
 public class ContextMenu implements InteractiveComponent, VisualComponent {
+	GenoWindow window;
 	ViewChromosome chromosome;
 	GeneCircle geneCircle;
-	float x, y, sizex, sizey, selectionHeight;
+	int width, selHeight, border, shadow;
+	float x, y;
 	Vector2 position, dimensions;
 	TextRenderer textRenderer;
 	ArrayList<Selection> selections;
 	int selected;
 	boolean close;
 
-	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 255);
-	private Color selectColor = new Color(0.9f,0.9f,0.9f,255);
+	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 0.9f);
+	private Color selectColor = new Color(0.9f,0.9f,0.9f,0.95f);
+	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.9f);
+	private Color shadowColor = new Color(0f,0f,0f,0.7f);
 
-	
-	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my) {
+	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, GenoWindow window) {
+		this.window = window;
 		close = false;
 		this.chromosome = chromosome;
 		x = mx;
 		y = my;
 		this.geneCircle = geneCircle;
-		sizex = 0.2f;
-		selectionHeight = 0.06f; // todo: säädä sopiva koko
+
+		width = 200;
+		selHeight = 26;
+		border = 4;
+		shadow = 6;
 		selections = new ArrayList<Selection>();
+
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
+		selections.add(new Selection("Restore all",3));
+		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",4));
+		else selections.add(new Selection("Fullscreen","F",4));
+		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",3));
+		else selections.add(new Selection("Fullscreen","F",3));
+		
 		selected = 0;
-		sizey = selectionHeight * selections.size();
 		initTextRenderers();
-        }
-	
+	}
+
 	private void action(int selection) {
 		if(selections.get(selected).action==0) {
 			chromosome.setMinimized(true);
@@ -63,35 +75,42 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		} else if(selections.get(selected).action==2) {
 			minimizeAllButOne(chromosome);
 			geneCircle.animating = true;
+		} else if(selections.get(selected).action==3) {
+			restoreAll(chromosome);
+			geneCircle.animating = true;
+		} else if(selections.get(selected).action==4) {
+			window.toggleFullscreen();
 		}
 		close = true;
 	}
-	
-	/*public int action() {
-		return selections.get(selected).action;
-	}*/
-	
+
 	public ViewChromosome getChromosome() {
 		return chromosome;
 	}
-	
+
 	private void minimizeAllButOne(ViewChromosome chromosome) {
 		int chromosomes = AbstractGenome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
 			ViewChromosome c = AbstractGenome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
-			}
+			} else c.setMinimized(false);
 		}
 	}
 	
+	private void restoreAll(ViewChromosome chromosome) {
+		int chromosomes = AbstractGenome.getNumChromosomes();
+		for (int i = 0; i < chromosomes; ++i) {
+			ViewChromosome c = AbstractGenome.getChromosome(i);
+			c.setMinimized(false);
+		}
+	}
+
 	@Override
 	public boolean handle(MouseEvent event, float mx, float my) {
-		System.out.println("hiiri y:"+my);
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
-				System.out.println(i+" välillä "+(y - selectionHeight * 0.5f - selectionHeight*i) +" ja "+(y + selectionHeight * 0.5f - selectionHeight*i));
-				if(my > y - selectionHeight * 0.5f - selectionHeight*i && my < y + selectionHeight * 0.5f - selectionHeight*i) {
+				if(my > y - convertH(selHeight) * 0.5f - convertH(selHeight)*i && my < y + convertH(selHeight) * 0.5f - convertH(selHeight)*i) {
 					selected = i;
 					break;
 				}
@@ -102,7 +121,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean handle(KeyEvent event) {
 		if(event.getKeyCode()==KeyEvent.VK_UP) {
@@ -115,49 +134,55 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			action(selected);
 			close=true;
 		}
-		System.out.println("Valinta "+selected);
 		return true;
 	}
-	
+
 	public boolean close() {
 		return close;
 	}
-	
+
 	@Override
 	public void draw(GL2 gl) {
-		gl.glEnable(SoulGL2.GL_BLEND);
+		gl.glEnable(GL2.GL_BLEND);
 
-		SoulGL2 soulgl = new DesktopGL2(gl);
-                
+		if(shadow>0) {
+			PrimitiveRenderer.drawRectangle(x + convertW(width + shadow) * .5f, y - convertH(selHeight * (selections.size() - 1) + shadow) * .5f, convertW(width + border) * .5f, convertH((selHeight * selections.size()) + border) * .5f / GlobalVariables.aspectRatio, gl, shadowColor);
+		}
+
+		if(border>0) {
+			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - convertH(selHeight*(selections.size()-1))*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / GlobalVariables.aspectRatio, gl, borderColor);
+		}
+
 		for(int i = 0; i<selections.size(); i++) {
 			Color color = menuColor;
 			if(i==selected) color = selectColor;
-			PrimitiveRenderer.drawRectangle(x, y - i*selectionHeight, sizex * 0.5f, selectionHeight * 0.5f / GlobalVariables.aspectRatio, soulgl, color);
-                }
-                gl.glDisable(SoulGL2.GL_BLEND);
+			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - i*convertH(selHeight), convertW(width)*.5f, convertH(selHeight)*.5f / GlobalVariables.aspectRatio, gl, color);
+		}
+		gl.glDisable(GL2.GL_BLEND);
 
-		int width = GlobalVariables.width, height = GlobalVariables.height;
-		textRenderer.beginRendering(width, height);
-		int hw = width/2, hh = height/2;
+		int swidth = GlobalVariables.width, sheight = GlobalVariables.height;
+		textRenderer.beginRendering(swidth, sheight);
+		int hw = swidth/2, hh = sheight/2;
 		for(int i = 0; i<selections.size(); i++) {
 			textRenderer.setColor(0f, 0f, 0f, 1f);
-			textRenderer.draw(selections.get(i).name, (int)(hw+(hw*(x-sizex/2))), (int)(hh+(hh*(y-selectionHeight/2+0.01f-i*selectionHeight))));
+			textRenderer.draw(selections.get(i).name, convertX(x)+5, convertY(y)-i*selHeight-5);
+			textRenderer.setColor(0.2f, 0.2f, 0.2f, 1f);
+			textRenderer.draw(selections.get(i).shortcut, convertX(x)+width-20, convertY(y)-i*selHeight-5);
 		}
 		textRenderer.endRendering();
 	}
-	
+
 	@Override
 	public void tick(float dt) {
-	    
+
 	}
-	
+
 	public boolean inComponent(float mx, float my) {
-		if(mx < x - sizex * 0.5f || mx > x + sizex * 0.5f) return false;
-		if(my < y - selectionHeight * 0.5f - selectionHeight*(selections.size()-1) || my > y + selectionHeight * 0.5f) return false;
-		System.out.println("In component, valinta "+selected);
+		if(mx < x || mx > x + convertW(width)) return false;
+		if(my < y - convertH(selHeight) * 0.5f - convertH(selHeight)*(selections.size()-1) || my > y + convertH(selHeight) * 0.5f) return false;
 		return true;
 	}
-	
+
 	private void initTextRenderers() {
 		Font font;
 		float fontSize = 16f;
@@ -171,13 +196,59 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 	}
 
+	private float convertW(int c) {
+		int hw = GlobalVariables.width/2;
+		return ((float)c)/hw;
+	}
+
+	private float convertH(int c) {
+		int hh = GlobalVariables.height/2;
+		return ((float)c)/hh;
+	}
+
+	private int convertW(float c) {
+		int hw = GlobalVariables.width/2;
+		return (int)(hw*c);
+	}
+
+	private int convertH(float c) {
+		int hh = GlobalVariables.height/2;
+		return (int)(hh*c);
+	}
+
+	private int convertX(float c) {
+		int hw = GlobalVariables.width/2;
+		return (int)(hw+(hw*c));
+	}
+
+	private int convertY(float c) {
+		int hh = GlobalVariables.height/2;
+		return (int)(hh+(hh*c));
+	}
+
+	private float convertX(int c) {
+		int hw = GlobalVariables.width/2;
+		return ((float)c)/hw+1f;
+	}
+
+	private float convertY(int c) {
+		int hh = GlobalVariables.height/2;
+		return ((float)c)/hh+1f;
+	}
 }
 
 class Selection {
 	String name;
+	String shortcut;
 	int action;
 	public Selection(String name, int action) {
 		this.name = name;
+		this.shortcut = "";
+		this.action = action;
+	}
+	public Selection(String name, String shortcut, int action) {
+		this.name = name;
+		this.shortcut = shortcut;
 		this.action = action;
 	}
 }

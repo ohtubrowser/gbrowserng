@@ -49,6 +49,7 @@ public class GenoWindow {
 		cl.next(container);
 		this.animator = new Animator(this.window);
 		this.animator.start();
+		newtCanvasAWT.requestFocusInWindow();
 	}
 
 	public void close() {
@@ -68,6 +69,10 @@ public class GenoWindow {
 			GlobalVariables.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
 			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
+	}
+	
+	public boolean isFullscreen() {
+		return isFullscreen;
 	}
 
 	public void toggleVisible() {

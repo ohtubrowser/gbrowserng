@@ -1,17 +1,13 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
+import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.VisualComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
-import gles.Color;
-import gles.SoulGL2;
-import gles.renderer.PrimitiveRenderer;
-import gles.renderer.TextRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
+
 import javax.media.opengl.GL2;
-import managers.TextureManager;
-import soulaim.DesktopGL2;
 
 public class ReferenceRenderer extends CascadingComponent implements VisualComponent {
 
@@ -25,7 +21,7 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 		this.setDimensions(2, 2);
 	}
 
-	private void drawRefSeq(SoulGL2 gl, float y) {
+	private void drawRefSeq(GL2 gl, float y) {
 
 		float smoothPosition = ((TrackView)getParent()).getGenePosition();
 		int intPosition = (int) smoothPosition;
@@ -44,9 +40,9 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 					glxSize(this.session.halfSizeX * session.payloadSize),
 					glySize(mySizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= mySizeY) {
-				TextureManager.bindTexture(gl, GenoTexID.FONT);
-				TextRenderer.getInstance().drawText(gl, Character.toString(c),
-						glx(x), gly(y), glySize(20 * this.session.halfSizeY));
+				//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
+				//TextRenderer.getInstance().drawText(gl, Character.toString(c),
+				//		glx(x), gly(y), glySize(20 * this.session.halfSizeY));
 			}
 
 		}
@@ -63,10 +59,10 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 						glxSize(this.session.halfSizeX * session.payloadSize),
 						glySize(mySizeY * session.payloadSize), gl, genomeColor);
 				if (this.session.halfSizeX >= mySizeY) {
-					TextureManager.bindTexture(gl, GenoTexID.FONT);
-					TextRenderer.getInstance().drawText(gl,
-							Character.toString(c), glx(x), gly(y),
-							glySize(20 * mySizeY));
+					//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
+					//TextRenderer.getInstance().drawText(gl,
+					//		Character.toString(c), glx(x), gly(y),
+					//		glySize(20 * mySizeY));
 				}
 			}
 			x -= 2 * this.session.halfSizeX;
@@ -74,8 +70,7 @@ public class ReferenceRenderer extends CascadingComponent implements VisualCompo
 	}
 
 	public void draw(GL2 gl) {
-		SoulGL2 soulgl = new DesktopGL2(gl);
-		this.drawRefSeq(soulgl, height);
+		this.drawRefSeq(gl, height);
 	}
 
 	public void tick(float dt) {

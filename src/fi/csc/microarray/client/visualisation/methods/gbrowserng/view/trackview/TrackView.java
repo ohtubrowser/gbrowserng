@@ -46,11 +46,11 @@ public class TrackView extends GenosideComponent {
 		this.heatMapRenderer.setDimensions(2, 2);
 
 		this.minimizeButton = new GenoButton(this, "MIN_BUTTON", -0.95f, 1.0f,
-				+0.04f, -0.04f, GenoTexID.SHRINK_BUTTON);
+				+0.04f, -0.04f, GenoTexID.TextureID.SHRINK_BUTTON);
 		this.deleteButton = new GenoButton(this, "DEL_BUTTON", -1.0f, 1.0f,
-				+0.04f, -0.04f, GenoTexID.QUIT_BUTTON);
+				+0.04f, -0.04f, GenoTexID.TextureID.QUIT_BUTTON);
 		this.maximizeButton = new GenoButton(this, "MAX_BUTTON", -1.0f, 1.0f,
-				+0.04f, -0.09f, GenoTexID.MAXIMIZE_BUTTON);
+				+0.04f, -0.09f, GenoTexID.TextureID.MAXIMIZE_BUTTON);
 		
 		setTrackViewMode(TrackView.READ);
 	}
