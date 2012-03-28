@@ -56,14 +56,14 @@ public class LinkRangeIterator {
 		int a = link.compareTo(collection.valueAt(startIndex));
 		int b = link.compareTo(collection.valueAt(clampIndex(endIndex-1)));
 		if(startIndex >= endIndex) {
-			return a <= 0 || b >= 0;
+			return a <= 0 || b > 0;
 		}
-		return a >= 0 && b <= 0;
+		return a >= 0 && b < 0;
 	}
 
 	public boolean inRange(int index) {
 		if(startIndex >= endIndex)
-			return index >= startIndex || index <= endIndex;
-		return index >= startIndex && index <= endIndex;
+			return index >= startIndex || index < endIndex;
+		return index >= startIndex && index < endIndex;
 	}
 }
