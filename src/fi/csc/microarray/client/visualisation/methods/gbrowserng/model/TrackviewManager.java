@@ -45,6 +45,7 @@ public class TrackviewManager extends Container {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(window.window.getWidth(), window.window.getHeight()));
 		genoWindow = window;
+		// Comment next lines if you don't have the files
 		sessionA = previewManager.createPreview(regionA, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
 		sessionB = previewManager.createPreview(regionB, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
 	}
