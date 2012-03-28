@@ -4,6 +4,11 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Casc
 
 import java.util.ArrayList;
 
+/**
+ * Creates gaps between chromosomes.
+ * 
+ * @author Kristiina Paloheimo
+ */
 public class SpaceDivider {
 
 	public static final int HORIZONTAL = 0;
@@ -13,20 +18,65 @@ public class SpaceDivider {
 	private final float maximumSize;
 	private final float minimumSize;
 	private final int myDirection;
+	private ArrayList<CascadingComponent> components;
+	
+	/**
+	 * Returns all CascadingComponents added to the SpaceDivider object
+	 * @return components
+	 */
+	public ArrayList<CascadingComponent> getComponents() {
+		return components;
+	}
 
-	ArrayList<CascadingComponent> components = new ArrayList<CascadingComponent>();
+	/**
+	 * Returns maximum size of 
+	 * @return maximun size
+	 */
+	public float getMaximumSize() {
+		return maximumSize;
+	}
 
+	/**
+	 * Return minimun size of
+	 * @return minimum size
+	 */
+	public float getMinimumSize() {
+		return minimumSize;
+	}
+
+	/**
+	 * Returns the direction of
+	 * @return direction
+	 */
+	public int getMyDirection() {
+		return myDirection;
+	}
+
+	/**
+	 * Creates a new instances of the Space Divider class
+	 * 
+	 * @param direction
+	 * @param minimumSize
+	 * @param maximumSize
+	 */
 	public SpaceDivider(int direction, float minimumSize, float maximumSize) {
 		this.myDirection = direction;
 		this.minimumSize = minimumSize;
 		this.maximumSize = maximumSize;
+		components = new ArrayList<CascadingComponent>();
 	}
 
+	/**
+	 * Inserts a CascadingComponent into list of dividers of chromosomes
+	 * @param component
+	 */
 	public void insertComponent(CascadingComponent component) {
 		components.add(component);
-	
 	}
 
+	/**
+	 * What happens here is .. 
+	 */
 	public void calculate() {
 		float componentSize = Math.max(this.minimumSize, Math.min(2.0f / components.size(), this.maximumSize));
 		float pos = 0.5f * componentSize - 1.0f;

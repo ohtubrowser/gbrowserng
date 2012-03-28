@@ -4,31 +4,39 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import javax.media.opengl.GL2;
 
-public class GeneralLink {
+public class GeneralLink implements Comparable<GeneralLink> {
 
-	private Chromosome aChromosome, bChromosome;
-	private long aStart, bStart, aEnd, bEnd;
-	//private float r = Math.max(0.5f, (float) Math.random()), g = (float) Math.random(), b = (float) Math.random();
-	private float r = 1.0f, g = 0.0f, b = 0.0f;
-	private final int drawMethod;
-	float aCirclePos, bCirclePos;
-	private Vector2 aXYPos, bXYPos;
+	private ViewChromosome aChromosome, bChromosome;
+	private long aStart, bStart;
+	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
+	public float r,g,b;
+	private float aCirclePos, bCirclePos;
+	private float aX, aY, bX, bY;
 	private float opacity;
 
-    public GeneralLink(long readChr, long mateChr, long aStart, long aEnd, long bStart, long bEnd, long readChrLength, long mateChrLength) {
-                this.aChromosome = new Chromosome((int) readChr, readChrLength);
-                this.bChromosome = new Chromosome((int) mateChr, mateChrLength);
+	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
+		this.aChromosome = aChromosome;
+		this.bChromosome = bChromosome;
 		this.aStart = aStart;
 		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
 		this.opacity = 1.0f;
-		drawMethod = GL2.GL_TRIANGLE_STRIP;
-    }
+		this.aOcc = aOcc;
+		initLinkColor();
+	}
+
+	public static GeneralLink createComparisonObject(ViewChromosome aC, ViewChromosome bC, long aS, long bS, boolean aOcc) {
+		return new GeneralLink(aC, bC, aS, bS, aOcc);
+	}
+	
+	private void initLinkColor() {
+		this.r = ((float)Math.random()*0.3f + 0.7f);
+		this.g = this.b = 0.3f;
+	}
 
 	public void fadeIn(float fadespeed) {
 		this.opacity += fadespeed;
@@ -39,8 +47,8 @@ public class GeneralLink {
 
 	public void fadeDim(float fadespeed) {
 		this.opacity -= fadespeed;
-		if (this.opacity < 0.2f) {
-			this.opacity = 0.2f;
+		if (this.opacity < 0.05f) {
+			this.opacity = 0.05f;
 		}
 	}
 
@@ -59,29 +67,25 @@ public class GeneralLink {
 		return bCirclePos;
 	}
 
-	public GeneralLink(Chromosome aChromosome, Chromosome bChromosome, long aStart, long aEnd, long bStart, long bEnd) {
-		this.aChromosome = aChromosome;
-		this.bChromosome = bChromosome;
-		this.aStart = aStart;
-		this.bStart = bStart;
-		this.aStart = aEnd;
-		this.bStart = bEnd;
-		this.opacity = 1.0f;
-		drawMethod = GL2.GL_TRIANGLE_STRIP;
-	}
-
 	public void calculatePositions(GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
-		aXYPos = geneCircle.getXYPosition(aCirclePos);
+		Vector2 aXYPos = geneCircle.getXYPosition(aCirclePos);
+		aX = aXYPos.x; aY = aXYPos.y;
 		// This magic constant is the same as in the circleseparators.
-		aXYPos.x *= 0.9495;
-		aXYPos.y *= 0.9495;
-		bXYPos = geneCircle.getXYPosition(bCirclePos);
-		bXYPos.x *= 0.9495;
-		bXYPos.y *= 0.9495;
+		aX *= 0.9495;
+		aY *= 0.9495;
+		Vector2 bXYPos = geneCircle.getXYPosition(bCirclePos);
+		bX = bXYPos.x; bY = bXYPos.y;
+		bX *= 0.9495;
+		bY *= 0.9495;
+		
+		aX = CoordinateManager.toCircleCoordsX(aX);
+		aY = CoordinateManager.toCircleCoordsY(aY);
+		bX = CoordinateManager.toCircleCoordsX(bX);
+		bY = CoordinateManager.toCircleCoordsY(bY);
 	}
-	
+
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
 
@@ -100,11 +104,11 @@ public class GeneralLink {
 		
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.bezierID);
 		gl.glEnableVertexAttribArray(0);
-		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE/Byte.SIZE, 0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
-	
+
 	public static void endDrawing(GL2 gl) {
-		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
 
 		gl.glEnable(gl.GL_CULL_FACE);
@@ -113,40 +117,96 @@ public class GeneralLink {
 		shader.stop(gl);
 	}
 
+	public float bezier(float t, float p1, float p2, float p3) {
+		return (1.0f-t)*((1.0f-t)*p1 + t*p2)+t*((1.0f-t)*p2+t*p3);
+	}
+
+	public float distance(float x1, float y1, float x2, float y2) {
+		return (float)Math.sqrt(Math.pow(x1-x2, 2f) + Math.pow(y1-y2, 2f));
+	}
+
+	public boolean isHit(float x, float y) {
+		boolean hit = false;
+		for (float i = 1; i <= 100; i++) {
+			float bezierX = bezier(i/100, aX, 0, bX);
+			float bezierY = bezier(i/100, aY, 0, bY);
+			float dist = distance(x, y, bezierX, bezierY);
+			if (dist < 0.01f) {
+				hit = true;
+				break;
+			}
+		}
+		return hit;
+	}
+
+	public boolean draw(GL2 gl, float x, float y) {
+		boolean hit = isHit(x, y);
+		if (hit) {
+			draw(gl, 0f, 0f, 1f);
+		} else {
+			draw(gl,r,g,b);
+		}
+		return hit;
+	}
 
 	public void draw(GL2 gl, float f, float f0, float f1) {
-		/*if (opacity <= 0.0f) {
+		if (opacity <= 0.0f) {
 			return; // No need to call shader on invisible links.
-		}*/
+		}
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
 
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aXYPos.x, aXYPos.y);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint1", aX, aY);
 		ShaderMemory.setUniformVec1(gl, shader, "uniAlpha", opacity);
-		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bXYPos.x, bXYPos.y);
+		ShaderMemory.setUniformVec2(gl, shader, "ControlPoint3", bX, bY);
 		ShaderMemory.setUniformVec3(gl, shader, "color", f, f0, f1);
-
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints+1);
-
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, OpenGLBuffers.numBezierPoints + 1);
+	}
+	
+	public void draw(GL2 gl)
+	{
+		this.draw(gl,r,g,b);
 	}
 
 	public boolean isMinimized() {
 		return aChromosome.isMinimized() || bChromosome.isMinimized();
 	}
 
-	public Chromosome getAChromosome() {
+	public ViewChromosome getAChromosome() {
 		return aChromosome;
 	}
 
-	public Chromosome getBChromosome() {
+	public ViewChromosome getBChromosome() {
 		return bChromosome;
 	}
 
-	long getaStart() {
+	public long getaStart() {
 		return aStart;
 	}
 
-	long getbStart() {
+	public long getbStart() {
 		return bStart;
+	}
+	@Override
+	public int compareTo(GeneralLink o) {
+		long thisPos = aOcc ? aChromosome.getChromosomeNumber() : bChromosome.getChromosomeNumber(),
+				oPos = o.aOcc ? o.aChromosome.getChromosomeNumber() : o.bChromosome.getChromosomeNumber();
+		
+		long diff = thisPos - oPos;
+
+		if(diff == 0) {
+				thisPos = aOcc ? aStart : bStart;
+				oPos = o.aOcc ? o.aStart : o.bStart;
+				diff = thisPos - oPos;
+		}
+		
+		// For type safety, maybe overkill
+		int ret = 0;
+		if(diff > 0)
+			ret = 1;
+		if(diff < 0)
+			ret = -1;
+		
+		return ret;
 	}
 
 }

@@ -110,7 +110,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 
 		GlobalVariables.width = width;
 		GlobalVariables.height = height;
-		GlobalVariables.aspectRatio = width * 1.0f / height;
+		GlobalVariables.aspectRatio = (float)width / (float)height;
 	}
 
 	public GenosideComponent getRoot() {

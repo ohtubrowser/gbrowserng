@@ -8,6 +8,7 @@ import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import javax.media.opengl.GL2;
 
@@ -64,6 +65,7 @@ public class SessionViewCapsule extends GenosideComponent {
 		genecirclePosition.x = geneCircle.getSize();
 		genecirclePosition.y = 0;
 		genecirclePosition.rotate(2 * (float) Math.PI * relativePos);
+		genecirclePosition = CoordinateManager.toCircleCoords(genecirclePosition);
 	}
 
 	public boolean isAlive() {
