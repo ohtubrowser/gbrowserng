@@ -3,7 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 public class Session {
 
 	public ReferenceSequence referenceSequence;
-	public float position = 0;
+	public long position = 0;
 
 	public float targetZoomLevel = 0.05f;
 	public float halfSizeX = 0.05f;

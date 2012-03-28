@@ -363,7 +363,7 @@ public class OverView extends GenosideComponent {
 				position = this.geneCircle.getChromosomePosition();
 				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
 			} else {
-				position = (long) this.hoverCapsule.getSession().getSession().position;
+				position = this.hoverCapsule.getSession().getSession().position;
 				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
 			}
 
@@ -520,24 +520,8 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void openSession(SessionViewCapsule capsule) {
-		capsule.activate();
-		activeSessions.add(capsule);
-
-		showActiveSessions();
-		state = OverViewState.SESSIONVIEW_ACTIVE;
-
-		for (SessionViewCapsule otherCapsule : sessions) {
-			boolean found = false;
-			for (SessionViewCapsule activeCapsule : activeSessions) {
-				if (otherCapsule.getId() == activeCapsule.getId()) {
-					found = true;
-				}
-			}
-
-			if (!found) {
-				otherCapsule.hideBackground();
-			}
-		}
+		trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000);
+		trackviewManager.toggleVisible();
 	}
 
 	public LinkSelection getLinkSelection() {

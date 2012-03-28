@@ -128,7 +128,6 @@ public class MouseEventHandler {
 					overview.setArcHighlightLocked(true);
 					selection.update(pointerGenePosition, overview.getLinkCollection());
 				} else if(overview.isArcHighlightLocked() && pointInsideCircle(geneCircle, x, y)) {
-					overview.getTrackviewManager().clearContainer();
 					overview.getTrackviewManager().openLinkSession(overview.getLinkSelection().getActiveLink());
 					overview.getTrackviewManager().toggleVisible();
 				} else {
