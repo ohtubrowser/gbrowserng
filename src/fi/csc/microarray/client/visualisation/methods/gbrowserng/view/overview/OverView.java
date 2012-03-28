@@ -222,7 +222,7 @@ public class OverView extends GenosideComponent {
 			else if(event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 				aKeyDown = true;
 			}
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
+		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
 				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));

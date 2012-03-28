@@ -48,10 +48,10 @@ public class LinkCollection {
 			}
 			newLinksToAdd.clear();
 		}
-		filterLinks(10000);	
+		filterLinks((long)1e6);	
 	}
 
-	public void filterLinks(int minDistance) {
+	public void filterLinks(long minDistance) {
 		synchronized (linkSyncLock) {
 			BitSet removeIndex = new BitSet(links.size());
 			for (int i = 0; i < links.size(); ++i) {
@@ -143,7 +143,7 @@ public class LinkCollection {
 		}
 	}
 
-	private boolean isOk(int i, int minDistance, BitSet removeIndex) {
+	private boolean isOk(int i, long minDistance, BitSet removeIndex) {
 		for (int j = i - 1; j > 0; --j) {
 			if (removeIndex.get(j)) {
 				continue;
