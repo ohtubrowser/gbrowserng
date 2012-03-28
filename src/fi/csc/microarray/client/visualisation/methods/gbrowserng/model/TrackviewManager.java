@@ -34,22 +34,24 @@ public class TrackviewManager extends Container {
 //ftp://ftp.ensembl.org/pub/release-65/gtf/homo_sapiens/Homo_sapiens.GRCh37.65.gtf.gz
 		GTF_ANNOTATION_FILE = new File(dataPath + "Homo_sapiens.GRCh37.65.gtf");
 	}
+	
 	private GenoWindow genoWindow;
-	private ArrayList<GBrowserPreview> sessions = new ArrayList<GBrowserPreview>(), newSessions = new ArrayList<GBrowserPreview>();
 	private PreviewManager previewManager = new PreviewManager();
+	private GBrowserPreview sessionA, sessionB;
+	private Region regionA=new Region(0l, 1l, new Chromosome("1")), regionB = new Region(0l, 1l, new Chromosome("1")); // TODO : need some good defaults
+	
+	
 	public final Object switchLock = new Object();
 
 	public TrackviewManager(GenoWindow window) {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(window.window.getWidth(), window.window.getHeight()));
 		genoWindow = window;
+		sessionA = previewManager.createPreview(regionA, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
+		sessionB = previewManager.createPreview(regionB, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
 	}
 
 	public void clearContainer() {
-		for (GBrowserPreview p : newSessions) {
-			previewManager.removePreview(p);
-		}
-		sessions.clear();
 		removeAll();
 	}
 
@@ -58,12 +60,11 @@ public class TrackviewManager extends Container {
 			clearContainer();
 			ViewChromosome a = l.getAChromosome();
 			ViewChromosome b = l.getBChromosome();
-			Region regiona = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
-			Region regionb = new Region(l.getbStart(), l.getbStart() + 10000, new Chromosome(b.getName()));
-			GBrowserPreview sessionA = previewManager.createPreview(regiona, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
-			GBrowserPreview sessionB = previewManager.createPreview(regionb, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, GTF_ANNOTATION_FILE);
-			sessions.add(sessionA);
-			sessions.add(sessionB);
+			regionA = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
+			regionB = new Region(l.getbStart(), l.getbStart() + 10000, new Chromosome(b.getName()));
+			sessionA.setRegion(regionA);
+			sessionB.setRegion(regionB);
+			
 			add(previewManager.getSplitJComponent(sessionA, sessionB), BorderLayout.CENTER);
 			validate();
 		}
