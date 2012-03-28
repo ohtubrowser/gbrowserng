@@ -46,7 +46,7 @@ public class OverView extends GenosideComponent {
 	public boolean die = false, arcHighlightLocked = false;
 	private OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 	public TextRenderer chromosomeNameRenderer, textRenderer;
-	private LinkSelection linkSelection = new LinkSelection();
+	private LinkSelection linkSelection;
 	public TrackviewManager trackviewManager;
 	private LinkCollection linkCollection;
 	private ContextMenu contextMenu;
@@ -56,7 +56,7 @@ public class OverView extends GenosideComponent {
 	private boolean circleNeedsUpdate = false;
 	private boolean aKeyDown = false, zKeyDown = false;
 
-	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
+	public OverView(GenoWindow window, LinkCollection linkCollection) {
 		super(null);
 
 		drawArcs = false;
@@ -67,12 +67,11 @@ public class OverView extends GenosideComponent {
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);
 
-		linkCollection = new LinkCollection(geneCircle);
+		this.linkCollection = linkCollection;
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
-		for (GeneralLink l : links) {
-			linkCollection.addToQueue(l);
-		}
+		linkSelection = new LinkSelection(geneCircle);
+
 		mouseHandler = new MouseEventHandler(this);
 	}
 
@@ -256,7 +255,7 @@ public class OverView extends GenosideComponent {
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
 		if(drawArcs) {
 			if (arcHighlightLocked) {
-				linkSelection.draw(gl, geneCircle);
+				linkSelection.drawClamps(gl);
 			}
 		}
 
@@ -413,7 +412,7 @@ public class OverView extends GenosideComponent {
 
 		
 		linkSelection.tick(dt, linkCollection);
-		linkCollection.tick(dt);
+		linkCollection.tick(dt, geneCircle);
 		geneCircleGFX.tick(dt);
 
 		fadeLinks(dt);

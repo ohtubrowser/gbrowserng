@@ -21,11 +21,13 @@ public class LinkSelection {
 	public final Object linkSelectionLock = new Object();
 	private float mouseX, mouseY;
 	private boolean mouseInsideCircle = false;
+	private GeneCircle geneCircle;
 
-	public LinkSelection() {
+	public LinkSelection(GeneCircle geneCircle) {
 		begin = 0.0f;
 		end = 1.0f;
 		area = GlobalVariables.selectSize;
+		this.geneCircle = geneCircle;
 	}
 
 	public void reset() {
@@ -72,7 +74,7 @@ public class LinkSelection {
 		return end - begin;
 	}
 
-	public void draw(GL2 gl, GeneCircle geneCircle) {
+	public void drawClamps(GL2 gl) {
 		// TODO : remove magic numbers
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.PLAINMVP);
 
@@ -203,7 +205,7 @@ public class LinkSelection {
 
 	private void updateActiveLinks(LinkCollection linkCollection) {
 		synchronized (linkSelectionLock) {
-			currentSelection = linkCollection.getRangeIterator(end, begin);
+			currentSelection = geneCircle.getRangeIterator(end, begin, linkCollection);
 		}
 	}
 

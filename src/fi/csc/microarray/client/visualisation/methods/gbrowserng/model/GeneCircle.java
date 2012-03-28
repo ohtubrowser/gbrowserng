@@ -4,6 +4,9 @@ import com.soulaim.tech.math.Vector2;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
+import java.util.Collections;
 
 public class GeneCircle {
 
@@ -32,23 +35,25 @@ public class GeneCircle {
 		for (int i = 1; i <= AbstractGenome.getNumChromosomes(); ++i) {
 			ViewChromosome chromosome = AbstractGenome.getChromosome(i - 1);
 			chromosome.tick(dt);
-			sliceSizeLeft -= chromosome.isAnimating() ? minimumChromosomeSlice*chromosome.getAnimationProgress() + minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) :
-					chromosome.isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
+			sliceSizeLeft -= chromosome.isAnimating() ? minimumChromosomeSlice * chromosome.getAnimationProgress() + minimizedChromosomeSize * (1f - chromosome.getAnimationProgress())
+					: chromosome.isMinimized() ? minimizedChromosomeSize : minimumChromosomeSlice;
 		}
 		assert (sliceSizeLeft >= 0.0f);
 
 		chromosomeBoundaries[0] = 1.0f;
 		chromosomeBoundaries[AbstractGenome.getNumChromosomes()] = 0.0f;
-		animating = AbstractGenome.getChromosome(AbstractGenome.getNumChromosomes()-1).isAnimating();
-		for(int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
+		animating = AbstractGenome.getChromosome(AbstractGenome.getNumChromosomes() - 1).isAnimating();
+		for (int i = 1; i < AbstractGenome.getNumChromosomes(); ++i) {
 			ViewChromosome chromosome = AbstractGenome.getChromosome(i - 1);
 			if (chromosome.isAnimating()) {
-				float chromosomesize = (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength())*chromosome.getAnimationProgress();
-				chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize*(1f-chromosome.getAnimationProgress()) - chromosomesize;
+				float chromosomesize = (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength()) * chromosome.getAnimationProgress();
+				chromosomeBoundaries[i] = chromosomeBoundaries[i - 1] - minimizedChromosomeSize * (1f - chromosome.getAnimationProgress()) - chromosomesize;
 				animating = true;
+			} else if (chromosome.isMinimized()) {
+				chromosomeBoundaries[i] = chromosomeBoundaries[i - 1] - minimizedChromosomeSize;
+			} else {
+				chromosomeBoundaries[i] = chromosomeBoundaries[i - 1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());
 			}
-			else if (chromosome.isMinimized()) chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - minimizedChromosomeSize;
-			else chromosomeBoundaries[i] = chromosomeBoundaries[i-1] - (minimumChromosomeSlice + sliceSizeLeft * chromosome.length() / AbstractGenome.getTotalLength());
 		}
 
 		Vector2[] chromosomeBoundariesPositions = new Vector2[AbstractGenome.getNumChromosomes()];
@@ -62,8 +67,9 @@ public class GeneCircle {
 
 	public void updatePosition(float pointerGenePosition) {
 		float relativePosition = pointerGenePosition - 0.25f; // Rotate 90 degrees counter-clockwise
-		if(relativePosition < 0.0f)
+		if (relativePosition < 0.0f) {
 			relativePosition += 1.0f; // If negative add one full turn
+		}
 		chromosome = getChromosomeByRelativePosition(relativePosition);
 		chromosomePosition = getPositionInChr(chromosome, relativePosition);
 	}
@@ -87,7 +93,7 @@ public class GeneCircle {
 		}
 		return null;
 	}
-	
+
 	public ViewChromosome getChromosome() {
 		return chromosome;
 	}
@@ -112,7 +118,7 @@ public class GeneCircle {
 
 	public Vector2 getXYPosition(float relativeCirclePos) {
 		Vector2 ret = new Vector2(size, 0.0f);
-		ret.rotate((float)(Math.PI/2f) + 2 * (float) Math.PI * relativeCirclePos);
+		ret.rotate((float) (Math.PI / 2f) + 2 * (float) Math.PI * relativeCirclePos);
 		return ret;
 	}
 
@@ -132,12 +138,34 @@ public class GeneCircle {
 
 	public long getChromosomePosition(ViewChromosome startChr, float relativePos) {
 		long ret = startChr.length();
-		int chrNum = startChr.getChromosomeNumber()-1;
-		float chrRelLength = chromosomeBoundaries[chrNum] - chromosomeBoundaries[chrNum+1];
-		ret = (long)(ret * (chromosomeBoundaries[chrNum]-relativePos)/chrRelLength);
-		
+		int chrNum = startChr.getChromosomeNumber() - 1;
+		float chrRelLength = chromosomeBoundaries[chrNum] - chromosomeBoundaries[chrNum + 1];
+		ret = (long) (ret * (chromosomeBoundaries[chrNum] - relativePos) / chrRelLength);
+
 		return ret;
 	}
 
+	public LinkRangeIterator getRangeIterator(float relativeStart, float relativeEnd, LinkCollection links) {
+		ViewChromosome a = getChromosomeByRelativePosition(relativeStart);
+		ViewChromosome b = getChromosomeByRelativePosition(relativeEnd);
+		long posA = getPositionInChr(a, relativeStart);
+		long posB = getPositionInChr(b, relativeEnd);
 
+		GeneralLink tempA = GeneralLink.createComparisonObject(a, b, posA, posB, true);
+		GeneralLink tempB = GeneralLink.createComparisonObject(a, b, posA, posB, false);
+
+		int startIndex = Collections.binarySearch(links.getLinks(), tempA);
+		if (startIndex < 0) {
+			startIndex = -(startIndex + 1);
+		}
+		int endIndex = Collections.binarySearch(links.getLinks(), tempB);
+		if (endIndex < 0) {
+			endIndex = -(endIndex + 1);
+		}
+
+		startIndex = Math.min(links.numLinks() - 1, startIndex);
+		endIndex = Math.min(links.numLinks(), endIndex);
+
+		return new LinkRangeIterator(links, startIndex, endIndex);
+	}
 }

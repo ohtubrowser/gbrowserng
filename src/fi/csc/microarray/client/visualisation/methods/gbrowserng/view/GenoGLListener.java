@@ -111,6 +111,8 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		GlobalVariables.width = width;
 		GlobalVariables.height = height;
 		GlobalVariables.aspectRatio = (float)width / (float)height;
+		
+		overView.updateCircleSize();
 	}
 
 	public GenosideComponent getRoot() {

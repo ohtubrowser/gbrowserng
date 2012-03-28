@@ -17,12 +17,10 @@ public class LinkCollection {
 	private ArrayList<GeneralLink> newLinksToAdd = new ArrayList<GeneralLink>(), links = new ArrayList<GeneralLink>();
 	public final Object linkSyncLock = new Object();
 	private float timeUntilSync = GlobalVariables.linkSyncInterval;
-	private GeneCircle geneCircle;
 
-	public LinkCollection(GeneCircle geneCircle) {
-		this.geneCircle = geneCircle;
+	public LinkCollection() {
 	}
-
+	
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
 	public void syncAdditions() {
 		if (newLinksToAdd.isEmpty()) {
@@ -30,10 +28,6 @@ public class LinkCollection {
 		}
 
 		synchronized (linkSyncLock) {
-			for (GeneralLink link : newLinksToAdd) {
-				link.calculatePositions(geneCircle);
-			}
-
 			if (newLinksToAdd.size() > links.size()) {
 				links.addAll(newLinksToAdd);
 				Collections.sort(links);
@@ -82,30 +76,6 @@ public class LinkCollection {
 		return links.get(index);
 	}
 
-	public LinkRangeIterator getRangeIterator(float relativeStart, float relativeEnd) {
-		ViewChromosome a = geneCircle.getChromosomeByRelativePosition(relativeStart);
-		ViewChromosome b = geneCircle.getChromosomeByRelativePosition(relativeEnd);
-		long posA = geneCircle.getPositionInChr(a, relativeStart);
-		long posB = geneCircle.getPositionInChr(b, relativeEnd);
-
-		GeneralLink tempA = GeneralLink.createComparisonObject(a, b, posA, posB, true);
-		GeneralLink tempB = GeneralLink.createComparisonObject(a, b, posA, posB, false);
-
-		int startIndex = Collections.binarySearch(links, tempA);
-		if (startIndex < 0) {
-			startIndex = -(startIndex + 1);
-		}
-		int endIndex = Collections.binarySearch(links, tempB);
-		if (endIndex < 0) {
-			endIndex = -(endIndex + 1);
-		}
-
-		startIndex = Math.min(links.size() - 1, startIndex);
-		endIndex = Math.min(links.size(), endIndex);
-		
-		return new LinkRangeIterator(this, startIndex, endIndex);
-	}
-
 	public ArrayList<GeneralLink> getLinks() {
 		return links;
 	}
@@ -114,10 +84,11 @@ public class LinkCollection {
 		return links.size();
 	}
 
-	public void tick(float dt) {
+	public void tick(float dt, GeneCircle geneCircle) {
 		timeUntilSync -= dt;
 		if (timeUntilSync < 0) {
 			timeUntilSync = GlobalVariables.linkSyncInterval;
+			updateNewLinkPositions(geneCircle);
 			syncAdditions();
 		}
 	}
@@ -135,9 +106,9 @@ public class LinkCollection {
 		return true;
 	}
 
-	public void updateLinkPositions(GeneCircle geneCircle) {
+	public void updateNewLinkPositions(GeneCircle geneCircle) {
 		synchronized (linkSyncLock) {
-			for (GeneralLink link : links) {
+			for (GeneralLink link : newLinksToAdd) {
 				link.calculatePositions(geneCircle);
 			}
 		}

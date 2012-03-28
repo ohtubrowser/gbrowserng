@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Queue;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowser.dataFetcher.AreaResultListener;
@@ -18,6 +16,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowser.message.BpCoord;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.FsfStatus;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.RegionContent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 
@@ -29,21 +28,20 @@ public class ConnectionsLoader implements AreaResultListener {
 	public Queue<AreaRequest> areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
 	private AtomicInteger requestsReady;
 	private ConcurrentLinkedQueue<ViewChromosome> chromosomes;
-	private ConcurrentLinkedQueue<GeneralLink> links;
+	private LinkCollection links = new LinkCollection();
 
 	public ConnectionsLoader(String bam, String bai, ConcurrentLinkedQueue<ViewChromosome> chromosomes) {
-		this.chromosomes=chromosomes;
-		this.links=new ConcurrentLinkedQueue<GeneralLink>();
+		this.chromosomes = chromosomes;
 
 		SAMDataSource file = null;
 		this.requestsReady = new AtomicInteger(0);
 		try {
 			File bamfile = new File(bam), baifile = new File(bai);
-			if(!bamfile.canRead()) {
+			if (!bamfile.canRead()) {
 				System.err.println("Cannot read BAM file " + bam + " !");
 				System.exit(2);
 			}
-			if(!baifile.canRead()) {
+			if (!baifile.canRead()) {
 				System.err.println("Cannot read BAI file " + bai + " !");
 				System.exit(2);
 			}
@@ -54,30 +52,21 @@ public class ConnectionsLoader implements AreaResultListener {
 
 		this.dataThread = new SAMHandlerThread(file, areaRequestQueue, this);
 		this.dataThread.start();
-		
+
 		requestData();
-		while (requestsReady.get() < 1052) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
-	public ConcurrentLinkedQueue<GeneralLink> getLinks() {
+	public LinkCollection getLinks() {
 		return links;
 	}
 
 	public void requestData() {
 		for (ViewChromosome c : this.chromosomes) {
-			if(c.getName().equals("1")) {
-				areaRequestQueue.add(new AreaRequest(
-						new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
-						new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{
-							ColumnType.ID, ColumnType.STRAND, ColumnType.MATE_POSITION})),
-						new FsfStatus()));
-			}
+			areaRequestQueue.add(new AreaRequest(
+					new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
+					new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{
+						ColumnType.ID, ColumnType.STRAND, ColumnType.MATE_POSITION})),
+					new FsfStatus()));
 		}
 		this.dataThread.notifyAreaRequestHandler();
 	}
@@ -89,10 +78,10 @@ public class ConnectionsLoader implements AreaResultListener {
 		fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome mateChr;
 
 		for (RegionContent read : areaResult.getContents()) {
-			
+
 			readChr = read.region.start.chr;
-			mateChr = ((BpCoord)read.values.get(ColumnType.MATE_POSITION)).chr;
-			
+			mateChr = ((BpCoord) read.values.get(ColumnType.MATE_POSITION)).chr;
+
 			long matebp = ((BpCoord) read.values.get(ColumnType.MATE_POSITION)).bp;
 			long readbp = read.region.start.bp;
 
@@ -101,18 +90,19 @@ public class ConnectionsLoader implements AreaResultListener {
 					continue;
 				}
 			}
-			ViewChromosome begin=null;
-			ViewChromosome end=null;
-			for(ViewChromosome c : chromosomes) {
-				if(c.getName().equals(readChr.toNormalisedString())) {
-					begin=c;
+			ViewChromosome begin = null;
+			ViewChromosome end = null;
+			for (ViewChromosome c : chromosomes) {
+				if (c.getName().equals(readChr.toNormalisedString())) {
+					begin = c;
+				} else if (c.getName().equals(mateChr.toNormalisedString())) {
+					end = c;
 				}
-				else if(c.getName().equals(mateChr.toNormalisedString())) {
-					end=c;
+				if (begin != null && end != null) {
+					break;
 				}
-				if(begin!=null && end!=null) break;
 			}
-			this.links.add(new GeneralLink(begin, end, readbp, matebp, true));
+			this.links.addToQueue(begin, end, readbp, matebp);
 		}
 		requestsReady.addAndGet(1);
 	}

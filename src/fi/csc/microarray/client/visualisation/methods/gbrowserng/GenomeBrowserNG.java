@@ -4,6 +4,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 import com.jogamp.newt.event.NEWTEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.*;
@@ -74,7 +75,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataRat() {
+	public static LinkCollection useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
@@ -93,7 +94,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataHuman() {
+	public static LinkCollection useChipsterDataHuman() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -113,7 +114,7 @@ public class GenomeBrowserNG {
 	 * @param height screen height in pixels
 	 */
 	public GenomeBrowserNG(int width, int height) {
-		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
+		LinkCollection links = useChipsterDataHuman();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
