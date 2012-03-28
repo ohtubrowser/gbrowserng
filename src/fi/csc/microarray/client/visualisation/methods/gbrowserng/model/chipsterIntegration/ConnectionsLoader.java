@@ -72,12 +72,11 @@ public class ConnectionsLoader implements AreaResultListener {
 	public void requestData() {
 		for (ViewChromosome c : this.chromosomes) {
 			if(c.getName().equals("1")) {
-				System.out.println("request");
-			areaRequestQueue.add(new AreaRequest(
-					new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
-					new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{
-						ColumnType.ID, ColumnType.STRAND, ColumnType.MATE_POSITION})),
-					new FsfStatus()));
+				areaRequestQueue.add(new AreaRequest(
+						new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
+						new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{
+							ColumnType.ID, ColumnType.STRAND, ColumnType.MATE_POSITION})),
+						new FsfStatus()));
 			}
 		}
 		this.dataThread.notifyAreaRequestHandler();
@@ -113,7 +112,6 @@ public class ConnectionsLoader implements AreaResultListener {
 				}
 				if(begin!=null && end!=null) break;
 			}
-			//System.out.println("From: " + begin.getName() + " " + readbp + " - To: " + end.getName() + " " + matebp);
 			this.links.add(new GeneralLink(begin, end, readbp, matebp, true));
 		}
 		requestsReady.addAndGet(1);
