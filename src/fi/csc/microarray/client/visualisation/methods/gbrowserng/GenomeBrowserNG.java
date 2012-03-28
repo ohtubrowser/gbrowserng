@@ -68,44 +68,6 @@ public class GenomeBrowserNG {
 		return windowListener;
 	}
 
-	public static void useSmallData() {
-		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new ViewChromosome(1, 600));
-		AbstractGenome.addChromosome(new ViewChromosome(2, 300));
-		AbstractGenome.addChromosome(new ViewChromosome(3, 900));
-		AbstractGenome.addChromosome(new ViewChromosome(4, 1200));
-		AbstractGenome.addChromosome(new ViewChromosome(5, 100));
-		AbstractGenome.addChromosome(new ViewChromosome(6, 400));
-		AbstractGenome.addChromosome(new ViewChromosome(7, 500));
-	}
-
-	public static void useBigData() {
-		AbstractGenome.setName("Bogus Genome");
-		AbstractGenome.addChromosome(new ViewChromosome(1, 247000000));
-		AbstractGenome.addChromosome(new ViewChromosome(2, 243000000));
-		AbstractGenome.addChromosome(new ViewChromosome(3, 199000000));
-		AbstractGenome.addChromosome(new ViewChromosome(4, 191000000));
-		AbstractGenome.addChromosome(new ViewChromosome(5, 181000000));
-		AbstractGenome.addChromosome(new ViewChromosome(6, 171000000));
-		AbstractGenome.addChromosome(new ViewChromosome(7, 159000000));
-		AbstractGenome.addChromosome(new ViewChromosome(8, 146000000));
-		AbstractGenome.addChromosome(new ViewChromosome(9, 140000000));
-		AbstractGenome.addChromosome(new ViewChromosome(10, 135000000));
-		AbstractGenome.addChromosome(new ViewChromosome(11, 134000000));
-		AbstractGenome.addChromosome(new ViewChromosome(12, 132000000));
-		AbstractGenome.addChromosome(new ViewChromosome(13, 114000000));
-		AbstractGenome.addChromosome(new ViewChromosome(14, 106000000));
-		AbstractGenome.addChromosome(new ViewChromosome(15, 100000000));
-		AbstractGenome.addChromosome(new ViewChromosome(16, 89000000));
-		AbstractGenome.addChromosome(new ViewChromosome(17, 79000000));
-		AbstractGenome.addChromosome(new ViewChromosome(18, 76000000));
-		AbstractGenome.addChromosome(new ViewChromosome(19, 63000000));
-		AbstractGenome.addChromosome(new ViewChromosome(20, 62000000));
-		AbstractGenome.addChromosome(new ViewChromosome(21, 4700000));
-		AbstractGenome.addChromosome(new ViewChromosome(22, 5000000));
-		AbstractGenome.addChromosome(new ViewChromosome(23, 155000000));
-	}
-
 /**
 	 * Loads all links between chrosomes to a queue and puts all chromosomes in the Genome-class for Rat data.
 	 * For the Genome of the organism needed files are karyotype and seq_region.
@@ -115,11 +77,6 @@ public class GenomeBrowserNG {
 	public static ConcurrentLinkedQueue<GeneralLink> useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
-//				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-//						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
-//               
-
-
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
@@ -140,9 +97,6 @@ public class GenomeBrowserNG {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
-//				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-//						"13", "14", "15", "16", "17", "18", "19", "20", "X"});
-//               
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotypeHuman.txt", "seq_regionHuman.txt",
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
@@ -159,13 +113,6 @@ public class GenomeBrowserNG {
 	 * @param height screen height in pixels
 	 */
 	public GenomeBrowserNG(int width, int height) {
-
-		//fill with bogus data
-		//useSmallData();
-		//useBigData();
-		//useChipsterData();
-		//useChipsterDataRat();
-
 		ConcurrentLinkedQueue<GeneralLink> links = useChipsterDataHuman();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
