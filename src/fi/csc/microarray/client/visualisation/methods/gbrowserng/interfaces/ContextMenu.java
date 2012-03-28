@@ -18,10 +18,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.gles.SoulGL2;
-import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 
 public class ContextMenu implements InteractiveComponent, VisualComponent {
 	GenoWindow window;
@@ -134,7 +132,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		gl.glEnable(GL2.GL_BLEND);
 
 		if(shadow>0) {
-			PrimitiveRenderer.drawRectangle(x+convertW(width+shadow)*.5f, y - convertH(selHeight*(selections.size()-1)+shadow)*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / GlobalVariables.aspectRatio, gl, shadowColor);
+			PrimitiveRenderer.drawRectangle(x + convertW(width + shadow) * .5f, y - convertH(selHeight * (selections.size() - 1) + shadow) * .5f, convertW(width + border) * .5f, convertH((selHeight * selections.size()) + border) * .5f / GlobalVariables.aspectRatio, gl, shadowColor);
 		}
 
 		if(border>0) {

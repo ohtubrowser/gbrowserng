@@ -3,9 +3,10 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
+
 import javax.media.opengl.GL2;
 
 public class GenoVisualBorder extends GenosideComponent {

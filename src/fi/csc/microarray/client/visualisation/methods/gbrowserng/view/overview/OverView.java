@@ -14,7 +14,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Cont
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
