@@ -217,4 +217,25 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		return ret;
 	}
 
+	public boolean isaocc() {
+		return aOcc;
+	}
+
+	public ViewChromosome getStartChromosome() {
+		return aOcc ? aChromosome : bChromosome;
+	}
+	
+	public ViewChromosome getEndChromosome() {
+		return aOcc ? bChromosome : aChromosome;
+	}
+	
+	public long getStartPosition() {
+		return aOcc ? aStart : bStart;
+	}
+	
+	public long getEndPosition() {
+		return aOcc ? bStart : aStart;
+	}
+
+
 }

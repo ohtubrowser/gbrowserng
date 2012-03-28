@@ -53,6 +53,8 @@ public class OverView extends GenosideComponent {
 	private MouseEventHandler mouseHandler;
 
 	private boolean drawArcs;
+	private boolean circleNeedsUpdate = false;
+	private boolean aKeyDown = false, zKeyDown = false;
 
 	public OverView(GenoWindow window, ConcurrentLinkedQueue<GeneralLink> links) {
 		super(null);
@@ -206,11 +208,20 @@ public class OverView extends GenosideComponent {
 		if (KeyEvent.VK_D == event.getKeyCode()) {
 			drawArcs = !drawArcs;
 		} else if (KeyEvent.VK_Z == event.getKeyCode()) {
-			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
-			updateCircleSize();
+			if(event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
+				circleNeedsUpdate = true;
+				zKeyDown = false;
+			}
+			else if(event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) 
+				zKeyDown = true;
 		} else if (KeyEvent.VK_A == event.getKeyCode()) {
-			geneCircle.setSize(geneCircle.getSize() + 0.01f);
-			updateCircleSize();
+			if(event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
+				circleNeedsUpdate = true;
+				aKeyDown = false;
+			}
+			else if(event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+				aKeyDown = true;
+			}
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode()) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
@@ -237,7 +248,7 @@ public class OverView extends GenosideComponent {
 			} else {
 				synchronized (linkCollection.linkSyncLock) {
 					for (GeneralLink link : linkCollection.getLinks()) {
-						link.draw(gl);
+						/*if(link.isaocc())*/ link.draw(gl);
 					}
 				}
 			}
@@ -394,7 +405,14 @@ public class OverView extends GenosideComponent {
 		if (geneCircle.animating) {
 			geneCircle.tick(dt);
 			updateCircleSize();
-		}
+		} else if(circleNeedsUpdate) { updateCircleSize(); circleNeedsUpdate = false;}
+		
+		if(aKeyDown)
+			geneCircle.setSize(geneCircle.getSize() + 0.01f);
+		if(zKeyDown)
+			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
+
+		
 		linkSelection.tick(dt, linkCollection);
 		linkCollection.tick(dt);
 		geneCircleGFX.tick(dt);
