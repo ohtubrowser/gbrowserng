@@ -524,7 +524,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void openSession(SessionViewCapsule capsule) {
-		trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000);
+		trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome-1), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000); // BEAUTIFUL
 		trackviewManager.toggleVisible();
 	}
 
