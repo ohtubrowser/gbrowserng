@@ -114,7 +114,7 @@ public class GenomeBrowserNG {
 	 * @param height screen height in pixels
 	 */
 	public GenomeBrowserNG(int width, int height) {
-		LinkCollection links = useChipsterDataHuman();
+		LinkCollection links = useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
