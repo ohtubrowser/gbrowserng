@@ -80,7 +80,7 @@ public class GenoButton extends GenosideComponent {
 		myColor.g = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		myColor.b = 1f-this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
 		float myScale = 0.02f + this.getAnimatedValues().getAnimatedValue("MOUSEHOVER") * 0.01f;
-		PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x * 0.5f, gl, myColor, myTexture);
+		//PrimitiveRenderer.drawTexturedSquare(position.x, position.y, dimensions.x * 0.5f, gl, myColor, myTexture);
 		gl.glDisable(GL2.GL_BLEND);
 	}
 

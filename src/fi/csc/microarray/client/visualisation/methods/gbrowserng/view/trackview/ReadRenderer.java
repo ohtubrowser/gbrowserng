@@ -1,15 +1,12 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview;
 
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
-import com.soulaim.tech.gles.renderer.TextRenderer;
-import com.soulaim.tech.managers.TextureManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Read;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.VisualComponent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 
 import java.util.ArrayList;
 import javax.media.opengl.GL2;
@@ -49,8 +46,8 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
 				//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
-				TextRenderer.getInstance().drawText(gl, Character.toString(c),
-						glx(x), gly(y), glySize(20 * this.session.halfSizeY));
+				//TextRenderer.getInstance().drawText(gl, Character.toString(c),
+				//		glx(x), gly(y), glySize(20 * this.session.halfSizeY));
 			}
 		}
 
@@ -74,8 +71,8 @@ public class ReadRenderer extends CascadingComponent implements VisualComponent 
 					glySize(this.session.halfSizeY * session.payloadSize), gl, GlobalVariables.genomeColors.get(c));
 			if (this.session.halfSizeX >= this.session.halfSizeY) {
 				//TextureManager.bindTexture(gl, GenoTexID.TextureID.FONT);
-				TextRenderer.getInstance().drawText(gl, Character.toString(c),
-						glx(x), gly(y), glySize(20 * this.session.halfSizeY));
+				//TextRenderer.getInstance().drawText(gl, Character.toString(c),
+				//		glx(x), gly(y), glySize(20 * this.session.halfSizeY));
 			}
 		}
 	}
