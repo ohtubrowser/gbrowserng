@@ -55,9 +55,12 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
+		selections.add(new Selection("Restore all",3));
+		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",4));
+		else selections.add(new Selection("Fullscreen","F",4));
 		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",3));
 		else selections.add(new Selection("Fullscreen","F",3));
-
+		
 		selected = 0;
 		initTextRenderers();
 	}
@@ -73,6 +76,9 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			minimizeAllButOne(chromosome);
 			geneCircle.animating = true;
 		} else if(selections.get(selected).action==3) {
+			restoreAll(chromosome);
+			geneCircle.animating = true;
+		} else if(selections.get(selected).action==4) {
 			window.toggleFullscreen();
 		}
 		close = true;
@@ -88,7 +94,15 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			ViewChromosome c = AbstractGenome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
-			}
+			} else c.setMinimized(false);
+		}
+	}
+	
+	private void restoreAll(ViewChromosome chromosome) {
+		int chromosomes = AbstractGenome.getNumChromosomes();
+		for (int i = 0; i < chromosomes; ++i) {
+			ViewChromosome c = AbstractGenome.getChromosome(i);
+			c.setMinimized(false);
 		}
 	}
 
