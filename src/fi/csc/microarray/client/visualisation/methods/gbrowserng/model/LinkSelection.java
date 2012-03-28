@@ -127,14 +127,20 @@ public class LinkSelection {
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
 			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
+				int oldIndex = currentSelection.currentIndex;
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-					currentSelection.increment();
-					if (currentSelection.currentIndex == currentSelection.endIndex) {
-						currentSelection.decrement();//  Not the most elegant solution, but it works
-					}
+					do {
+						currentSelection.increment();
+						if(currentSelection.currentIndex == currentSelection.endIndex)
+							currentSelection.currentIndex = currentSelection.startIndex;
+					} while (currentSelection.value().isMinimized() && currentSelection.currentIndex != oldIndex);
 				}
-				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT && currentSelection.currentIndex != currentSelection.startIndex) {
-					currentSelection.decrement();
+				if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+					do {
+						if(currentSelection.currentIndex == currentSelection.startIndex)
+							currentSelection.currentIndex = currentSelection.endIndex;
+						currentSelection.decrement();
+					} while (currentSelection.value().isMinimized() && currentSelection.currentIndex != oldIndex);
 				}
 			}
 			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
@@ -222,7 +228,7 @@ public class LinkSelection {
 					if (oneLinkSelected) {
 						rangeIterator.value().draw(gl);
 					} else {
-						if (oneLinkSelected = rangeIterator.value().draw(gl, mouseX, mouseY)) {
+						if (!rangeIterator.value().isMinimized() && (oneLinkSelected = rangeIterator.value().draw(gl, mouseX, mouseY))) {
 							currentSelection.currentIndex = rangeIterator.currentIndex;
 						}
 					}
@@ -245,4 +251,3 @@ public class LinkSelection {
 		}
 	}
 }
-
