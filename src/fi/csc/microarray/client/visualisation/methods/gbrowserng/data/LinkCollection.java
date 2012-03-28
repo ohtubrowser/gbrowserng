@@ -17,6 +17,7 @@ public class LinkCollection {
 	private ArrayList<GeneralLink> newLinksToAdd = new ArrayList<GeneralLink>(), links = new ArrayList<GeneralLink>();
 	public final Object linkSyncLock = new Object();
 	private float timeUntilSync = GlobalVariables.linkSyncInterval;
+	public boolean loading = false;
 
 	public LinkCollection() {
 	}
@@ -26,11 +27,14 @@ public class LinkCollection {
 		if (newLinksToAdd.isEmpty()) {
 			return;
 		}
-
 		synchronized (linkSyncLock) {
+			loading = true;
 			if (newLinksToAdd.size() > links.size()) {
-				links.addAll(newLinksToAdd);
-				Collections.sort(links);
+				newLinksToAdd.addAll(links);
+				Collections.sort(newLinksToAdd);
+				ArrayList<GeneralLink> t = links;
+				links = newLinksToAdd;
+				newLinksToAdd = t;
 			} else {
 				for (GeneralLink link : newLinksToAdd) {
 					int insertIndex = Collections.binarySearch(links, link);
@@ -43,6 +47,7 @@ public class LinkCollection {
 			newLinksToAdd.clear();
 		}
 		filterLinks((long)1e6);	
+		loading = false;
 	}
 
 	public void filterLinks(long minDistance) {

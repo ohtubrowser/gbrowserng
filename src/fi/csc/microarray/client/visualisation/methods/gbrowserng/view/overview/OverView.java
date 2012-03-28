@@ -234,6 +234,10 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public void draw(GL2 gl) {
+		if(linkCollection.loading)
+			window.newtCanvasAWT.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		else
+			window.newtCanvasAWT.setCursor(Cursor.getDefaultCursor());
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
