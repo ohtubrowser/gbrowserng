@@ -6,7 +6,7 @@ precision mediump float;
 uniform float thickness;
 
 varying float dist;
-varying float dotproduct;
+varying float angle;
 
 void main() {
     float d = ( dist-(1.0-thickness)) / thickness;
@@ -20,5 +20,5 @@ void main() {
 
     vec4 color1 = vec4(d, 0.0, 0.0, d);
     vec4 color2 = vec4(d, d, d, alpha);
-    gl_FragColor = dotproduct * color1 + (1.0 - dotproduct) * color2;
+    gl_FragColor = angle * color1 + (1.0 - angle) * color2;
 }
