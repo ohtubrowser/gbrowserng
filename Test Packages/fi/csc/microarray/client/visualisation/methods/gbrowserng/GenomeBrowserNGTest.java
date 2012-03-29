@@ -4,6 +4,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 import com.jogamp.newt.event.NEWTEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.EventHandler;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.GenoWindowListener;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoGLListener;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
@@ -114,7 +115,7 @@ public class GenomeBrowserNGTest {
 	@Test
 	public void testUseChipsterDataRat() {
 		System.out.println("useChipsterDataRat");
-		ConcurrentLinkedQueue<GeneralLink> links = GenomeBrowserNG.useChipsterDataHuman();
+		LinkCollection links = GenomeBrowserNG.useChipsterDataHuman();
 		assertNotNull(links);
 	}
 
@@ -125,7 +126,7 @@ public class GenomeBrowserNGTest {
 	@Test
 	public void testUseChipsterDataHuman() {
 		System.out.println("useChipsterDataHuman");
-		ConcurrentLinkedQueue<GeneralLink> links = GenomeBrowserNG.useChipsterDataHuman();
+		LinkCollection links = GenomeBrowserNG.useChipsterDataHuman();
 		assertNotNull(links);
 	}
 
