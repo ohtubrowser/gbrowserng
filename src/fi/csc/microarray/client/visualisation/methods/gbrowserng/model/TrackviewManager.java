@@ -1,12 +1,17 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ReferenceSequence;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -40,6 +45,7 @@ public class TrackviewManager extends Container {
 	private GBrowserPreview sessionA, sessionB;
 	private Region regionA = new Region(0l, 1l, new Chromosome("1")), regionB = new Region(0l, 1l, new Chromosome("1")); // TODO : need some good defaults
 	public final Object switchLock = new Object();
+	private GeneralLink currentLink;
 
 	public TrackviewManager(GenoWindow window) {
 		setLayout(new BorderLayout());
@@ -66,6 +72,7 @@ public class TrackviewManager extends Container {
 
 			add(previewManager.getSplitJComponent(sessionA, sessionB), BorderLayout.CENTER);
 			validate();
+			currentLink = l;
 		}
 	}
 
@@ -75,7 +82,15 @@ public class TrackviewManager extends Container {
 			sessionA.setRegion(regionA);
 			add(sessionA.getJComponent(), BorderLayout.CENTER);
 			validate();
+			currentLink = null;
 		}
+	}
+
+	public SessionViewCapsule generateLinkCapsule(OverView overview) {
+		Session session = new Session(currentLink.getAChromosome().getReferenceSequence(), currentLink.getaStart());
+		SessionView sessionView = new SessionView(session, overview);
+		SessionViewCapsule capsule = new SessionViewCapsule(sessionView, currentLink, currentLink.getStartPos(), overview.getGeneCircle());
+		return capsule;
 	}
 
 	public void toggleVisible() {
@@ -87,5 +102,9 @@ public class TrackviewManager extends Container {
 		synchronized (switchLock) {
 			super.paint(g);
 		}
+	}
+
+	public GeneralLink getLink() {
+		return currentLink;
 	}
 }

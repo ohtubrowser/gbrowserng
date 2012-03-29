@@ -16,7 +16,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	private final boolean aOcc; // Used for sorting, describes whether this is the a or b-occurrence of this link (since all are present twice)
 	public float r,g,b;
 	private float aCirclePos, bCirclePos;
-	private float aX, aY, bX, bY;
+	public float aX, aY, bX, bY;
 	private float opacity;
 
 	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {

@@ -7,6 +7,7 @@ import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
@@ -16,7 +17,9 @@ public class SessionViewCapsule extends GenosideComponent {
 
 	private boolean needsTextureUpdate = true;
 	private final SessionView sessionView;
+	private final GeneralLink linkData;
 	private final GeneCircle geneCircle;
+	
 	// TODO: SessionViewCapsuleData class could contain this.
 	private boolean isActive = false;
 	private boolean dying = false;
@@ -28,9 +31,10 @@ public class SessionViewCapsule extends GenosideComponent {
 	private final LinkGFX link;
 	private boolean hide;
 
-	public SessionViewCapsule(SessionView sessionView, float relativePos, GeneCircle geneCircle) {
+	public SessionViewCapsule(SessionView sessionView, GeneralLink linkData, float relativePos, GeneCircle geneCircle) {
 		super(null); // should be ok
 		this.sessionView = sessionView;
+		this.linkData = linkData;
 		this.geneCircle = geneCircle;
 		this.relativePos = relativePos;
 		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
@@ -38,9 +42,10 @@ public class SessionViewCapsule extends GenosideComponent {
 		link = new LinkGFX(sessionView, this);
 	}
 
-	public SessionViewCapsule(SessionView sessionView, Vector2 relativePosVector, GeneCircle geneCircle) {
+	public SessionViewCapsule(SessionView sessionView, GeneralLink linkData, Vector2 relativePosVector, GeneCircle geneCircle) {
 		super(null); // should be ok
 		this.sessionView = sessionView;
+		this.linkData = linkData;
 		this.geneCircle = geneCircle;
 		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
 		this.genecirclePosition = relativePosVector;
@@ -230,5 +235,13 @@ public class SessionViewCapsule extends GenosideComponent {
 	void drawToTexture(GL2 gl) {
 		sessionView.updateTexture(gl);
 		needsTextureUpdate = false;
+	}
+	
+	public boolean isLinkSession() {
+		return linkData != null;
+	}
+
+	public GeneralLink getLink() {
+		return linkData;
 	}
 }

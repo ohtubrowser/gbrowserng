@@ -200,6 +200,7 @@ public class OverView extends GenosideComponent {
 				trackviewManager.clearContainer();
 				trackviewManager.openLinkSession(linkSelection.getActiveLink());
 				trackviewManager.toggleVisible();
+				sessions.add(getTrackviewManager().generateLinkCapsule(this));
 			}
 			linkSelection.handle(event);
 		}
@@ -250,7 +251,7 @@ public class OverView extends GenosideComponent {
 			} else {
 				synchronized (linkCollection.linkSyncLock) {
 					for (GeneralLink link : linkCollection.getLinks()) {
-						/*if(link.isaocc())*/ link.draw(gl);
+						link.draw(gl);
 					}
 				}
 			}
@@ -414,7 +415,6 @@ public class OverView extends GenosideComponent {
 		if(zKeyDown)
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
 
-		
 		linkSelection.tick(dt, linkCollection);
 		linkCollection.tick(dt, geneCircle);
 		geneCircleGFX.tick(dt);
@@ -524,7 +524,10 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void openSession(SessionViewCapsule capsule) {
-		trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome-1), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000); // BEAUTIFUL
+		if(capsule.isLinkSession())
+			trackviewManager.openLinkSession(capsule.getLink());
+		else
+			trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome-1), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000); // BEAUTIFUL
 		trackviewManager.toggleVisible();
 	}
 
