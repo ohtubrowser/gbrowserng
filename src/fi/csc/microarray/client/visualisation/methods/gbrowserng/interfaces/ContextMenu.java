@@ -58,8 +58,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		selections.add(new Selection("Restore all",3));
 		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",4));
 		else selections.add(new Selection("Fullscreen","F",4));
-		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",3));
-		else selections.add(new Selection("Fullscreen","F",3));
 		
 		selected = 0;
 		initTextRenderers();
