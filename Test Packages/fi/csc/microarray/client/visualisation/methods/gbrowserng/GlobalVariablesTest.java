@@ -4,7 +4,8 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
-import gles.Color;
+
+import com.soulaim.tech.gles.Color;
 import java.util.Map;
 import org.junit.*;
 import static org.junit.Assert.*;

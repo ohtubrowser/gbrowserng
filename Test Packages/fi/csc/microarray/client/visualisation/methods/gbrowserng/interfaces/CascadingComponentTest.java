@@ -4,7 +4,6 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
-import math.Vector2;
 import org.junit.*;
 import static org.junit.Assert.*;
 

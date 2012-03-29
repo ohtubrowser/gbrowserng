@@ -5,7 +5,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import math.Vector2;
+//import math.Vector2;
 import org.junit.*;
 import static org.junit.Assert.*;
 

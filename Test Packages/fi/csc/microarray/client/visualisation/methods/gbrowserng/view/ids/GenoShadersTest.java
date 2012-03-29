@@ -4,7 +4,7 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids;
 
-import gles.SoulGL2;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
