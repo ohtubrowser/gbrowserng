@@ -79,6 +79,7 @@ public class TrackviewManager extends Container {
 
 	public void openAreaSession(ViewChromosome c, long start, long end) {
 		synchronized (switchLock) {
+			clearContainer();
 			regionA = new Region(start, end, new Chromosome(c.getName()));
 			sessionA.setRegion(regionA);
 			add(sessionA.getJComponent(), BorderLayout.CENTER);
