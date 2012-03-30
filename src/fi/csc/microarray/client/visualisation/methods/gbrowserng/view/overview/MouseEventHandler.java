@@ -21,7 +21,15 @@ public class MouseEventHandler {
 		this.lastMouseClick = null;
 		this.overview = overview;
 	}
+	
+	public SimpleMouseEvent getLastMouseClick() {
+		return lastMouseClick;
+	}
 
+	public OverView getOverview() {
+		return overview;
+	}
+	
 	public boolean handle(MouseEvent event, float x, float y, GeneCircle geneCircle) {
 		SessionViewCapsule hoverCapsule = overview.getHoverCapsule();
 		ContextMenu contextMenu = overview.getContextMenu();
