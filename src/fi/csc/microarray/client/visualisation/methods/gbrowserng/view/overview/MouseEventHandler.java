@@ -22,7 +22,7 @@ public class MouseEventHandler {
 		this.overview = overview;
 	}
 
-	boolean handle(MouseEvent event, float x, float y, GeneCircle geneCircle) {
+	public boolean handle(MouseEvent event, float x, float y, GeneCircle geneCircle) {
 		SessionViewCapsule hoverCapsule = overview.getHoverCapsule();
 		ContextMenu contextMenu = overview.getContextMenu();
 
@@ -171,22 +171,35 @@ public class MouseEventHandler {
 		overview.getTrackviewManager().openLinkSession(activeLink);
 		overview.getTrackviewManager().toggleVisible();
 
-		
+		// get coordinates of ending point of link (away from point on chrosome where scrolling)
 		float[] linkEndCoordinates = activeLink.getLinkEndPositions();
 		float x = linkEndCoordinates[0];
 		float y = linkEndCoordinates[1];
+		// no clue - just copy-pasted from somewhere else in code. Ask original writer. (who?)
 		float pointerGenePosition = 1.0f - ((float) (Math.atan2(CoordinateManager.toCircleCoordsX(y), 
 				CoordinateManager.toCircleCoordsY(-x)) / Math.PI) * 0.5f + 0.5f);
 		
+		// capsule for opening trackview again opened
 		openNewCapsule(pointerGenePosition, 0.5f, 0.5f, geneCircle);
 	}
 
+	/**
+	 * Opens a new capsule in the overview window.
+	 * Instantiates needed objects for creating Capsule, then creates Capsule.
+	 * Adds Capsule to the list of capsules in Overview-window, then sets Capsule to be updated so drawn on screen.
+	 * @param pointerGenePosition point on circle from where line from circle to Capsule begins
+	 * @param x ask writer - location of capsule?
+	 * @param y ask writer - location of capsule?
+	 * @param geneCircle GeneCircle to which to attach capsule
+	 */
 	private void openNewCapsule(float pointerGenePosition, float x, float y, GeneCircle geneCircle) {
 		Session session = new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition());
 		SessionView sessionView = new SessionView(session, overview);
+		
 		SessionViewCapsule capsule = new SessionViewCapsule(sessionView, pointerGenePosition, geneCircle);
 		capsule.getSession().setDimensions(0.4f, 0.2f);
 		capsule.getSession().setPosition(x, y);
+		
 		sessions.add(capsule);
 		LinkedList<SessionViewCapsule> textureUpdateListLock = overview.getTextureUpdateListLock();
 		synchronized (textureUpdateListLock) {
