@@ -6,7 +6,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
-import gles.Color;
+//import gles.Color;
 import javax.media.opengl.GL2;
 import org.junit.*;
 import static org.junit.Assert.*;

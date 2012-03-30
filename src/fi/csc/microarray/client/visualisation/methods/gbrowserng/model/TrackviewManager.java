@@ -32,6 +32,7 @@ public class TrackviewManager extends Container {
 
 		dataPath = "/cs/group2/home/gbrowsng/";
 
+//		dataPath = "";
 		BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam");
 		BAI_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam.bai");
 		CYTOBAND_FILE = new File(dataPath + "karyotypeHuman.txt");

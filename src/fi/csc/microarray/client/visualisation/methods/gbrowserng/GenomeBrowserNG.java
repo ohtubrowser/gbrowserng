@@ -113,7 +113,7 @@ public class GenomeBrowserNG {
 	 * @param width	screen width in pixels
 	 * @param height screen height in pixels
 	 */
-	public GenomeBrowserNG(int width, int height) {
+	public GenomeBrowserNG(int width, int height) throws ArrayIndexOutOfBoundsException {
 		LinkCollection links = useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
@@ -165,5 +165,6 @@ public class GenomeBrowserNG {
 		double fraction = 0.8d;
 		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction)).run();
 	}
+
 
 }

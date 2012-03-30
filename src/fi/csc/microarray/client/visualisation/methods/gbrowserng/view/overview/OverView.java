@@ -42,7 +42,7 @@ public class OverView extends GenosideComponent {
 	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
-	private final Object textureUpdateListLock = new Object();
+	final Object textureUpdateListLock = new Object();
 	public boolean die = false, arcHighlightLocked = false;
 	private OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 	public TextRenderer chromosomeNameRenderer, textRenderer;
@@ -543,7 +543,7 @@ public class OverView extends GenosideComponent {
 		this.mousePosition.x = x;
 		this.mousePosition.y = y;
 	}
-	LinkedList<SessionViewCapsule> getTextureUpdateListLock() {
+	LinkedList<SessionViewCapsule> getTextureUpdateList() {
 		return this.textureUpdateList;
 	}
 
@@ -553,7 +553,7 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-		return mouseHandler.handle(event, screen_x, screen_y);
+		return mouseHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
 
 	public LinkCollection getLinkCollection() {

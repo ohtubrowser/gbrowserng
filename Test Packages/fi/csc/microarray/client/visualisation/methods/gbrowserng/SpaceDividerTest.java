@@ -4,6 +4,7 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ReferenceSequence;
@@ -15,7 +16,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.Gen
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import java.util.ArrayList;
-import math.Vector2;
 import org.junit.*;
 import static org.junit.Assert.*;
 

@@ -5,8 +5,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import javax.media.opengl.GL2;
-import math.Matrix4;
-import math.Vector2;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 

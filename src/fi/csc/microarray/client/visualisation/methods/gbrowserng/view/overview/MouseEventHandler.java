@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
@@ -20,10 +21,17 @@ public class MouseEventHandler {
 		this.lastMouseClick = null;
 		this.overview = overview;
 	}
+	
+	public SimpleMouseEvent getLastMouseClick() {
+		return lastMouseClick;
+	}
 
-	boolean handle(MouseEvent event, float x, float y) {
+	public OverView getOverview() {
+		return overview;
+	}
+	
+	public boolean handle(MouseEvent event, float x, float y, GeneCircle geneCircle) {
 		SessionViewCapsule hoverCapsule = overview.getHoverCapsule();
-		GeneCircle geneCircle = overview.getGeneCircle();
 		ContextMenu contextMenu = overview.getContextMenu();
 
 		if (contextMenu != null) {
@@ -61,7 +69,7 @@ public class MouseEventHandler {
 
 		LinkSelection selection = overview.getLinkSelection();
 		if (!overview.isArcHighlightLocked()) {
-			if (pointOnCircle(geneCircle, x, y)) {
+			if (pointOnCircle(x, y, geneCircle)) {
 				selection.update(pointerGenePosition, overview.getLinkCollection());
 			} else {
 				selection.reset();
@@ -120,40 +128,21 @@ public class MouseEventHandler {
 						return true;
 					}
 				}
-				if (pointOnCircle(geneCircle, x, y)) {
+				if (pointOnCircle(x, y, geneCircle)) {
 					overview.setArcHighlightLocked(true);
 					selection.update(pointerGenePosition, overview.getLinkCollection());
-				} else if (overview.isArcHighlightLocked() && pointInsideCircle(geneCircle, x, y)) {
+				} else if (overview.isArcHighlightLocked() && pointInsideCircle(x, y, geneCircle)) {
 					overview.getTrackviewManager().openLinkSession(overview.getLinkSelection().getActiveLink());
 					overview.getTrackviewManager().toggleVisible();
 					GeneralLink cl = overview.getTrackviewManager().getLink();
-					Session session = new Session(cl.getBChromosome().getReferenceSequence(), cl.getbStart());
-					SessionView sessionView = new SessionView(session, overview);
-					SessionViewCapsule capsule = new SessionViewCapsule(sessionView, cl, geneCircle.getRelativePosition(cl.getBChromosome().getChromosomeNumber()-1, ((float) cl.getbStart())/cl.getBChromosome().length()), geneCircle);
-					capsule.getSession().setDimensions(0.4f, 0.2f);
-					capsule.getSession().setPosition(x, y);
-					sessions.add(capsule);
-					LinkedList<SessionViewCapsule> textureUpdateListLock = overview.getTextureUpdateListLock();
-					synchronized (textureUpdateListLock) {
-						overview.addCapsuleToTextureUpdateList(capsule);
-						capsule.setNeedsTextureUpdate();
-					}
+					float relPos = geneCircle.getRelativePosition(cl.getBChromosome().getChromosomeNumber()-1, ((float) cl.getbStart())/cl.getBChromosome().length());
+					openNewAreaCapsule(relPos, x, y, cl, geneCircle);
 				} else {
 					if (overview.isArcHighlightLocked()) {
 						overview.setArcHighlightLocked(false);
 						selection.deactivate();
 					} else {
-						Session session = new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition());
-						SessionView sessionView = new SessionView(session, overview);
-						SessionViewCapsule capsule = new SessionViewCapsule(sessionView, null, pointerGenePosition, geneCircle);
-						capsule.getSession().setDimensions(0.4f, 0.2f);
-						capsule.getSession().setPosition(x, y);
-						sessions.add(capsule);
-						LinkedList<SessionViewCapsule> textureUpdateListLock = overview.getTextureUpdateListLock();
-						synchronized (textureUpdateListLock) {
-							overview.addCapsuleToTextureUpdateList(capsule);
-							capsule.setNeedsTextureUpdate();
-						}
+						openNewAreaCapsule(pointerGenePosition, x, y, null, geneCircle);
 					}
 				}
 			} else if (event.getButton() == 3) {
@@ -181,12 +170,38 @@ public class MouseEventHandler {
 				overview.updateCircleSize();
 			}
 		}
-		selection.mouseMove(pointInsideCircle(geneCircle, x, y), x, y);
+		selection.mouseMove(pointInsideCircle(x, y, geneCircle), x, y);
 		overview.setMousePositionX(CoordinateManager.toCircleCoordsY(x), CoordinateManager.toCircleCoordsX(y));
 		return false;
 	}
+	
+	/**
+	 * Opens a new capsule in the overview window.
+	 * Instantiates needed objects for creating Capsule, then creates Capsule.
+	 * Adds Capsule to the list of capsules in Overview-window, then sets Capsule to be updated so drawn on screen.
+	 * @param pointerGenePosition point on circle from where line from circle to Capsule begins
+	 * @param x ask writer - location of capsule?
+	 * @param y ask writer - location of capsule?
+	 * @param link Link associated with this capsule (null if this is an area capsule)
+	 * @param geneCircle GeneCircle to which to attach capsule
+	 */
+	private void openNewAreaCapsule(float pointerGenePosition, float x, float y, GeneralLink link, GeneCircle geneCircle) {
+		Session session = new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition());
+		SessionView sessionView = new SessionView(session, overview);
+		
+		SessionViewCapsule capsule = new SessionViewCapsule(sessionView, link, pointerGenePosition, geneCircle);
+		capsule.getSession().setDimensions(0.4f, 0.2f);
+		capsule.getSession().setPosition(x, y);
+		
+		sessions.add(capsule);
+		synchronized (overview.textureUpdateListLock) {
+			overview.addCapsuleToTextureUpdateList(capsule);
+			capsule.setNeedsTextureUpdate();
+		}
+	}
 
-	public boolean pointOnCircle(GeneCircle geneCircle, float x, float y) {
+
+	public boolean pointOnCircle(float x, float y, GeneCircle geneCircle) {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);
@@ -194,7 +209,7 @@ public class MouseEventHandler {
 		return (s < 1.0f && s > 0.8f);
 	}
 
-	private boolean pointInsideCircle(GeneCircle geneCircle, float x, float y) {
+	private boolean pointInsideCircle(float x, float y, GeneCircle geneCircle) {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);

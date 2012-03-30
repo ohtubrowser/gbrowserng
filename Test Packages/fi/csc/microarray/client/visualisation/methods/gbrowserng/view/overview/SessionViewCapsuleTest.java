@@ -8,7 +8,7 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import javax.media.opengl.GL2;
-import math.Vector2;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
