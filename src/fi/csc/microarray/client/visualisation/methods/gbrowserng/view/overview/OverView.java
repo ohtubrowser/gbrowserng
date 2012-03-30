@@ -550,7 +550,7 @@ public class OverView extends GenosideComponent {
 
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-		return mouseHandler.handle(event, screen_x, screen_y);
+		return mouseHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
 
 	public LinkCollection getLinkCollection() {
