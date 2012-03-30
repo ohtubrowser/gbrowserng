@@ -126,13 +126,13 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 
 	@Override
 	public boolean handle(KeyEvent event) {
-		if(event.getKeyCode()==KeyEvent.VK_UP) {
+		if(event.getKeyCode()==KeyEvent.VK_UP && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			if(selected == 0) selected = selections.size()-1;
-			else selected--;
-		} else if(event.getKeyCode()==KeyEvent.VK_DOWN) {
+			else selected--;	
+		} else if(event.getKeyCode()==KeyEvent.VK_DOWN && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			if(selected == selections.size()-1) selected = 0;
 			else selected++;
-		} else if(event.getKeyCode()==KeyEvent.VK_ENTER) {
+		} else if(event.getKeyCode()==KeyEvent.VK_ENTER && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			action(selected);
 			close=true;
 		}
