@@ -20,8 +20,10 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircl
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
 public class ContextMenu implements InteractiveComponent, VisualComponent {
+	OverView overview;
 	GenoWindow window;
 	ViewChromosome chromosome;
 	GeneCircle geneCircle;
@@ -38,8 +40,9 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.9f);
 	private Color shadowColor = new Color(0f,0f,0f,0.7f);
 
-	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, GenoWindow window) {
-		this.window = window;
+	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, OverView overview) {
+		this.overview = overview;
+		this.window = overview.window;
 		close = false;
 		this.chromosome = chromosome;
 		x = mx;
@@ -78,6 +81,7 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			geneCircle.animating = true;
 		} else if(selections.get(selected).action==4) {
 			window.toggleFullscreen();
+			overview.updateCircleSize();
 		}
 		close = true;
 	}

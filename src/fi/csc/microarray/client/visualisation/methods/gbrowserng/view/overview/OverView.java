@@ -36,7 +36,7 @@ public class OverView extends GenosideComponent {
 	private GenoFPSCounter drawCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
-	private GenoWindow window;
+	public GenoWindow window;
 
 	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
@@ -565,7 +565,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void openContextMenu(float x, float y) {
-		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y, window);
+		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y, this);
 	}
 
 	public ContextMenu getContextMenu() {
