@@ -114,11 +114,12 @@ public class GenomeBrowserNG {
 	 * @param height screen height in pixels
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data) throws ArrayIndexOutOfBoundsException {
-		LinkCollection links = useChipsterDataHuman();
+		LinkCollection links;
 		if(data==0)
 			links = useChipsterDataHuman();
 		else if(data==1)
 			links = useChipsterDataRat();
+		else links = useChipsterDataHuman();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
