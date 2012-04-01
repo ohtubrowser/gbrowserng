@@ -112,14 +112,19 @@ public class GenomeBrowserNG {
 	 * Here choice can be made whether to use Rat or Human data. Links between chromosomes, and gehome, are loaded based on this choice.
 	 * @param width	screen width in pixels
 	 * @param height screen height in pixels
+	 * @param filtering
+	 * @param data
+	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data) throws ArrayIndexOutOfBoundsException {
 		LinkCollection links;
-		if(data==0)
+		if (data==0) {
 			links = useChipsterDataHuman();
-		else if(data==1)
+		} else if(data==1) {
 			links = useChipsterDataRat();
-		else links = useChipsterDataHuman();
+		}else {
+			links = useChipsterDataHuman();
+		}
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);

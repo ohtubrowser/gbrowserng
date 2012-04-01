@@ -12,6 +12,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.CascadingComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.common.GenoVisualBorder;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
@@ -90,8 +91,11 @@ public class SpaceDividerTest {
 		GenoVisualBorder border = null;
 		border = new GenoVisualBorder(border);
 		SessionView view = new SessionView(session, border);
+		ViewChromosome a = new ViewChromosome(1, 1);
+		ViewChromosome b = new ViewChromosome(1, 1);
+		GeneralLink link = new GeneralLink(a, b, 0, 0, false);
 		AbstractGenome.addChromosome(new ViewChromosome(1, 1));
-		return new SessionViewCapsule(view, 0, new GeneCircle()); 
+		return new SessionViewCapsule(view, link,  0, new GeneCircle()); 
 	}
 
 	/**

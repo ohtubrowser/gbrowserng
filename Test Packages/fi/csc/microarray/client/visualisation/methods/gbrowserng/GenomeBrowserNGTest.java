@@ -29,12 +29,12 @@ public class GenomeBrowserNGTest {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		browser = new GenomeBrowserNG(500, 500);	// size does not matter
+		browser = new GenomeBrowserNG(500, 500, 0, 0);	// size does not matter
 	}
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
-		browser = new GenomeBrowserNG(500, 500);	// size does not matter
+		browser = new GenomeBrowserNG(500, 500, 0, 0);	// size does not matter
 	}
 	
 	@Before
@@ -55,7 +55,7 @@ public class GenomeBrowserNGTest {
 		System.out.println("constructorCreation");
 		GenomeBrowserNG instance = null;
 		try{
-		 instance = new GenomeBrowserNG(500, 500);
+		 instance = new GenomeBrowserNG(500, 500, 0, 0);
 		} catch(java.lang.ArrayIndexOutOfBoundsException a) {
 			System.out.println(a);
 			assert(true);
