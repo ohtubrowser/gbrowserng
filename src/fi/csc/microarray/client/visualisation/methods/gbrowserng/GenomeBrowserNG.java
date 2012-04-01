@@ -113,8 +113,12 @@ public class GenomeBrowserNG {
 	 * @param width	screen width in pixels
 	 * @param height screen height in pixels
 	 */
-	public GenomeBrowserNG(int width, int height) throws ArrayIndexOutOfBoundsException {
-		LinkCollection links = useChipsterDataRat();
+	public GenomeBrowserNG(int width, int height, long filtering, int data) throws ArrayIndexOutOfBoundsException {
+		LinkCollection links = useChipsterDataHuman();
+		if(data==0)
+			links = useChipsterDataHuman();
+		else if(data==1)
+			links = useChipsterDataRat();
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
@@ -157,13 +161,38 @@ public class GenomeBrowserNG {
 	
 	/**
 	 * Main method of program, calls on class to run program, based on screen size.
-	 * @param args no string input parameters as of this time of development
+	 * @param args command line syntax:
+	 * -f [number] filtering range (0 turns filtering off)
+	 * -g h/r human or rat genome data
+	 * -bam [bam-file] opens a bam-file
+	 * -bai [bai-file] opens a bai-file
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		long filtering = 100000;
+		int genome=0;
+		String bam, bai;
+		for(int i=0;i<args.length;i++) {
+			if(args[i].equals("-f") && args.length > i+1) {
+				i++;
+				filtering = Long.parseLong(args[i]);
+			} else if(args[i].equals("-g") && args.length > i+1) {
+				i++;
+				if(args[i].equals("h"))
+					genome = 0;
+				else if(args[i].equals("r"))
+					genome = 1;
+			} else if(args[i].equals("-bam") && args.length > i+1) {
+				i++;
+				bam = args[i];
+			} else if(args[i].equals("-bai") && args.length > i+1) {
+				i++;
+				bai = args[i];
+			}
+		}
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction)).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome).run();
 	}
 
 
