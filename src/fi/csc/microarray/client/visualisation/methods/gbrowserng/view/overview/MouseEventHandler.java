@@ -209,7 +209,7 @@ public class MouseEventHandler {
 		return (s < 1.0f && s > 0.8f);
 	}
 
-	private boolean pointInsideCircle(float x, float y, GeneCircle geneCircle) {
+	public boolean pointInsideCircle(float x, float y, GeneCircle geneCircle) {
 		float size = geneCircle.getSize();
 		float a = CoordinateManager.toCircleCoordsX(size);
 		float b = CoordinateManager.toCircleCoordsY(size);

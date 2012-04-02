@@ -42,16 +42,6 @@ public class SessionViewCapsule extends GenosideComponent {
 		link = new LinkGFX(sessionView, this);
 	}
 
-	public SessionViewCapsule(SessionView sessionView, GeneralLink linkData, Vector2 relativePosVector, GeneCircle geneCircle) {
-		super(null); // should be ok
-		this.sessionView = sessionView;
-		this.linkData = linkData;
-		this.geneCircle = geneCircle;
-		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
-		this.genecirclePosition = relativePosVector;
-		link = new LinkGFX(sessionView, this);
-	}
-
 	public Vector2 getGeneCirclePosition() {
 		return genecirclePosition;
 	}

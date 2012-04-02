@@ -18,6 +18,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	private float aCirclePos, bCirclePos;
 	public float aX, aY, bX, bY;
 	private float opacity;
+	private long counter = 1;
 
 	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
 		this.aChromosome = aChromosome;
@@ -246,5 +247,29 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	public long getEndPosition() {
 		return aOcc ? bStart : aStart;
+	}
+
+	/**
+	 * @return the counter
+	 */
+	public long getCounter() {
+		return counter;
+	}
+
+	/**
+	 * @param counter the counter to set
+	 */
+	public void setCounter(long counter) {
+		this.counter = counter;
+	}
+	
+	public void addCounter(long value) {
+		counter += value;
+	}
+
+	public void setColorByCounter(long avgCounter) {
+		float r = Math.min(1.0f, 0.5f*counter / avgCounter);
+		this.r = (r * 0.5f + 0.5f);
+		this.g = this.b = 0.3f;
 	}
 }

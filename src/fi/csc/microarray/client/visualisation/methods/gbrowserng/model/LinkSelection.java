@@ -235,7 +235,6 @@ public class LinkSelection {
 						}
 					}
 					rangeIterator.increment();
-
 				}
 			} else {
 				LinkRangeIterator rangeIterator = new LinkRangeIterator(currentSelection);
@@ -251,5 +250,9 @@ public class LinkSelection {
 				}
 			}
 		}
+	}
+
+	public boolean mouseInCircle() {
+		return mouseInsideCircle;
 	}
 }

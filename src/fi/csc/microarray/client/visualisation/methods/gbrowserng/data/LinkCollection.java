@@ -46,7 +46,8 @@ public class LinkCollection {
 			}
 			newLinksToAdd.clear();
 		}
-		filterLinks((long)1e5);	
+		filterLinks((long)1e6);
+		updateColors();
 		loading = false;
 	}
 
@@ -125,6 +126,7 @@ public class LinkCollection {
 				continue;
 			}
 			if (startDistance(i, j) > minDistance) {
+				links.get(j).addCounter(links.get(i).getCounter());
 				break;
 			}
 			if (endDistance(i, j) < minDistance) {
@@ -136,6 +138,7 @@ public class LinkCollection {
 				continue;
 			}
 			if (startDistance(i, j) > minDistance) {
+				links.get(j).addCounter(links.get(i).getCounter());
 				break;
 			}
 			if (endDistance(i, j) < minDistance) {
@@ -169,5 +172,16 @@ public class LinkCollection {
 		long aPos = a.getEndPosition(),
 				bPos = b.getEndPosition();
 		return Math.abs(aPos - bPos);
+	}
+	
+	private void updateColors() {
+		// must be synced with linksynclock
+		long avgCounter = 0;
+		for(GeneralLink l : links)
+			avgCounter += l.getCounter();
+		avgCounter /= numLinks();
+		
+		for(GeneralLink l : links)
+			l.setColorByCounter(avgCounter);
 	}
 }
