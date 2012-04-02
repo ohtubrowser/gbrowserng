@@ -168,15 +168,17 @@ public class GenomeBrowserNG {
 	/**
 	 * Main method of program, calls on class to run program, based on screen size.
 	 * @param args command line syntax:
-	 * -f [number] filtering range (0 turns filtering off)
-	 * -g h/r human or rat genome data
-	 * -bam [bam-file] opens a bam-file
-	 * -bai [bai-file] opens a bai-file
+	 * -f				[number] filtering range (0 turns filtering off)
+	 * -g h/r			human or rat genome data
+	 * -bam [bam-file]	opens a bam-file
+	 * -bai [bai-file]	opens a bai-file
+	 * -d				debug-mode
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		boolean debug = false;
 		long filtering = 100000;
-		int genome=0;
+		int genome = 0;
 		String bam, bai;
 		for(int i=0;i<args.length;i++) {
 			if(args[i].equals("-f") && args.length > i+1) {
@@ -194,6 +196,8 @@ public class GenomeBrowserNG {
 			} else if(args[i].equals("-bai") && args.length > i+1) {
 				i++;
 				bai = args[i];
+			} else if(args[i].equals("-d")) {
+				debug = true;
 			}
 		}
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
