@@ -7,7 +7,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
@@ -24,7 +23,6 @@ import java.util.LinkedList;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
 
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 
@@ -37,6 +35,7 @@ public class OverView extends GenosideComponent {
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	public GenoWindow window;
+
 	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
@@ -49,28 +48,28 @@ public class OverView extends GenosideComponent {
 	public TrackviewManager trackviewManager;
 	private LinkCollection linkCollection;
 	private ContextMenu contextMenu;
-	private MouseEventHandler mouseHandler;
+	private MouseEventHandler mouseEventHandler;
+	private KeyEventHandler keyEventHandler;
+
 	private boolean drawArcs;
 	private boolean circleNeedsUpdate = false;
 	private boolean aKeyDown = false, zKeyDown = false;
 
+	// initialize object and neede parts
+	
 	public OverView(GenoWindow window, LinkCollection linkCollection) {
 		super(null);
-
 		drawArcs = false;
-
 		this.window = window;
-
 		initTextRenderers();
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);
-
 		this.linkCollection = linkCollection;
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
 		linkSelection = new LinkSelection(geneCircle);
-
-		mouseHandler = new MouseEventHandler(this);
+		mouseEventHandler = new MouseEventHandler(this);
+		keyEventHandler = new KeyEventHandler(this);
 	}
 
 	private void initTextRenderers() {
@@ -103,6 +102,15 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+		public void updateCircleSize() {
+		for (SessionViewCapsule capsule : sessions) {
+			capsule.updateGeneCirclePosition();
+		}
+		for (GeneralLink link : linkCollection.getLinks()) {
+			link.calculatePositions(geneCircle);
+		}
+	}
+	
 	@Override
 	public void childComponentCall(String who, String what) {
 		if (who.equals("SESSION")) {
@@ -122,13 +130,29 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	public void showActiveSessions() {
-		SpaceDivider divider = new SpaceDivider(SpaceDivider.HORIZONTAL, 1.0f, 2.0f);
-		for (SessionViewCapsule capsule : activeSessions) {
-			divider.insertComponent(capsule.getSession());
-		}
-		divider.calculate();
+	// handle events
+	
+	@Override
+	public boolean handle(KeyEvent event) {
+		return this.keyEventHandler.handle(event);
 	}
+	
+	@Override
+	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
+		return mouseEventHandler.handle(event, screen_x, screen_y, this.geneCircle);
+	}
+	
+	// handle sessions
+	
+	
+	// commented out as no usage found - if in use please indicate where and return to use
+//	public void showActiveSessions() {
+//		SpaceDivider divider = new SpaceDivider(SpaceDivider.HORIZONTAL, 1.0f, 2.0f);
+//		for (SessionViewCapsule capsule : activeSessions) {
+//			divider.insertComponent(capsule.getSession());
+//		}
+//		divider.calculate();
+//	}
 
 	private void hideActiveSessions() {
 
@@ -178,73 +202,29 @@ public class OverView extends GenosideComponent {
 		}
 		activeSessions.clear();
 	}
-
-	@Override
-	public boolean handle(KeyEvent event) {
-		if (contextMenu != null && (event.getKeyCode() == KeyEvent.VK_DOWN || event.getKeyCode() == KeyEvent.VK_UP || event.getKeyCode() == KeyEvent.VK_ENTER)) {
-			contextMenu.handle(event);
-			if (contextMenu.close()) {
-				contextMenu = null;
-			}
-			return true;
-		}
-		if (!activeSessions.isEmpty()) {
-			for (SessionViewCapsule capsule : activeSessions) {
-				if (capsule.inComponent(mousePosition.x, mousePosition.y)) {
-					return capsule.getSession().handle(event);
-				}
-			}
-		}
-		if (arcHighlightLocked) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-				trackviewManager.clearContainer();
-				trackviewManager.openLinkSession(linkSelection.getActiveLink());
-				trackviewManager.toggleVisible();
-				sessions.add(getTrackviewManager().generateLinkCapsule(this));
-			}
-			linkSelection.handle(event);
-		}
-
-		if (KeyEvent.VK_D == event.getKeyCode()) {
-			drawArcs = !drawArcs;
-		} else if (KeyEvent.VK_Z == event.getKeyCode()) {
-			if (event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
-				circleNeedsUpdate = true;
-				zKeyDown = false;
-			} else if (event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-				zKeyDown = true;
-			}
-		} else if (KeyEvent.VK_A == event.getKeyCode()) {
-			if (event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
-				circleNeedsUpdate = true;
-				aKeyDown = false;
-			} else if (event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-				aKeyDown = true;
-			}
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-			Random r = new Random();
-			for (int i = 0; i < 1000; ++i) {
-				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
-			}
-		}
-		return false;
+	
+	public void openSession(SessionViewCapsule capsule) {
+		if(capsule.isLinkSession())
+			trackviewManager.openLinkSession(capsule.getLink());
+		else
+			trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome-1), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000); // BEAUTIFUL
+		trackviewManager.toggleVisible();
 	}
 
+	// drawing things + fading things
+	
 	@Override
 	public void draw(GL2 gl) {
-		if (linkCollection.loading) {
+		if(linkCollection.loading)
 			window.newtCanvasAWT.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		} else {
+		else
 			window.newtCanvasAWT.setCursor(Cursor.getDefaultCursor());
-		}
 		Vector2 mypos = this.getPosition();
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 
-		if (drawArcs) {
+		if(drawArcs) {
 			GeneralLink.beginDrawing(gl, geneCircle.getSize());
 			if (arcHighlightLocked) {
 				linkSelection.draw(gl);
@@ -258,7 +238,7 @@ public class OverView extends GenosideComponent {
 			GeneralLink.endDrawing(gl);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if (drawArcs) {
+		if(drawArcs) {
 			if (arcHighlightLocked) {
 				linkSelection.drawClamps(gl);
 			}
@@ -268,7 +248,7 @@ public class OverView extends GenosideComponent {
 		renderText(GlobalVariables.width, GlobalVariables.height);
 		drawNumbers(GlobalVariables.width, GlobalVariables.height);
 
-		if (contextMenu != null) {
+		if(contextMenu!=null) {
 			contextMenu.draw(gl);
 		}
 	}
@@ -362,25 +342,16 @@ public class OverView extends GenosideComponent {
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
-			long position = 0;
-			int chromosome = 0;
-			if (arcHighlightLocked && linkSelection.mouseInCircle()) {
-				GeneralLink link = linkSelection.getActiveLink();
-				if (link != null) {
-					String counter = "Links " + link.getCounter();
-					textRenderer.draw(counter, 20, 2 * stringHeight + 30);
-					position = link.getEndPosition();
-					chromosome = link.getEndChromosome().getChromosomeNumber();
-				}
+			long position;
+			int chromosome;
+			if (hoverCapsule == null) {
+				position = this.geneCircle.getChromosomePosition();
+				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
 			} else {
-				if (hoverCapsule == null) {
-					position = this.geneCircle.getChromosomePosition();
-					chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
-				} else {
-					position = this.hoverCapsule.getSession().getSession().position;
-					chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
-				}
+				position = this.hoverCapsule.getSession().getSession().position;
+				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
 			}
+
 			String chrom = "Chromosome " + chromosome;
 			String pos = "Position: " + position;
 			textRenderer.draw(chrom, 20, stringHeight + 20);
@@ -393,7 +364,8 @@ public class OverView extends GenosideComponent {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
 		synchronized (linkCollection.linkSyncLock) {
-			for (int i = 0; i < linkCollection.numLinks(); ++i) {
+			for(int i = 0; i < linkCollection.numLinks(); ++i)
+			{
 				GeneralLink link = linkCollection.valueAt(i);
 				if (!link.isMinimized()) {
 					if (linkSelection.inSelection(i)) {
@@ -411,22 +383,19 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	// tick - used for ?
+	
 	@Override
 	public void userTick(float dt) {
 		if (geneCircle.animating) {
 			geneCircle.tick(dt);
 			updateCircleSize();
-		} else if (circleNeedsUpdate) {
-			updateCircleSize();
-			circleNeedsUpdate = false;
-		}
-
-		if (aKeyDown) {
+		} else if(circleNeedsUpdate) { updateCircleSize(); circleNeedsUpdate = false;}
+		
+		if(aKeyDown)
 			geneCircle.setSize(geneCircle.getSize() + 0.01f);
-		}
-		if (zKeyDown) {
+		if(zKeyDown)
 			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
-		}
 
 		linkSelection.tick(dt, linkCollection);
 		linkCollection.tick(dt, geneCircle);
@@ -491,21 +460,14 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	// getters and setters 
+	
 	public GenoFPSCounter getDrawCounter() {
 		return drawCounter;
 	}
 
 	public GenoFPSCounter getTickCounter() {
 		return tickCounter;
-	}
-
-	public void updateCircleSize() {
-		for (SessionViewCapsule capsule : sessions) {
-			capsule.updateGeneCirclePosition();
-		}
-		for (GeneralLink link : linkCollection.getLinks()) {
-			link.calculatePositions(geneCircle);
-		}
 	}
 
 	public void setHoverCapsule(SessionViewCapsule capsule) {
@@ -536,15 +498,6 @@ public class OverView extends GenosideComponent {
 		return this.arcHighlightLocked;
 	}
 
-	public void openSession(SessionViewCapsule capsule) {
-		if (capsule.isLinkSession()) {
-			trackviewManager.openLinkSession(capsule.getLink());
-		} else {
-			trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome - 1), capsule.getSession().getSession().position, capsule.getSession().getSession().position + 1000); // BEAUTIFUL
-		}
-		trackviewManager.toggleVisible();
-	}
-
 	public LinkSelection getLinkSelection() {
 		return this.linkSelection;
 	}
@@ -557,25 +510,20 @@ public class OverView extends GenosideComponent {
 		this.mousePosition.x = x;
 		this.mousePosition.y = y;
 	}
-
-	LinkedList<SessionViewCapsule> getTextureUpdateList() {
+	
+	public LinkedList<SessionViewCapsule> getTextureUpdateList() {
 		return this.textureUpdateList;
 	}
 
-	void addCapsuleToTextureUpdateList(SessionViewCapsule capsule) {
+	public void addCapsuleToTextureUpdateList(SessionViewCapsule capsule) {
 		this.textureUpdateList.add(capsule);
-	}
-
-	@Override
-	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-		return mouseHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
 
 	public LinkCollection getLinkCollection() {
 		return linkCollection;
 	}
 
-	TrackviewManager getTrackviewManager() {
+	public TrackviewManager getTrackviewManager() {
 		return trackviewManager;
 	}
 
@@ -587,7 +535,34 @@ public class OverView extends GenosideComponent {
 		return this.contextMenu;
 	}
 
+	protected Vector2 getMousePosition() {
+		return this.mousePosition;
+	}
+
+	protected boolean getAKeyDown() {
+		return this.aKeyDown;
+	}
+
+	protected boolean getZKeyDown() {
+		return this.zKeyDown;
+	}
+
+	protected boolean getDrawArcs() {
+		return this.drawArcs;
+	}
+
 	public void closeContextMenu() {
+		this.contextMenu.close();
 		this.contextMenu = null;
 	}
+
+	public void setDrawArcs() {
+		this.drawArcs = !this.drawArcs;
+	}
+
+	void setCircleUpdate(boolean b) {
+		this.circleNeedsUpdate = b;
+	}
+
+
 }
