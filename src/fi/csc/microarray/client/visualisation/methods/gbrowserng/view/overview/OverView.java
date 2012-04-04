@@ -52,7 +52,6 @@ public class OverView extends GenosideComponent {
 
 	// initialize object and neede parts
 	public OverView(GenoWindow window, LinkCollection linkCollection) {
-		super(null);
 		drawArcs = false;
 		this.window = window;
 		initTextRenderers();
@@ -98,7 +97,7 @@ public class OverView extends GenosideComponent {
 
 	public void updateCircleSize() {
 		for (SessionViewCapsule capsule : sessions) {
-			capsule.updateGeneCirclePosition();
+			capsule.setRelativePosition(geneCircle);
 		}
 		for (GeneralLink link : linkCollection.getLinks()) {
 			link.calculatePositions(geneCircle);
@@ -175,15 +174,11 @@ public class OverView extends GenosideComponent {
 		}
 
 		for (SessionViewCapsule capsule : activeSessions) {
-			synchronized (capsule.tickdrawLock) {
 				capsule.drawToTexture(gl);
-			}
 		}
 
 		for (SessionViewCapsule capsule : sessions) {
-			synchronized (capsule.tickdrawLock) {
 				capsule.draw(gl);
-			}
 		}
 	}
 
@@ -304,7 +299,7 @@ public class OverView extends GenosideComponent {
 
 	// tick - used for ?
 	@Override
-	public void userTick(float dt) {
+	public void tick(float dt) {
 		if (geneCircle.animating) {
 			geneCircle.tick(dt);
 			updateCircleSize();

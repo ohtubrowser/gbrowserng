@@ -22,7 +22,7 @@ import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 
-public class ContextMenu implements InteractiveComponent, VisualComponent {
+public class ContextMenu {
 	OverView overview;
 	GenoWindow window;
 	ViewChromosome chromosome;
@@ -108,7 +108,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		}
 	}
 
-	@Override
 	public boolean handle(MouseEvent event, float mx, float my) {
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
@@ -124,7 +123,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		return true;
 	}
 
-	@Override
 	public boolean handle(KeyEvent event) {
 		if(event.getKeyCode()==KeyEvent.VK_UP && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			if(selected == 0) selected = selections.size()-1;
@@ -143,7 +141,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 		return close;
 	}
 
-	@Override
 	public void draw(GL2 gl) {
 		gl.glEnable(GL2.GL_BLEND);
 
@@ -172,11 +169,6 @@ public class ContextMenu implements InteractiveComponent, VisualComponent {
 			textRenderer.draw(selections.get(i).shortcut, convertX(x)+width-20, convertY(y)-i*selHeight-5);
 		}
 		textRenderer.endRendering();
-	}
-
-	@Override
-	public void tick(float dt) {
-
 	}
 
 	public boolean inComponent(float mx, float my) {

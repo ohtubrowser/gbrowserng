@@ -184,7 +184,7 @@ public class GenosideComponentTest {
 		public void draw(GL2 gl) {
 		}
 
-		public void userTick(float dt) {
+		public void tick(float dt) {
 		}
 	}
 }

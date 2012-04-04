@@ -12,7 +12,7 @@ import javax.media.opengl.GL2;
 
 public class LinkGFX {
 
-	SessionViewCapsule c;
+	SessionViewCapsule capsule;
 	Vector2 circlePos;
 
 	Matrix4 modelMatrix = new Matrix4();
@@ -25,7 +25,7 @@ public class LinkGFX {
 	private float target_alpha = 1.0f;
 
 	public LinkGFX(SessionViewCapsule c, Vector2 circlePos) {
-		this.c = c;
+		this.capsule = c;
 		this.circlePos = circlePos;
 	}
 
@@ -45,14 +45,14 @@ public class LinkGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 
-		float x = (c.getCapsulePosition().x + circlePos.x) / 2.0f;
-		float y = (c.getCapsulePosition().y + circlePos.y) / 2.0f;
+		float x = (capsule.getCapsulePosition().x + circlePos.x) / 2.0f;
+		float y = (capsule.getCapsulePosition().y + circlePos.y) / 2.0f;
 
-		float dx = c.getCapsulePosition().x - circlePos.x;
-		float dy = c.getCapsulePosition().y - circlePos.y;
+		float dx = capsule.getCapsulePosition().x - circlePos.x;
+		float dy = capsule.getCapsulePosition().y - circlePos.y;
 
 		float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
-		float length = c.getCapsulePosition().distance(circlePos) * 0.5f;
+		float length = capsule.getCapsulePosition().distance(circlePos) * 0.5f;
 
 		modelMatrix.makeTranslationMatrix(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);

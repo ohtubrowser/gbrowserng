@@ -74,6 +74,7 @@ public class GeneCircle {
 		chromosomePosition = getPositionInChr(chromosome, relativePosition);
 	}
 
+	// Relativeposition == relative position on CIRCLE
 	public long getPositionInChr(ViewChromosome chr, float relativePosition) {
 		long length = chr.length();
 		float thisChromoBound = chromosomeBoundaries[chr.getChromosomeNumber()];

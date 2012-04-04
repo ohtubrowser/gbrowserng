@@ -3,29 +3,35 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import com.soulaim.tech.gles.Color;
+import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
+import com.soulaim.tech.gles.shaders.Shader;
+import com.soulaim.tech.gles.shaders.ShaderMemory;
+import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+import java.nio.IntBuffer;
 import javax.media.opengl.GL2;
 
 public class SessionViewCapsule extends GenosideComponent {
 
+	private static IntBuffer frameBufferHandle = IntBuffer.allocate(1);
+	private IntBuffer textureHandle = IntBuffer.allocate(1);
 	private boolean needsTextureUpdate = true;
+
 	private final GeneralLink linkData;
 	private final GeneCircle geneCircle;
 	private final ViewChromosome chr;
 	private final long chrPosition;
 	
-	// TODO: SessionViewCapsuleData class could contain this.
-	private boolean isActive = false;
 	private boolean dying = false;
 	private float death = 0;
-	private Color backGroundColor = new Color(0, 0, 0, 255);
+	private Color backGroundColor = new Color(0, 0, 0, 1.0f);
 
 	private Vector2 capsulePosition = new Vector2(0.4f, 0.5f);
 	private Vector2 circlePosition = new Vector2(1, 0);
@@ -35,28 +41,41 @@ public class SessionViewCapsule extends GenosideComponent {
 	private float dimX = 0.1f;
 	private float dimY = 0.1f;
 	private boolean hover = false;
+	private LinkGFX linkGFX;
+	private boolean textureCreated;
 
 	public SessionViewCapsule(ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
-		super(null); // should be ok
 		this.linkData = linkData;
 		this.geneCircle = geneCircle;
 		this.chr = chr;
 		this.chrPosition = chrPosition;
-		setRelativePosition(geneCircle.getRelativePosition(chr.getChromosomeNumber()-1, chrPosition));
+		setRelativePosition(geneCircle);
+		linkGFX = new LinkGFX(this, circlePosition);
 	}
 
-	SessionViewCapsule(GeneralLink link, float relativePosition, GeneCircle geneCircle) {
-		super(null);
+	public SessionViewCapsule(GeneralLink link, float relativePosition, GeneCircle geneCircle) {
 		this.linkData = link;
 		this.geneCircle = geneCircle;
+
 		setRelativePosition(relativePosition);
 
+		relativePosition -= 0.25f;
+		if(relativePosition < 0)
+			relativePosition+=1.0f;
+
 		this.chr = geneCircle.getChromosomeByRelativePosition(relativePosition);
-		this.chrPosition = geneCircle.getChromosomePosition(chr, relativePosition);
+		this.chrPosition = geneCircle.getPositionInChr(chr, relativePosition);
+
+		linkGFX = new LinkGFX(this, circlePosition);
 	}
 
 	public Vector2 getCapsulePosition() {
 		return capsulePosition;
+	}
+
+	public void setRelativePosition(GeneCircle geneCircle) {
+		float t = geneCircle.getRelativePosition(chr.getChromosomeNumber()-1, chrPosition);
+		setRelativePosition(t);
 	}
 
 	public void setRelativePosition(float relativePosition) {
@@ -68,19 +87,17 @@ public class SessionViewCapsule extends GenosideComponent {
 		return circlePosition;
 	}
 
-	public void updateGeneCirclePosition() {
+
+	private void updateGeneCirclePosition() {
 		circlePosition.x = geneCircle.getSize();
 		circlePosition.y = 0;
 		circlePosition.rotate(2 * (float) Math.PI * relativePosition);
-		circlePosition = CoordinateManager.toCircleCoords(circlePosition);
+		circlePosition.x = CoordinateManager.toCircleCoordsX(circlePosition.x);
+		circlePosition.y = CoordinateManager.toCircleCoordsY(circlePosition.y);
 	}
 
 	public boolean isAlive() {
 		return death < 1.0f;
-	}
-
-	public boolean isActive() {
-		return isActive;
 	}
 
 	public void setDimensions(float x, float y) {
@@ -89,16 +106,16 @@ public class SessionViewCapsule extends GenosideComponent {
 	}
 
 	public boolean inCapsule(float screen_x, float screen_y) {
-		return (capsulePosition.x - dimX/2 < screen_x
-				&& capsulePosition.x + dimX/2 > screen_x
-				&& capsulePosition.y - dimY/(2*GlobalVariables.aspectRatio) < screen_y
-				&& capsulePosition.y + dimY/(2*GlobalVariables.aspectRatio) > screen_y);
+		return (capsulePosition.x - CoordinateManager.toCircleCoordsX(dimX)/2 < screen_x
+				&& capsulePosition.x + CoordinateManager.toCircleCoordsX(dimX)/2 > screen_x
+				&& capsulePosition.y - CoordinateManager.toCircleCoordsY(dimY)/2 < screen_y
+				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(dimY)/2 > screen_y);
 	}
 
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-		hover = true;
-		return inCapsule(screen_x, screen_y);
+		hover = inCapsule(screen_x, screen_y);
+		return hover;
 	}
 
 	@Override
@@ -108,10 +125,10 @@ public class SessionViewCapsule extends GenosideComponent {
 
 	@Override
 	public void draw(GL2 gl) {
-		//link.draw(gl);
+		linkGFX.draw(gl);
 
 		gl.glEnable(GL2.GL_BLEND);
-		PrimitiveRenderer.drawRectangle(capsulePosition.x, capsulePosition.y, dimX, dimY / GlobalVariables.aspectRatio, gl, backGroundColor);
+		PrimitiveRenderer.drawRectangle(capsulePosition.x, capsulePosition.y, dimX/2, dimY/2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
 		gl.glDisable(GL2.GL_BLEND);
 	}
 
@@ -120,16 +137,10 @@ public class SessionViewCapsule extends GenosideComponent {
 	}
 
 	@Override
-	public void userTick(float dt) {
-		if (needsTextureUpdate) {
-			return;
-		}
+	public void tick(float dt) {
 		if (dying) {
 			death += dt;
 		}
-		
-		setCirclePosition(circlePosition.x, circlePosition.y);
-//		link.tick(dt);
 	}
 
 	public void die() {
@@ -163,13 +174,12 @@ public class SessionViewCapsule extends GenosideComponent {
 		return chrPosition;
 	}
 
-	private void setCirclePosition(float x, float y) {
-		circlePosition.x = x;
-		circlePosition.y = y;
+	void setCapsulePosition(float x, float y) {
+		capsulePosition.x = x;
+		capsulePosition.y = y;
 	}
 
-
-	/*public static void initFrameBuffer(GL2 gl) {
+	public static void initFrameBuffer(GL2 gl) {
 		gl.glGenFramebuffers(1, frameBufferHandle);
 	}
 
@@ -205,7 +215,8 @@ public class SessionViewCapsule extends GenosideComponent {
 		gl.glViewport(0, 0, 160, 120);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		// render
-		drawActive(gl);
+
+		//DRAW SWING IMAGE HERE
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
 		gl.glViewport(oldViewPort.get(0), oldViewPort.get(1), oldViewPort.get(2), oldViewPort.get(3));
 	}
@@ -214,14 +225,13 @@ public class SessionViewCapsule extends GenosideComponent {
 
 		Matrix4 modelViewMatrix = new Matrix4();
 
-		modelViewMatrix.makeTranslationMatrix(glx(0), gly(0), 0);
-		modelViewMatrix.scale(getDimensions().x * 0.5f, getDimensions().y * 0.5f / GlobalVariables.aspectRatio, 1.0f);
+		modelViewMatrix.makeTranslationMatrix(capsulePosition.x, capsulePosition.y, 0);
+		modelViewMatrix.scale(dimX * 0.5f, dimY * 0.5f, 1.0f);
 		gl.glEnable(gl.GL_BLEND);
-		alpha = hide ? 0.0f : 1.0f;
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TEXRECTANGLE);
 		shader.start(gl);
 		ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
-		ShaderMemory.setUniformVec1(gl, shader, "alpha", alpha);
+		ShaderMemory.setUniformVec1(gl, shader, "alpha", 1.0f);
 
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
 
@@ -242,13 +252,5 @@ public class SessionViewCapsule extends GenosideComponent {
 		gl.glDisable(gl.GL_BLEND);
 
 	}
-
-	public void show() {
-		hide = false;
-	}
-
-	public void hide() {
-		hide = true;
-	}*/
 
 }
