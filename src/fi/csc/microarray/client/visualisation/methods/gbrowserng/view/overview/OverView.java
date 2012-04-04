@@ -341,16 +341,25 @@ public class OverView extends GenosideComponent {
 
 		if (state == OverViewState.OVERVIEW_ACTIVE) {
 			// Mouse hover information
-			long position;
-			int chromosome;
-			if (hoverCapsule == null) {
-				position = this.geneCircle.getChromosomePosition();
-				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
+			long position = 0;
+			int chromosome = 0;
+			if (arcHighlightLocked && linkSelection.mouseInCircle()) {
+				GeneralLink link = linkSelection.getActiveLink();
+				if (link != null) {
+					String counter = "Links " + link.getCounter();
+					textRenderer.draw(counter, 20, 2 * stringHeight + 30);
+					position = link.getEndPosition();
+					chromosome = link.getEndChromosome().getChromosomeNumber();
+				}
 			} else {
-				position = this.hoverCapsule.getSession().getSession().position;
-				chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
+				if (hoverCapsule == null) {
+					position = this.geneCircle.getChromosomePosition();
+					chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
+				} else {
+					position = this.hoverCapsule.getSession().getSession().position;
+					chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
+				}
 			}
-
 			String chrom = "Chromosome " + chromosome;
 			String pos = "Position: " + position;
 			textRenderer.draw(chrom, 20, stringHeight + 20);
