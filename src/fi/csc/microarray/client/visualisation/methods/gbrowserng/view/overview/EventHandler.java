@@ -41,6 +41,5 @@ public class EventHandler {
 		this.trackviewManager = overview.getTrackviewManager();
 		this.linkSelection = overview.getLinkSelection();
 		this.linkCollection = overview.getLinkCollection();
-		
 	}
 }

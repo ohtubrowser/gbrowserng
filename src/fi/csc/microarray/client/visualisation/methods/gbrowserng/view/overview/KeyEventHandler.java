@@ -10,21 +10,42 @@ import java.util.Random;
 /**
  * Handles KeyEvents in Overview window.
  * Commenting needs work - work in progress
+ * Code also still a bit confusing and not well named - working on that, too
  *
  * @author
  * Paloheimo
  */
 public class KeyEventHandler extends EventHandler {
 
+	private KeyEvent event;
 	public KeyEventHandler(OverView overview) {
 		super(overview);
 	}
 
 	public boolean handle(KeyEvent event) {
-
+		this.event = event;
 		updateVariables();
 		
-		if (contextMenu != null && (event.getKeyCode() == KeyEvent.VK_DOWN
+		if (contextMenu != null) {
+			if (handleContextMenuCommands()) return true;
+		}
+		
+		if (!activeSessions.isEmpty()) {
+			if (handleMouseOverCapsule()) return true;
+		}
+
+		if (arcHighlightLocked) {
+			handleLockedArch();
+		}
+
+		handleOtherKeyEvents();
+		
+		return false;
+
+	}
+
+	private boolean handleContextMenuCommands() {	
+			if ((event.getKeyCode() == KeyEvent.VK_DOWN
 				|| event.getKeyCode() == KeyEvent.VK_UP
 				|| event.getKeyCode() == KeyEvent.VK_ENTER)) {
 
@@ -35,26 +56,30 @@ public class KeyEventHandler extends EventHandler {
 			}
 			return true;
 		}
+			return false;
+	}
 
-		if (!activeSessions.isEmpty()) {
+	private boolean handleMouseOverCapsule() {
 			for (SessionViewCapsule capsule : activeSessions) {
 				if (capsule.inComponent(mousePosition.x, mousePosition.y)) {
 					SessionView currentSessionView = capsule.getSession();
 					return currentSessionView.handle(event);
 				}
 			}
-		}
+			return false;
+	}
 
-		if (arcHighlightLocked) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+	private void handleLockedArch() {
+		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
 				trackviewManager.clearContainer();
 				trackviewManager.openLinkSession(linkSelection.getActiveLink());
 				trackviewManager.toggleVisible();
 				sessions.add(trackviewManager.generateLinkCapsule(overview));
 			}
 			linkSelection.handle(event);
-		}
+	}
 
+	private void handleOtherKeyEvents() {
 		if (KeyEvent.VK_D == event.getKeyCode()) {
 			overview.setDrawArcs();
 		} else if (KeyEvent.VK_Z == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
@@ -69,7 +94,5 @@ public class KeyEventHandler extends EventHandler {
 				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
 			}
 		}
-		return false;
-
 	}
 }
