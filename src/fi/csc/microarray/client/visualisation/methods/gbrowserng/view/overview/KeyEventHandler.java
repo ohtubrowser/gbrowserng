@@ -40,7 +40,7 @@ public class KeyEventHandler extends EventHandler {
 			contextMenu.handle(event);
 
 			if (contextMenu.close()) {
-				contextMenu = null;
+				overview.closeContextMenu();
 			}
 			return true;
 		}

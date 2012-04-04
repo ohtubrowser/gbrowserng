@@ -168,7 +168,7 @@ public class GenomeBrowserNG {
 	/**
 	 * Main method of program, calls on class to run program, based on screen size.
 	 * @param args command line syntax:
-	 * -f				[number] filtering range (0 turns filtering off)
+	 * -f [number]		filtering range (0 turns filtering off)
 	 * -g h/r			human or rat genome data
 	 * -bam [bam-file]	opens a bam-file
 	 * -bai [bai-file]	opens a bai-file
