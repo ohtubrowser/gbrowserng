@@ -28,7 +28,7 @@ import javax.media.opengl.GL2;
 
 public class OverView extends GenosideComponent {
 
-	private GeneCircle geneCircle = new GeneCircle();
+	public GeneCircle geneCircle = new GeneCircle();
 	private GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
 	private GenoFPSCounter tickCounter = new GenoFPSCounter();
 	private GenoFPSCounter drawCounter = new GenoFPSCounter();
@@ -53,7 +53,6 @@ public class OverView extends GenosideComponent {
 
 	private boolean drawArcs;
 	private boolean circleNeedsUpdate = false;
-	private boolean aKeyDown = false, zKeyDown = false;
 
 	// initialize object and neede parts
 	
@@ -392,11 +391,6 @@ public class OverView extends GenosideComponent {
 			updateCircleSize();
 		} else if(circleNeedsUpdate) { updateCircleSize(); circleNeedsUpdate = false;}
 		
-		if(aKeyDown)
-			geneCircle.setSize(geneCircle.getSize() + 0.01f);
-		if(zKeyDown)
-			geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() - 0.01f));
-
 		linkSelection.tick(dt, linkCollection);
 		linkCollection.tick(dt, geneCircle);
 		geneCircleGFX.tick(dt);
@@ -537,18 +531,6 @@ public class OverView extends GenosideComponent {
 
 	protected Vector2 getMousePosition() {
 		return this.mousePosition;
-	}
-
-	protected boolean getAKeyDown() {
-		return this.aKeyDown;
-	}
-
-	protected boolean getZKeyDown() {
-		return this.zKeyDown;
-	}
-
-	protected boolean getDrawArcs() {
-		return this.drawArcs;
 	}
 
 	public void closeContextMenu() {

@@ -20,14 +20,8 @@ import java.util.Random;
  */
 public class KeyEventHandler extends EventHandler {
 
-	private boolean circleNeedsUpdate;
-	private boolean zKeyDown, aKeyDown, drawArcs;
-
 	public KeyEventHandler(OverView overview) {
 		super(overview);
-		this.aKeyDown = overview.getAKeyDown();
-		this.zKeyDown = overview.getZKeyDown();
-		this.drawArcs = overview.getDrawArcs();
 	}
 
 	public boolean handle(KeyEvent event) {
@@ -63,26 +57,12 @@ public class KeyEventHandler extends EventHandler {
 			linkSelection.handle(event);
 		}
 
-		// if-else horrow which would make Luukkainen pass out - will refactor once I get what goes on here (Kristiina)
-		// maybe just do a a CASE -> DO thing here? would at least be more readable
 		if (KeyEvent.VK_D == event.getKeyCode()) {
 			overview.setDrawArcs();
-		} else if (KeyEvent.VK_Z == event.getKeyCode()) {
-			if (event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
-				overview.setCircleUpdate(true);
-				zKeyDown = false;
-			} else if (event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-				zKeyDown = true;
-			}
-			
-		} else if (KeyEvent.VK_A == event.getKeyCode()) {
-			if (event.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
-				circleNeedsUpdate = true;
-				aKeyDown = false;
-			} else if (event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-				aKeyDown = true;
-			}
-			
+		} else if (KeyEvent.VK_Z == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+			overview.geneCircle.setSize(overview.geneCircle.getSize() + 0.01f);
+		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+			overview.geneCircle.setSize(overview.geneCircle.getSize() - 0.01f);
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
