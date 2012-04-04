@@ -116,6 +116,11 @@ public class GeneCircle {
 		return ret;
 	}
 
+	public float getRelativePosition(int chromosome, long chrPosition) {
+		float rel = ((float)chrPosition) / AbstractGenome.getChromosome(chromosome).length();
+		return getRelativePosition(chromosome, rel);
+	}
+
 	public Vector2 getXYPosition(float relativeCirclePos) {
 		Vector2 ret = new Vector2(size, 0.0f);
 		ret.rotate((float) (Math.PI / 2f) + 2 * (float) Math.PI * relativeCirclePos);

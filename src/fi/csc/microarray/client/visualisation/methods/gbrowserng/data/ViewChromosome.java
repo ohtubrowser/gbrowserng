@@ -7,7 +7,6 @@ public class ViewChromosome {
     private float relativeSize = 1f;
     private final long size;
     private final int id;
-    private final ReferenceSequence sequence;
     private boolean minimized = false;
     private boolean animating = false;
     private float animationProgress = 1f;
@@ -17,7 +16,6 @@ public class ViewChromosome {
     public ViewChromosome(int id, long size) {
         this.id = id;
         this.size = size;
-        this.sequence = new ReferenceSequence(id, (int) 300);
         this.centromerePosition = -1;
         this.name = "NULL";
     }
@@ -25,7 +23,6 @@ public class ViewChromosome {
     public ViewChromosome(int id, String name, long size) {
         this.id = id;
         this.size = size;
-        this.sequence = new ReferenceSequence(id, (int) 300);
         this.centromerePosition = 0.5f;
         this.name = name;
     }
@@ -33,7 +30,6 @@ public class ViewChromosome {
     public ViewChromosome(int id, String name, long size, long centromereposition) {
         this.id = id;
         this.size = size;
-        this.sequence = new ReferenceSequence(id, (int) 300);
         setCentromerePosition(centromereposition);
         this.name = name;
     }
@@ -56,14 +52,6 @@ public class ViewChromosome {
 
     public long length() {
         return size;
-    }
-
-    ReferenceSequence getSequence() {
-        return sequence;
-    }
-
-    public ReferenceSequence getReferenceSequence() {
-        return sequence;
     }
 
     public boolean isMinimized() {

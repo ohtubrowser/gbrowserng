@@ -34,6 +34,7 @@ public class LinkSelection {
 		begin = 0.0f;
 		end = 1.0f;
 		currentSelection = null;
+		area = GlobalVariables.selectSize;
 	}
 
 	public void update(float pointerGenePosition, LinkCollection linkCollection) {

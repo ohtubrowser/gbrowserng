@@ -2,11 +2,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 
 /**
  * Handles MouseEvents in Overview window. 
@@ -51,7 +48,7 @@ public class MouseEventHandler extends EventHandler {
 		setHoverCapsules(x, y);
 
 		if (!activeSessions.isEmpty() && hoverCapsule != null) {
-			return hoverCapsule.getSession().handle(event, x, y);
+			return hoverCapsule.handle(event, x, y);
 		}
 
 		calculatePointerGenePosition();
@@ -90,7 +87,7 @@ public class MouseEventHandler extends EventHandler {
 
 	private void setHoverCapsules(float x, float y) {
 		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
-			if (capsule.getSession().inComponent(x, y)) {
+			if (capsule.inCapsule(x, y)) {
 				overview.setHoverCapsule(capsule);
 				break;
 			}
@@ -215,7 +212,6 @@ public class MouseEventHandler extends EventHandler {
 			
 			if (capsule.handle(event, mouseX, mouseY)) {
 				capsule.die();
-				capsule.deactivate();
 				return true;
 			}
 		}
@@ -228,7 +224,7 @@ public class MouseEventHandler extends EventHandler {
 		if (capsule.isLinkSession()) {
 			trackviewManager.openLinkSession(capsule.getLink());
 		} else {
-			trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome - 1), capsule.getSession().getSession().position, capsule.getSession().getSession().position + 1000); // BEAUTIFUL
+			trackviewManager.openAreaSession(capsule.getChromosome(), capsule.getChrPosition(), capsule.getChrPosition()+1000); // TODO : zoom level
 		}
 		trackviewManager.toggleVisible();
 	}
@@ -244,12 +240,9 @@ public class MouseEventHandler extends EventHandler {
 	 * @param geneCircle GeneCircle to which to attach capsule
 	 */
 	private void openNewAreaCapsule(float pointerGenePosition, float x, float y, GeneralLink link, GeneCircle geneCircle) {
-		Session session = new Session(geneCircle.getChromosome().getReferenceSequence(), geneCircle.getChromosomePosition());
-		SessionView sessionView = new SessionView(session, overview);
-
-		SessionViewCapsule capsule = new SessionViewCapsule(sessionView, link, pointerGenePosition, geneCircle);
-		capsule.getSession().setDimensions(0.4f, 0.2f);
-		capsule.getSession().setPosition(x, y);
+		SessionViewCapsule capsule = new SessionViewCapsule(link, pointerGenePosition, geneCircle);
+		capsule.setDimensions(0.4f, 0.2f);
+		//capsule.setPosition(x, y);
 
 		sessions.add(capsule);
 		synchronized (overview.textureUpdateListLock) {

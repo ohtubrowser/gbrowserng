@@ -3,6 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
+import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
@@ -11,8 +12,9 @@ import javax.media.opengl.GL2;
 
 public class LinkGFX {
 
-	GenosideComponent component1;
-	GenosideComponent component2;
+	SessionViewCapsule c;
+	Vector2 circlePos;
+
 	Matrix4 modelMatrix = new Matrix4();
 	Matrix4 identityMatrix = new Matrix4();
 
@@ -22,9 +24,9 @@ public class LinkGFX {
 	private float alpha = 1.0f;
 	private float target_alpha = 1.0f;
 
-	public LinkGFX(GenosideComponent a, GenosideComponent b) {
-		component1 = a;
-		component2 = b;
+	public LinkGFX(SessionViewCapsule c, Vector2 circlePos) {
+		this.c = c;
+		this.circlePos = circlePos;
 	}
 
 	public void draw(GL2 gl) {
@@ -43,14 +45,14 @@ public class LinkGFX {
 		ShaderMemory.setUniformMat4(gl, shader, "viewMatrix", identityMatrix);
 		ShaderMemory.setUniformMat4(gl, shader, "projectionMatrix", identityMatrix);
 
-		float x = (component1.getPosition().x + component2.getPosition().x) / 2.0f;
-		float y = (component1.getPosition().y + component2.getPosition().y) / 2.0f;
+		float x = (c.getCapsulePosition().x + circlePos.x) / 2.0f;
+		float y = (c.getCapsulePosition().y + circlePos.y) / 2.0f;
 
-		float dy = component1.getPosition().y - component2.getPosition().y;
-		float dx = component1.getPosition().x - component2.getPosition().x;
+		float dx = c.getCapsulePosition().x - circlePos.x;
+		float dy = c.getCapsulePosition().y - circlePos.y;
 
 		float angle = 180f * (float)Math.atan2(dy, dx) / (float)Math.PI;
-		float length = component1.getPosition().distance(component2.getPosition()) * 0.5f;
+		float length = c.getCapsulePosition().distance(circlePos) * 0.5f;
 
 		modelMatrix.makeTranslationMatrix(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);

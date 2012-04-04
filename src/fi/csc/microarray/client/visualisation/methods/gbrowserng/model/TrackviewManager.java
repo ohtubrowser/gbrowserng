@@ -1,23 +1,18 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ReferenceSequence;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.File;
-import java.util.ArrayList;
 
 public class TrackviewManager extends Container {
 
@@ -89,10 +84,7 @@ public class TrackviewManager extends Container {
 	}
 
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
-		Session session = new Session(currentLink.getAChromosome().getReferenceSequence(), currentLink.getaStart());
-		SessionView sessionView = new SessionView(session, overview);
-		SessionViewCapsule capsule = new SessionViewCapsule(sessionView, currentLink, currentLink.getStartPos(), overview.getGeneCircle());
-		return capsule;
+		return new SessionViewCapsule(currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
 	}
 
 	public void toggleVisible() {

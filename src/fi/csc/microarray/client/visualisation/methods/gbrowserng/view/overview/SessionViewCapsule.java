@@ -5,62 +5,74 @@ import com.jogamp.newt.event.MouseEvent;
 import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import javax.media.opengl.GL2;
 
 public class SessionViewCapsule extends GenosideComponent {
 
 	private boolean needsTextureUpdate = true;
-	private final SessionView sessionView;
 	private final GeneralLink linkData;
 	private final GeneCircle geneCircle;
+	private final ViewChromosome chr;
+	private final long chrPosition;
 	
 	// TODO: SessionViewCapsuleData class could contain this.
 	private boolean isActive = false;
 	private boolean dying = false;
 	private float death = 0;
-	private float relativePos;
 	private Color backGroundColor = new Color(0, 0, 0, 255);
-	private Vector2 genecirclePosition = new Vector2(1, 0);
-	private Vector2 positionAdjustment = new Vector2();
-	private final LinkGFX link;
-	private boolean hide;
 
-	public SessionViewCapsule(SessionView sessionView, GeneralLink linkData, float relativePos, GeneCircle geneCircle) {
+	private Vector2 capsulePosition = new Vector2(0.4f, 0.5f);
+	private Vector2 circlePosition = new Vector2(1, 0);
+
+	private float relativePosition;
+
+	private float dimX = 0.1f;
+	private float dimY = 0.1f;
+	private boolean hover = false;
+
+	public SessionViewCapsule(ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
 		super(null); // should be ok
-		this.sessionView = sessionView;
 		this.linkData = linkData;
 		this.geneCircle = geneCircle;
-		this.relativePos = relativePos;
-		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
-		setGeneCirclePosition(relativePos);
-		link = new LinkGFX(sessionView, this);
+		this.chr = chr;
+		this.chrPosition = chrPosition;
+		setRelativePosition(geneCircle.getRelativePosition(chr.getChromosomeNumber()-1, chrPosition));
+	}
+
+	SessionViewCapsule(GeneralLink link, float relativePosition, GeneCircle geneCircle) {
+		super(null);
+		this.linkData = link;
+		this.geneCircle = geneCircle;
+		setRelativePosition(relativePosition);
+
+		this.chr = geneCircle.getChromosomeByRelativePosition(relativePosition);
+		this.chrPosition = geneCircle.getChromosomePosition(chr, relativePosition);
+	}
+
+	public Vector2 getCapsulePosition() {
+		return capsulePosition;
+	}
+
+	public void setRelativePosition(float relativePosition) {
+		this.relativePosition = relativePosition;
+		updateGeneCirclePosition();
 	}
 
 	public Vector2 getGeneCirclePosition() {
-		return genecirclePosition;
-	}
-
-	private void setGeneCirclePosition(float relativePos) {
-		this.relativePos = relativePos;
-		updateGeneCirclePosition();
-
-	}
-
-	public void updateGeneCirclePosition(float relativePos) {
-		setGeneCirclePosition(relativePos);
+		return circlePosition;
 	}
 
 	public void updateGeneCirclePosition() {
-		genecirclePosition.x = geneCircle.getSize();
-		genecirclePosition.y = 0;
-		genecirclePosition.rotate(2 * (float) Math.PI * relativePos);
-		genecirclePosition = CoordinateManager.toCircleCoords(genecirclePosition);
+		circlePosition.x = geneCircle.getSize();
+		circlePosition.y = 0;
+		circlePosition.rotate(2 * (float) Math.PI * relativePosition);
+		circlePosition = CoordinateManager.toCircleCoords(circlePosition);
 	}
 
 	public boolean isAlive() {
@@ -71,47 +83,22 @@ public class SessionViewCapsule extends GenosideComponent {
 		return isActive;
 	}
 
-	public void activate() {
-		System.out.println("activating capsule");
-		isActive = true;
-		link.hide();
-		// sessionView.setDimensions(2, 2);
-		// sessionView.setPosition(0, 0);
-		this.getAnimatedValues().setAnimatedValue("ALPHA", -0.02f);
+	public void setDimensions(float x, float y) {
+		dimX = x;
+		dimY = y;
 	}
 
-	public void deactivate() {
-		System.out.println("deactivating capsule");
-		isActive = false;
-		if (!dying) {
-			link.show();
-			sessionView.setDimensions(0.4f, 0.2f);
-			this.show();
-		} else {
-			link.hide();
-			sessionView.setDimensions(0.0f, 0.0f);
-		}
-		this.getAnimatedValues().setAnimatedValue("ALPHA", 1.0f);
-	}
-
-	@Override
-	public void childComponentCall(String who, String what) {
+	public boolean inCapsule(float screen_x, float screen_y) {
+		return (capsulePosition.x - dimX/2 < screen_x
+				&& capsulePosition.x + dimX/2 > screen_x
+				&& capsulePosition.y - dimY/(2*GlobalVariables.aspectRatio) < screen_y
+				&& capsulePosition.y + dimY/(2*GlobalVariables.aspectRatio) > screen_y);
 	}
 
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-		Vector2 dimensions = sessionView.getDimensions();
-		Vector2 position = sessionView.getPosition();
-
-		if (screen_x > position.x - dimensions.x * 0.5f && screen_x < position.x + dimensions.x * 0.5f) {
-			if (screen_y > position.y - dimensions.y * 0.5f && screen_y < position.y + dimensions.y * 0.5f) {
-				this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 1);
-				return true;
-			}
-		}
-
-		this.getAnimatedValues().setAnimatedValue("MOUSEHOVER", 0);
-		return false;
+		hover = true;
+		return inCapsule(screen_x, screen_y);
 	}
 
 	@Override
@@ -121,23 +108,11 @@ public class SessionViewCapsule extends GenosideComponent {
 
 	@Override
 	public void draw(GL2 gl) {
-		link.draw(gl);
+		//link.draw(gl);
 
-		// this is just for debug
-		float v = 1.0f - this.getAnimatedValues().getAnimatedValue("MOUSEHOVER");
-		float alpha = this.getAnimatedValues().getAnimatedValue("ALPHA");
-
-		if (alpha > 0) {
-			gl.glEnable(GL2.GL_BLEND);
-			this.backGroundColor.r = v;
-			this.backGroundColor.g = v;
-			this.backGroundColor.b = v;
-			this.backGroundColor.a = alpha * (1.0f - death);
-			if(!hide) PrimitiveRenderer.drawRectangle(sessionView.glx(0), sessionView.gly(0), sessionView.getDimensions().x * 0.5f, sessionView.getDimensions().y * 0.5f / GlobalVariables.aspectRatio, gl, backGroundColor);
-			gl.glDisable(GL2.GL_BLEND);
-		}
-		sessionView.setActive(isActive);
-		sessionView.draw(gl);
+		gl.glEnable(GL2.GL_BLEND);
+		PrimitiveRenderer.drawRectangle(capsulePosition.x, capsulePosition.y, dimX, dimY / GlobalVariables.aspectRatio, gl, backGroundColor);
+		gl.glDisable(GL2.GL_BLEND);
 	}
 
 	public void setNeedsTextureUpdate() {
@@ -153,78 +128,23 @@ public class SessionViewCapsule extends GenosideComponent {
 			death += dt;
 		}
 		
-		sessionView.tick(dt);
-
-		if (this.positionAdjustment.lengthSquared() > 0.00001f) {
-			this.getSession().modifyPosition(this.positionAdjustment.x, this.positionAdjustment.y);
-		}
-		this.setPosition(genecirclePosition.x, genecirclePosition.y);
-
-		link.tick(dt);
-	}
-
-	public SessionView getSession() {
-		return sessionView;
+		setCirclePosition(circlePosition.x, circlePosition.y);
+//		link.tick(dt);
 	}
 
 	public void die() {
 		dying = true;
-		link.hide();
-	}
-
-	public void hideBackground() {
-		hide = true;
-		sessionView.hide();
-		link.hide();
-	}
-
-	public void showBackround() {
-		hide = false;
-		sessionView.show();
-		link.show();
+//		link.hide();
 	}
 
 	public boolean isDying() {
 		return dying;
 	}
 
-	public void hide() {
-		// todo
-		link.hide();
-		Vector2 myPos = this.sessionView.getPosition();
-		myPos.normalize();
-		myPos.scale(1.7f);
-		this.sessionView.setPosition(myPos.x, myPos.y);
-	}
-
-	public void show() {
-		// todo
-		Vector2 myPos = this.sessionView.getPosition();
-
-		link.show();
-		if (myPos.length() < 0.00000001f) {
-			myPos.x = (float) Math.random() - 0.5f;
-			myPos.y = (float) Math.random() - 0.5f;
-		}
-
-		myPos.normalize();
-		myPos.scale(0.7f);
-		this.sessionView.setPosition(myPos.x, myPos.y);
-	}
-
-	public void incrementPositionAdjustment(float x, float y) {
-		positionAdjustment.x += x;
-		positionAdjustment.y += y;
-	}
-
-	public void clearPositionAdjustment() {
-		this.positionAdjustment.x = 0;
-		this.positionAdjustment.y = 0;
-	}
-
 	void drawToTexture(GL2 gl) {
+		/*
 		sessionView.updateTexture(gl);
-		needsTextureUpdate = false;
+		needsTextureUpdate = false;*/
 	}
 	
 	public boolean isLinkSession() {
@@ -234,4 +154,101 @@ public class SessionViewCapsule extends GenosideComponent {
 	public GeneralLink getLink() {
 		return linkData;
 	}
+
+	public ViewChromosome getChromosome() {
+		return chr;
+	}
+
+	public long getChrPosition() {
+		return chrPosition;
+	}
+
+	private void setCirclePosition(float x, float y) {
+		circlePosition.x = x;
+		circlePosition.y = y;
+	}
+
+
+	/*public static void initFrameBuffer(GL2 gl) {
+		gl.glGenFramebuffers(1, frameBufferHandle);
+	}
+
+	private void genTexture(GL2 gl) {
+		gl.glGenTextures(1, textureHandle);
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+		gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, 160, 120, 0, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, null);
+		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
+		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
+		updateTexture(gl);
+	}
+
+	public void updateTexture(GL2 gl) {
+		if (!textureCreated) {
+			textureCreated = true;
+			genTexture(gl);
+		}
+
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+
+		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, frameBufferHandle.get(0));
+		gl.glFramebufferTexture2D(GL2.GL_FRAMEBUFFER, GL2.GL_COLOR_ATTACHMENT0, GL2.GL_TEXTURE_2D, textureHandle.get(0), 0);
+
+		if (gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER) != GL2.GL_FRAMEBUFFER_COMPLETE) {
+			System.out.println("FRAMEBUFFER ERROR --- ABANDON SHIP!\n");
+		}
+
+		IntBuffer oldViewPort = IntBuffer.allocate(4);
+
+		gl.glGetIntegerv(GL2.GL_VIEWPORT, oldViewPort);
+		gl.glViewport(0, 0, 160, 120);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		// render
+		drawActive(gl);
+		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
+		gl.glViewport(oldViewPort.get(0), oldViewPort.get(1), oldViewPort.get(2), oldViewPort.get(3));
+	}
+
+	private void drawFromTexture(GL2 gl) {
+
+		Matrix4 modelViewMatrix = new Matrix4();
+
+		modelViewMatrix.makeTranslationMatrix(glx(0), gly(0), 0);
+		modelViewMatrix.scale(getDimensions().x * 0.5f, getDimensions().y * 0.5f / GlobalVariables.aspectRatio, 1.0f);
+		gl.glEnable(gl.GL_BLEND);
+		alpha = hide ? 0.0f : 1.0f;
+		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TEXRECTANGLE);
+		shader.start(gl);
+		ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
+		ShaderMemory.setUniformVec1(gl, shader, "alpha", alpha);
+
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+
+		PrimitiveBuffers.squareBuffer.rewind();
+		PrimitiveBuffers.squareTextureBuffer.rewind();
+
+		int vertexPositionHandle = shader.getAttribLocation(gl, "vertexCoord");
+		int texPositionHandle = shader.getAttribLocation(gl, "texCoord");
+		gl.glEnableVertexAttribArray(vertexPositionHandle);
+		gl.glEnableVertexAttribArray(texPositionHandle);
+		gl.glVertexAttribPointer(vertexPositionHandle, 2, GL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
+		gl.glVertexAttribPointer(texPositionHandle, 2, GL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareTextureBuffer);
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
+
+		gl.glDisableVertexAttribArray(vertexPositionHandle);
+		gl.glDisableVertexAttribArray(texPositionHandle);
+		shader.stop(gl);
+		gl.glDisable(gl.GL_BLEND);
+
+	}
+
+	public void show() {
+		hide = false;
+	}
+
+	public void hide() {
+		hide = true;
+	}*/
+
 }

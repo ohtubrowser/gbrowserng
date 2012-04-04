@@ -13,12 +13,13 @@ import fi.csc.microarray.client.visualisation.methods.gbrowser.SAMDataSource;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.AreaRequest;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.AreaResult;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.BpCoord;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.FsfStatus;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.RegionContent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,7 +27,6 @@ public class ConnectionsLoader implements AreaResultListener {
 
 	public SAMHandlerThread dataThread;
 	public Queue<AreaRequest> areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
-	private AtomicInteger requestsReady;
 	private ConcurrentLinkedQueue<ViewChromosome> chromosomes;
 	private LinkCollection links = new LinkCollection();
 
@@ -34,7 +34,6 @@ public class ConnectionsLoader implements AreaResultListener {
 		this.chromosomes = chromosomes;
 
 		SAMDataSource file = null;
-		this.requestsReady = new AtomicInteger(0);
 		try {
 			File bamfile = new File(bam), baifile = new File(bai);
 			if (!bamfile.canRead()) {
@@ -62,6 +61,7 @@ public class ConnectionsLoader implements AreaResultListener {
 
 	public void requestData() {
 		for (ViewChromosome c : this.chromosomes) {
+			if(GlobalVariables.devmode && c.getName().compareTo("15") != 0) continue;
 			areaRequestQueue.add(new AreaRequest(
 					new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
 					new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{
@@ -74,8 +74,7 @@ public class ConnectionsLoader implements AreaResultListener {
 	@Override
 	public void processAreaResult(AreaResult areaResult) {
 
-		fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome readChr;
-		fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome mateChr;
+		Chromosome readChr, mateChr;
 
 		for (RegionContent read : areaResult.getContents()) {
 
@@ -104,6 +103,5 @@ public class ConnectionsLoader implements AreaResultListener {
 			}
 			this.links.addToQueue(begin, end, readbp, matebp);
 		}
-		requestsReady.addAndGet(1);
 	}
 }

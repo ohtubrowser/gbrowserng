@@ -1,10 +1,8 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
-import fi.csc.microarray.client.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import java.util.Random;
 
 /**
@@ -61,9 +59,8 @@ public class KeyEventHandler extends EventHandler {
 
 	private boolean handleMouseOverCapsule() {
 			for (SessionViewCapsule capsule : activeSessions) {
-				if (capsule.inComponent(mousePosition.x, mousePosition.y)) {
-					SessionView currentSessionView = capsule.getSession();
-					return currentSessionView.handle(event);
+				if (capsule.inCapsule(mousePosition.x, mousePosition.y)) {
+					return capsule.handle(event);
 				}
 			}
 			return false;

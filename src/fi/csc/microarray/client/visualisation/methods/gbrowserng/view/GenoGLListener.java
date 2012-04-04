@@ -1,28 +1,23 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
 import com.soulaim.desktop.DesktopAssetManager;
-import com.soulaim.desktop.DesktopGL2;
 import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
 import com.soulaim.tech.gles.renderer.TextRenderer;
-import com.soulaim.tech.gles.shaders.DefaultShaders;
 import com.soulaim.tech.managers.AssetManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoSideTimer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoTexID;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import com.soulaim.tech.managers.TextureManager;
-import com.soulaim.desktop.DesktopTextureManager;
 
 public class GenoGLListener implements GLEventListener, Runnable {
 
@@ -75,22 +70,11 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		TextRenderer.createInstance();
 		PrimitiveBuffers.createBuffers();
 		OpenGLBuffers.initBuffers(gl);
-		SessionView.initFrameBuffer(gl);
+		//SessionViewCapsule.initFrameBuffer(gl);
 
 		AssetManager.setInstance(new DesktopAssetManager());
 
-		/*
-		DesktopTextureManager textureManager = new DesktopTextureManager();
-		TextureManager.setInstance(textureManager);
-		TextureManager.init(gl);
-		*/
-
-		/*
-		 * TODO: Soulgl
-		DefaultShaders.createDefaultShaders(gl);
-		*/
 		GenoShaders.createShaders(gl);
-		GenoTexID.createTextures(gl);
 
 		gl.glDisable(GL2.GL_DEPTH_TEST);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);

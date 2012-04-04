@@ -4,7 +4,6 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.SpaceDivider;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
@@ -35,14 +34,12 @@ public class OverView extends GenosideComponent {
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	public GenoWindow window;
-
 	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	final Object textureUpdateListLock = new Object();
 	public boolean die = false, arcHighlightLocked = false;
-	private OverViewState state = OverViewState.OVERVIEW_ACTIVE;
 	public TextRenderer chromosomeNameRenderer, textRenderer;
 	private LinkSelection linkSelection;
 	public TrackviewManager trackviewManager;
@@ -50,12 +47,10 @@ public class OverView extends GenosideComponent {
 	private ContextMenu contextMenu;
 	private MouseEventHandler mouseEventHandler;
 	private KeyEventHandler keyEventHandler;
-
 	private boolean drawArcs;
 	private boolean circleNeedsUpdate = false;
 
 	// initialize object and neede parts
-	
 	public OverView(GenoWindow window, LinkCollection linkCollection) {
 		super(null);
 		drawArcs = false;
@@ -101,7 +96,7 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-		public void updateCircleSize() {
+	public void updateCircleSize() {
 		for (SessionViewCapsule capsule : sessions) {
 			capsule.updateGeneCirclePosition();
 		}
@@ -109,121 +104,40 @@ public class OverView extends GenosideComponent {
 			link.calculatePositions(geneCircle);
 		}
 	}
-	
-	@Override
-	public void childComponentCall(String who, String what) {
-		if (who.equals("SESSION")) {
-			if (what.equals("SHRINK")) {
-				disableActiveSession();
-				state = OverViewState.OVERVIEW_ACTIVE;
-			}
-			if (what.equals("KILL")) {
-				killActiveSession();
-				disableActiveSession();
-				state = OverViewState.OVERVIEW_ACTIVE;
-			}
-			if (what.equals("OPEN_ANOTHER")) {
-				hideActiveSessions();
-				state = OverViewState.OVERVIEW_ACTIVE;
-			}
-		}
-	}
 
 	// handle events
-	
 	@Override
 	public boolean handle(KeyEvent event) {
 		return this.keyEventHandler.handle(event);
 	}
-	
+
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
 		return mouseEventHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
-	
+
 	// handle sessions
-	
-	
-	// commented out as no usage found - if in use please indicate where and return to use
-//	public void showActiveSessions() {
-//		SpaceDivider divider = new SpaceDivider(SpaceDivider.HORIZONTAL, 1.0f, 2.0f);
-//		for (SessionViewCapsule capsule : activeSessions) {
-//			divider.insertComponent(capsule.getSession());
-//		}
-//		divider.calculate();
-//	}
-
-	private void hideActiveSessions() {
-
-		for (SessionViewCapsule otherCapsule : sessions) {
-			otherCapsule.show();
-		}
-
-		for (SessionViewCapsule capsule : activeSessions) {
-			capsule.getSession().setPosition(+2.5f, 0);
-		}
-
-	}
-
-	private void killActiveSession() {
-		if (activeSessions.isEmpty()) {
-			return;
-		}
-
-		for (SessionViewCapsule capsule : activeSessions) {
-			if (capsule.isActive()) {
-				capsule.die();
-			}
-		}
-	}
-
-	// TODO: might be a good idea to break this function apart
-	private void disableActiveSession() {
-		if (activeSessions.isEmpty()) {
-			return;
-		}
-
-		for (SessionViewCapsule otherCapsule : sessions) {
-			otherCapsule.showBackround();
-		}
-
-		for (SessionViewCapsule capsule : activeSessions) {
-			synchronized (textureUpdateListLock) {
-				textureUpdateList.add(capsule);
-				capsule.setNeedsTextureUpdate();
-			}
-			int chromosome = capsule.getSession().getSession().referenceSequence.chromosome;
-			float position = capsule.getSession().getSession().position;
-			float relativePosition = position / AbstractGenome.getChromosome(chromosome - 1).length();
-			relativePosition = Math.min(Math.max(relativePosition, 0.0f), 1.0f);
-			capsule.updateGeneCirclePosition(geneCircle.getRelativePosition(chromosome - 1, relativePosition));
-			capsule.deactivate();
-		}
-		activeSessions.clear();
-	}
-	
 	public void openSession(SessionViewCapsule capsule) {
-		if(capsule.isLinkSession())
+		if (capsule.isLinkSession()) {
 			trackviewManager.openLinkSession(capsule.getLink());
-		else
-			trackviewManager.openAreaSession(AbstractGenome.getChromosome(capsule.getSession().getSession().referenceSequence.chromosome-1), capsule.getSession().getSession().position, capsule.getSession().getSession().position+1000); // BEAUTIFUL
+		} else {
+			trackviewManager.openAreaSession(capsule.getChromosome(), capsule.getChrPosition(), capsule.getChrPosition()+1000);
+		}
 		trackviewManager.toggleVisible();
 	}
 
 	// drawing things + fading things
-	
 	@Override
 	public void draw(GL2 gl) {
-		if(linkCollection.loading)
+		if (linkCollection.loading) {
 			window.newtCanvasAWT.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		else
+		} else {
 			window.newtCanvasAWT.setCursor(Cursor.getDefaultCursor());
-		Vector2 mypos = this.getPosition();
+		}
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
-		geneCircleModelMatrix.translate(mypos.x, mypos.y, 0);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 
-		if(drawArcs) {
+		if (drawArcs) {
 			GeneralLink.beginDrawing(gl, geneCircle.getSize());
 			if (arcHighlightLocked) {
 				linkSelection.draw(gl);
@@ -237,7 +151,7 @@ public class OverView extends GenosideComponent {
 			GeneralLink.endDrawing(gl);
 		}
 		geneCircleGFX.draw(gl, geneCircleModelMatrix, this.mousePosition);
-		if(drawArcs) {
+		if (drawArcs) {
 			if (arcHighlightLocked) {
 				linkSelection.drawClamps(gl);
 			}
@@ -247,7 +161,7 @@ public class OverView extends GenosideComponent {
 		renderText(GlobalVariables.width, GlobalVariables.height);
 		drawNumbers(GlobalVariables.width, GlobalVariables.height);
 
-		if(contextMenu!=null) {
+		if (contextMenu != null) {
 			contextMenu.draw(gl);
 		}
 	}
@@ -339,32 +253,30 @@ public class OverView extends GenosideComponent {
 		String arcs = "Arcs: " + linkCollection.numLinks();
 		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
 
-		if (state == OverViewState.OVERVIEW_ACTIVE) {
-			// Mouse hover information
-			long position = 0;
-			int chromosome = 0;
-			if (arcHighlightLocked && linkSelection.mouseInCircle()) {
-				GeneralLink link = linkSelection.getActiveLink();
-				if (link != null) {
-					String counter = "Links " + link.getCounter();
-					textRenderer.draw(counter, 20, 2 * stringHeight + 30);
-					position = link.getEndPosition();
-					chromosome = link.getEndChromosome().getChromosomeNumber();
-				}
-			} else {
-				if (hoverCapsule == null) {
-					position = this.geneCircle.getChromosomePosition();
-					chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
-				} else {
-					position = this.hoverCapsule.getSession().getSession().position;
-					chromosome = this.hoverCapsule.getSession().getSession().referenceSequence.chromosome;
-				}
+		// Mouse hover information
+		long position = 0;
+		int chromosome = 0;
+		if (arcHighlightLocked && linkSelection.mouseInCircle()) {
+			GeneralLink link = linkSelection.getActiveLink();
+			if (link != null) {
+				String counter = "Links " + link.getCounter();
+				textRenderer.draw(counter, 20, 2 * stringHeight + 30);
+				position = link.getEndPosition();
+				chromosome = link.getEndChromosome().getChromosomeNumber();
 			}
-			String chrom = "Chromosome " + chromosome;
-			String pos = "Position: " + position;
-			textRenderer.draw(chrom, 20, stringHeight + 20);
-			textRenderer.draw(pos, 20, 10);
+		} else {
+			if (hoverCapsule == null) {
+				position = this.geneCircle.getChromosomePosition();
+				chromosome = this.geneCircle.getChromosome().getChromosomeNumber();
+			} else {
+				position = this.hoverCapsule.getChrPosition();
+				chromosome = this.hoverCapsule.getChromosome().getChromosomeNumber();
+			}
 		}
+		String chrom = "Chromosome " + chromosome;
+		String pos = "Position: " + position;
+		textRenderer.draw(chrom, 20, stringHeight + 20);
+		textRenderer.draw(pos, 20, 10);
 		textRenderer.endRendering();
 	}
 
@@ -372,8 +284,7 @@ public class OverView extends GenosideComponent {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
 		synchronized (linkCollection.linkSyncLock) {
-			for(int i = 0; i < linkCollection.numLinks(); ++i)
-			{
+			for (int i = 0; i < linkCollection.numLinks(); ++i) {
 				GeneralLink link = linkCollection.valueAt(i);
 				if (!link.isMinimized()) {
 					if (linkSelection.inSelection(i)) {
@@ -392,14 +303,16 @@ public class OverView extends GenosideComponent {
 	}
 
 	// tick - used for ?
-	
 	@Override
 	public void userTick(float dt) {
 		if (geneCircle.animating) {
 			geneCircle.tick(dt);
 			updateCircleSize();
-		} else if(circleNeedsUpdate) { updateCircleSize(); circleNeedsUpdate = false;}
-		
+		} else if (circleNeedsUpdate) {
+			updateCircleSize();
+			circleNeedsUpdate = false;
+		}
+
 		linkSelection.tick(dt, linkCollection);
 		linkCollection.tick(dt, geneCircle);
 		geneCircleGFX.tick(dt);
@@ -412,50 +325,6 @@ public class OverView extends GenosideComponent {
 				killCapsule = capsule;
 			}
 			capsule.tick(dt);
-			capsule.clearPositionAdjustment();
-		}
-
-		// if no active session, try to place session views in a good way.
-		if (activeSessions.isEmpty()) {
-			for (SessionViewCapsule capsule1 : sessions) {
-				if (capsule1.isDying()) {
-					continue;
-				}
-
-				// push away from the origin
-				Vector2 position = new Vector2();
-				position.copyFrom(capsule1.getSession().getPosition());
-				position.normalize();
-				position.scale(0.004f);
-				capsule1.incrementPositionAdjustment(position.x, position.y);
-
-				// pull towards target
-				position.copyFrom(capsule1.getSession().getPosition());
-				position.x -= capsule1.getPosition().x;
-				position.y -= capsule1.getPosition().y;
-
-				// to prevent overdoing things.
-				float pow = Math.min(0.2f, position.lengthSquared());
-				position.scale(0.1f * pow);
-
-				capsule1.incrementPositionAdjustment(-position.x, -position.y);
-
-				for (SessionViewCapsule capsule2 : sessions) {
-					if (capsule1.getId() == capsule2.getId()) {
-						continue;
-					}
-					if (capsule2.isDying()) {
-						continue;
-					}
-
-					if (capsule1.getSession().getPosition().distance(capsule2.getSession().getPosition()) < 0.5f) {
-						Vector2 v = capsule1.getSession().getPosition().minus(capsule2.getSession().getPosition());
-						v.scale(0.0005f / (0.001f + v.lengthSquared()));
-						capsule1.incrementPositionAdjustment(+v.x, +v.y);
-						capsule2.incrementPositionAdjustment(-v.x, -v.y);
-					}
-				}
-			}
 		}
 
 		if (killCapsule != null) {
@@ -464,7 +333,6 @@ public class OverView extends GenosideComponent {
 	}
 
 	// getters and setters 
-	
 	public GenoFPSCounter getDrawCounter() {
 		return drawCounter;
 	}
@@ -513,7 +381,7 @@ public class OverView extends GenosideComponent {
 		this.mousePosition.x = x;
 		this.mousePosition.y = y;
 	}
-	
+
 	public LinkedList<SessionViewCapsule> getTextureUpdateList() {
 		return this.textureUpdateList;
 	}
@@ -554,5 +422,4 @@ public class OverView extends GenosideComponent {
 	void setCircleUpdate(boolean b) {
 		this.circleNeedsUpdate = b;
 	}
-
 }
