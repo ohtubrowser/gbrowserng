@@ -1,19 +1,15 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import com.jogamp.newt.event.KeyEvent;
+import fi.csc.microarray.client.Session;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.trackview.SessionView;
 import java.util.Random;
 
 /**
  * Handles KeyEvents in Overview window.
- * Commenting needs work - work inprogress
+ * Commenting needs work - work in progress
  *
  * @author
  * Paloheimo
@@ -26,7 +22,8 @@ public class KeyEventHandler extends EventHandler {
 
 	public boolean handle(KeyEvent event) {
 
-		contextMenu = overview.getContextMenu();
+		updateVariables();
+		
 		if (contextMenu != null && (event.getKeyCode() == KeyEvent.VK_DOWN
 				|| event.getKeyCode() == KeyEvent.VK_UP
 				|| event.getKeyCode() == KeyEvent.VK_ENTER)) {
@@ -42,7 +39,8 @@ public class KeyEventHandler extends EventHandler {
 		if (!activeSessions.isEmpty()) {
 			for (SessionViewCapsule capsule : activeSessions) {
 				if (capsule.inComponent(mousePosition.x, mousePosition.y)) {
-					return capsule.getSession().handle(event);
+					SessionView currentSessionView = capsule.getSession();
+					return currentSessionView.handle(event);
 				}
 			}
 		}

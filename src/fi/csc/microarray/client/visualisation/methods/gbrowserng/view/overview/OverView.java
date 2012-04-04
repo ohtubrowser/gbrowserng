@@ -546,5 +546,4 @@ public class OverView extends GenosideComponent {
 		this.circleNeedsUpdate = b;
 	}
 
-
 }
