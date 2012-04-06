@@ -13,5 +13,7 @@ public class ChipsterInterface {
 	public static LinkCollection getConnections(ConcurrentLinkedQueue<ViewChromosome> chromosomes) {
 		return new ConnectionsLoader("ohtu-between-chrs.bam", "ohtu-between-chrs.bam.bai", chromosomes).getLinks();
 	}
-	
+	public static LinkCollection getConnections(ConcurrentLinkedQueue<ViewChromosome> chromosomes, String bam, String bai) {
+		return new ConnectionsLoader(bam, bai, chromosomes).getLinks();
+	}	
 }

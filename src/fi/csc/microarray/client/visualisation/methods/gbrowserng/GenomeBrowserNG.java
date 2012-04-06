@@ -28,6 +28,7 @@ public class GenomeBrowserNG {
 	private GenoGLListener glListener;
 	private GenoWindow genoWindow;
 	private EventHandler eventHandler;
+	private static String bam, bai;
 
 	/**
 	 * Returns the created EventHandler
@@ -85,7 +86,7 @@ public class GenomeBrowserNG {
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData);
+		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class GenomeBrowserNG {
 		for (ViewChromosome c : chromosomeData) {
 			AbstractGenome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData);
+		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
 	}
 
 	/**
@@ -116,7 +117,9 @@ public class GenomeBrowserNG {
 	 * @param data
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
-	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug) throws ArrayIndexOutOfBoundsException {
+	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
+		this.bam = bam;
+		this.bai = bai;
 		LinkCollection links;
 		if (data==0) {
 			links = useChipsterDataHuman();
@@ -182,7 +185,7 @@ public class GenomeBrowserNG {
 		boolean debug = false;
 		long filtering = 100000;
 		int genome = 0;
-		String bam, bai;
+		String bam="ohtu-between-chrs.bam", bai="ohtu-between-chrs.bam.bai";
 		for(int i=0;i<args.length;i++) {
 			if(args[i].equals("-f") && args.length > i+1) {
 				i++;
@@ -206,7 +209,7 @@ public class GenomeBrowserNG {
 				
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug, bam, bai).run();
 	}
 
 
