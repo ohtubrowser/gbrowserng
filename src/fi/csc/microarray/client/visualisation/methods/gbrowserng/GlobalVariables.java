@@ -16,4 +16,5 @@ public class GlobalVariables {
 	public static final float linkSyncInterval = 3.0f;
 	public static boolean devmode = true;
 	public static long filtering;
+	public static boolean debug;
 }

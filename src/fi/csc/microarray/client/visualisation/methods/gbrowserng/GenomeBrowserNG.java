@@ -116,7 +116,7 @@ public class GenomeBrowserNG {
 	 * @param data
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
-	public GenomeBrowserNG(int width, int height, long filtering, int data) throws ArrayIndexOutOfBoundsException {
+	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug) throws ArrayIndexOutOfBoundsException {
 		LinkCollection links;
 		if (data==0) {
 			links = useChipsterDataHuman();
@@ -126,6 +126,7 @@ public class GenomeBrowserNG {
 			links = useChipsterDataHuman();
 		}
 		GlobalVariables.filtering = filtering;
+		GlobalVariables.debug = debug;
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
@@ -202,9 +203,10 @@ public class GenomeBrowserNG {
 				debug = true;
 			}
 		}
+				
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug).run();
 	}
 
 

@@ -67,7 +67,7 @@ public class OverView extends GenosideComponent {
 
 	private void initTextRenderers() {
 		Font font;
-		float fontSize = 40f;
+		float fontSize = 16f;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/drawable/Tiresias Signfont Bold.ttf")).deriveFont(fontSize);
 		} catch (IOException e) {
@@ -240,14 +240,15 @@ public class OverView extends GenosideComponent {
 	private void renderText(int width, int height) {
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
-		String fps = "Tick: " + tickCounter.getMillis() + "ms";
-		int stringHeight = (int) textRenderer.getBounds(fps).getHeight();
-		textRenderer.draw(fps, 20, height - stringHeight - 7);
-		String draw = "Draw: " + drawCounter.getMillis() + "ms";
-		textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
-		String arcs = "Arcs: " + linkCollection.numLinks();
-		textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
-
+		int stringHeight = (int) textRenderer.getBounds("TEXT").getHeight();
+		if(GlobalVariables.debug == true) {
+			String fps = "Tick: " + tickCounter.getMillis() + "ms";
+			textRenderer.draw(fps, 20, height - stringHeight);
+			String draw = "Draw: " + drawCounter.getMillis() + "ms";
+			textRenderer.draw(draw, 20, (int) (height - stringHeight * 2.2));
+			String arcs = "Arcs: " + linkCollection.numLinks();
+			textRenderer.draw(arcs, 20, (int) (height - stringHeight * 3.3));
+		}
 		// Mouse hover information
 		long position = 0;
 		int chromosome = 0;
