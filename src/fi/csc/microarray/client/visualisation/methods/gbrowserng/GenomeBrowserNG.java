@@ -125,6 +125,7 @@ public class GenomeBrowserNG {
 		}else {
 			links = useChipsterDataHuman();
 		}
+		GlobalVariables.filtering = filtering;
 
 		this.eventQueue = new LinkedBlockingQueue<NEWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);
@@ -176,6 +177,7 @@ public class GenomeBrowserNG {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		// default values
 		boolean debug = false;
 		long filtering = 100000;
 		int genome = 0;

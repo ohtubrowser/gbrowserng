@@ -46,7 +46,7 @@ public class LinkCollection {
 			}
 			newLinksToAdd.clear();
 		}
-		filterLinks((long)1e6);
+		filterLinks(GlobalVariables.filtering);
 		updateColors();
 		loading = false;
 	}

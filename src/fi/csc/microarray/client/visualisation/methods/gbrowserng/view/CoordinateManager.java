@@ -28,45 +28,6 @@ public class CoordinateManager {
 		return y / GlobalVariables.aspectRatio;
 	}
 	
-	public float convertW(int c) {
-		int hw = GlobalVariables.width/2;
-		return ((float)c)/hw;
-	}
-	
-	public float convertH(int c) {
-		int hh = GlobalVariables.height/2;
-		return ((float)c)/hh;
-	}
-	
-	public int convertW(float c) {
-		int hw = GlobalVariables.width/2;
-		return (int)(hw*c);
-	}
-	
-	public int convertH(float c) {
-		int hh = GlobalVariables.height/2;
-		return (int)(hh*c);
-	}
-	
-	public int convertX(float c) {
-		int hw = GlobalVariables.width/2;
-		return (int)(hw+(hw*c));
-	}
-	
-	public int convertY(float c) {
-		int hh = GlobalVariables.height/2;
-		return (int)(hh+(hh*c));
-	}
-	
-	public float convertX(int c) {
-		int hw = GlobalVariables.width/2;
-		return ((float)c)/hw+1f;
-	}
-	
-	public float convertY(int c) {
-		int hh = GlobalVariables.height/2;
-		return ((float)c)/hh+1f;
-	}
 	/*
 	public static int toCircleCoordsX(int x) {
 		return x;

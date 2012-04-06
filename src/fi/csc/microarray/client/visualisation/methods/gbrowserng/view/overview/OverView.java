@@ -406,7 +406,6 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void closeContextMenu() {
-		this.contextMenu.close();
 		this.contextMenu = null;
 	}
 
