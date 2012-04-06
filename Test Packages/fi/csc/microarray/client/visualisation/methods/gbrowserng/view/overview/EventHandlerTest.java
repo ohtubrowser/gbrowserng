@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
+package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
  * @author
  * Mammutti
  */
-public class HeatMapTest {
+public class EventHandlerTest {
 	
-	public HeatMapTest() {
+	public EventHandlerTest() {
 	}
 
 	@BeforeClass
@@ -33,8 +33,14 @@ public class HeatMapTest {
 	public void tearDown() {
 	}
 
+	/**
+	 * Test of updateVariables method, of class EventHandler.
+	 */
 	@Test
-	public void testSomeMethod() {
+	public void testUpdateVariables() {
+		System.out.println("updateVariables");
+		EventHandler instance = null;
+		instance.updateVariables();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

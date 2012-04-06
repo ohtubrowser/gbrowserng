@@ -108,4 +108,18 @@ public class GenoWindowTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
+	/**
+	 * Test of isFullscreen method, of class GenoWindow.
+	 */
+	@Test
+	public void testIsFullscreen() {
+		System.out.println("isFullscreen");
+		GenoWindow instance = null;
+		boolean expResult = false;
+		boolean result = instance.isFullscreen();
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
 }

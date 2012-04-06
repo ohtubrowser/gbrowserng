@@ -6,7 +6,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.AnimatedValues;
 import javax.media.opengl.GL2;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -163,28 +162,28 @@ public class GenosideComponentTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	public class GenosideComponentImpl extends GenosideComponent {
-
-		public GenosideComponentImpl() {
-			super(null);
-		}
-
-		public void childComponentCall(String who, String what) {
-		}
-
-		public boolean handle(MouseEvent event, float screen_x, float screen_y) {
-			return false;
-		}
-
-		public boolean handle(KeyEvent event) {
-			return false;
-		}
-
-		public void draw(GL2 gl) {
-		}
-
-		public void tick(float dt) {
-		}
-	}
+//
+//	public class GenosideComponentImpl extends GenosideComponent {
+//
+//		public GenosideComponentImpl() {
+//			super(null);
+//		}
+//
+//		public void childComponentCall(String who, String what) {
+//		}
+//
+//		public boolean handle(MouseEvent event, float screen_x, float screen_y) {
+//			return false;
+//		}
+//
+//		public boolean handle(KeyEvent event) {
+//			return false;
+//		}
+//
+//		public void draw(GL2 gl) {
+//		}
+//
+//		public void tick(float dt) {
+//		}
+//	}
 }
