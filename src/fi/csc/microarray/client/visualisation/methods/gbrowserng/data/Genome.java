@@ -2,13 +2,13 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
 import java.util.ArrayList;
 
-public class AbstractGenome {
+public class Genome {
 
 	private static final ArrayList<ViewChromosome> abstractGenomeData = new ArrayList<ViewChromosome>();
 	private static String name = "empty";
 
 	public static void setName(String name) {
-		AbstractGenome.name = name;
+		Genome.name = name;
 	}
 
 	public static String getName() {

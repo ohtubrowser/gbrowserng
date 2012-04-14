@@ -1,7 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.MouseEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 

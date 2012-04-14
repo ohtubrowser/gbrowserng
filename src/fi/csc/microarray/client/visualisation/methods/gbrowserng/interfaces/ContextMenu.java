@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import com.soulaim.tech.gles.Color;
@@ -91,9 +91,9 @@ public class ContextMenu {
 	}
 
 	private void minimizeAllButOne(ViewChromosome chromosome) {
-		int chromosomes = AbstractGenome.getNumChromosomes();
+		int chromosomes = Genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = AbstractGenome.getChromosome(i);
+			ViewChromosome c = Genome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
 			} else c.setMinimized(false);
@@ -101,9 +101,9 @@ public class ContextMenu {
 	}
 	
 	private void restoreAll(ViewChromosome chromosome) {
-		int chromosomes = AbstractGenome.getNumChromosomes();
+		int chromosomes = Genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = AbstractGenome.getChromosome(i);
+			ViewChromosome c = Genome.getChromosome(i);
 			c.setMinimized(false);
 		}
 	}

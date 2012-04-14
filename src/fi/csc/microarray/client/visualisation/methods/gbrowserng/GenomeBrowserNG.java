@@ -3,7 +3,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
 import com.jogamp.newt.event.NEWTEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.controller.*;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.chipsterIntegration.ChipsterInterface;
@@ -84,7 +84,7 @@ public class GenomeBrowserNG {
 					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (ViewChromosome c : chromosomeData) {
-			AbstractGenome.addChromosome(c);
+			Genome.addChromosome(c);
 		}
 		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
 	}
@@ -103,7 +103,7 @@ public class GenomeBrowserNG {
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (ViewChromosome c : chromosomeData) {
-			AbstractGenome.addChromosome(c);
+			Genome.addChromosome(c);
 		}
 		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
 	}

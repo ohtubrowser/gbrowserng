@@ -1,7 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.newt.event.KeyEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import java.util.Random;
 
@@ -86,8 +86,8 @@ public class KeyEventHandler extends EventHandler {
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
-				ViewChromosome begin = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
-				ViewChromosome end = AbstractGenome.getChromosome(r.nextInt(AbstractGenome.getNumChromosomes()));
+				ViewChromosome begin = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
+				ViewChromosome end = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
 				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
 			}
 		}

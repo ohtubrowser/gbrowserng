@@ -4,7 +4,7 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.AbstractGenome;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -90,7 +90,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void initChromoNames() {
-		for (ViewChromosome chromosome : AbstractGenome.getChromosomes()) {
+		for (ViewChromosome chromosome : Genome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
 		}
 	}
@@ -197,12 +197,12 @@ public class OverView extends GenosideComponent {
 		for (Vector2 v : chromobounds) {
 			// Rotation needs to be done first because of coordinate modification.
 			Vector2 rotationv = new Vector2(v);
-			float angle = rotationv.relativeAngle(chromobounds[i % AbstractGenome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
+			float angle = rotationv.relativeAngle(chromobounds[i % Genome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 			rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 
 			// Convert to circlecoords using the rotated vector.
 			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
-			String chromoname = AbstractGenome.getChromosome(i - 1).getName();
+			String chromoname = Genome.getChromosome(i - 1).getName();
 
 			float bound = vv.relativeAngle(new Vector2(0f, 1f));
 			bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;
