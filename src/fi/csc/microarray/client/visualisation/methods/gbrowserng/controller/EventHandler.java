@@ -1,24 +1,23 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
-import com.jogamp.newt.event.KeyEvent;
-
-import com.jogamp.newt.event.MouseEvent;
-import com.jogamp.newt.event.NEWTEvent;
-import com.jogamp.newt.event.WindowEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import java.awt.AWTEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 
 import java.util.concurrent.BlockingQueue;
 
 public class EventHandler {
 
-	private BlockingQueue<NEWTEvent> eventQueue = null;
+	private BlockingQueue<AWTEvent> eventQueue = null;
 	private final GenoWindow window;
 	private GenoEvent genoEvent;
 	private final GenosideComponent client;
 
-	public EventHandler(GenoWindow hostWindow, GenosideComponent client, BlockingQueue<NEWTEvent> eventQueue, int width, int height) {
+	public EventHandler(GenoWindow hostWindow, GenosideComponent client, BlockingQueue<AWTEvent> eventQueue, int width, int height) {
 		this.client = client;
 		this.eventQueue = eventQueue;
 		this.window = hostWindow;
@@ -46,17 +45,19 @@ public class EventHandler {
 
 	public void handleEvents() throws InterruptedException {
 		for (;;) {
-			NEWTEvent event = this.eventQueue.take();
+			AWTEvent event = this.eventQueue.take();
+			
 			genoEvent.event = event;
 			if (event instanceof KeyEvent) {
 				KeyEvent keyEvent = (KeyEvent) event;
+
 				if (keyEvent.getKeyChar() == KeyEvent.VK_ESCAPE) {
 					if (toggleVisible()) {
 						return;
 					}
 				} else if (keyEvent.getKeyChar() == 'f') {
 					toggleFullscreen();
-				} else if (keyEvent.getKeyChar() == 't') {
+				} else if (keyEvent.getKeyChar() == 't' && keyEvent.getID() == KeyEvent.KEY_PRESSED) {
 					window.toggleVisible();
 				} else {
 					client.handle((KeyEvent) event);
@@ -64,9 +65,9 @@ public class EventHandler {
 			} else if (genoEvent.event instanceof MouseEvent) {
 				client.handle((MouseEvent) (genoEvent.event), genoEvent.getMouseGLX(), genoEvent.getMouseGLY());
 			} else if (event instanceof WindowEvent) {
-				if (event.getEventType() == WindowEvent.EVENT_WINDOW_RESIZED) {
-					genoEvent.setScreenSize(window.window.getWidth(), window.window.getHeight());
-				} else if (event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROYED || event.getEventType() == WindowEvent.EVENT_WINDOW_DESTROY_NOTIFY) {
+				if (event.getID() == WindowEvent.COMPONENT_RESIZED) {
+					genoEvent.setScreenSize(window.c.getWidth(), window.c.getHeight());
+				} else if (event.getID() == WindowEvent.WINDOW_CLOSED || event.getID() == WindowEvent.WINDOW_CLOSING) {
 					if (toggleVisible()) {
 						return;
 					}

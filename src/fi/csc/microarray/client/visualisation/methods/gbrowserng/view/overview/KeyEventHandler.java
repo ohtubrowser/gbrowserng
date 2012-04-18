@@ -1,8 +1,8 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import com.jogamp.newt.event.KeyEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 /**
@@ -79,11 +79,11 @@ public class KeyEventHandler extends EventHandler {
 	private void handleOtherKeyEvents() {
 		if (KeyEvent.VK_D == event.getKeyCode()) {
 			overview.setDrawArcs();
-		} else if (KeyEvent.VK_Z == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-			overview.geneCircle.setSize(overview.geneCircle.getSize() + 0.01f);
-		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
-			overview.geneCircle.setSize(overview.geneCircle.getSize() - 0.01f);
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+		} else if (KeyEvent.VK_Z == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
+			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() + 0.01f));
+		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
+			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() - 0.01f));
+		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
 				ViewChromosome begin = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));

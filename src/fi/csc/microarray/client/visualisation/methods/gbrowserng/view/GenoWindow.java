@@ -1,33 +1,29 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 
-import com.jogamp.newt.awt.NewtCanvasAWT;
-import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import java.awt.*;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JFrame;
 
 public class GenoWindow {
 
 
-	public GLWindow window;
+	public GLCanvas c;
 	public GBrowserPreview trackviewWindow;
 	private Animator animator;
 	private boolean isFullscreen = false;
-	public NewtCanvasAWT newtCanvasAWT;
-	Frame frame;
-	Container container;
+	public Frame frame;
+	public Container container;
 	private boolean overviewVisible = true;
 
 	public GenoWindow(int width, int height) {
+		
 		GLProfile.initSingleton();
-		this.window = GLWindow.create(new GLCapabilities(GLProfile.getDefault()));
-		this.window.setSize(width, height);
-		this.window.setTitle("GenomeBrowserNG");
-
-		newtCanvasAWT = new NewtCanvasAWT(window);
+		c = new GLCanvas(new GLCapabilities(GLProfile.getDefault()));
 
 		frame = new Frame("GenomeBrowserNG");
 
@@ -37,37 +33,35 @@ public class GenoWindow {
 		container = new Container();
 		container.setLayout(new CardLayout());
 
-		container.add(newtCanvasAWT, "TESTING!");
-		container.setVisible(false);
+		container.add(c, "1");
+		c.setVisible(true);
+		container.setVisible(true);
 
 		frame.add(container, BorderLayout.CENTER);
 		frame.setSize(width, height);
 	}
 
 	public void open() {
-		this.window.setVisible(true);
+		this.c.setVisible(true);
 		frame.setVisible(true);
-		CardLayout cl = (CardLayout) container.getLayout();
-		cl.next(container);
-		this.animator = new Animator(this.window);
+		container.validate();
+		c.requestFocusInWindow();
+		this.animator = new Animator(c);
 		this.animator.start();
-		newtCanvasAWT.requestFocusInWindow();
 	}
 
 	public void close() {
 		this.animator.stop();
 		frame.setVisible(false);
+		c.destroy();
 		frame.dispose(); // This causes a sigsegv because of a jogl bug
-		this.window.destroy();
 	}
 
 	public void toggleFullscreen() {
 		if (isFullscreen = !isFullscreen) {
-			this.window.setFullscreen(true);
 			GlobalVariables.width = Toolkit.getDefaultToolkit().getScreenSize().width;
 			GlobalVariables.height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		} else {
-			this.window.setFullscreen(false);
 			GlobalVariables.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
 			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
@@ -79,8 +73,11 @@ public class GenoWindow {
 
 	public void toggleVisible() {
 		overviewVisible = !overviewVisible;
+		System.out.println("Overview : " + overviewVisible);
 		CardLayout cl = (CardLayout) container.getLayout();
 		cl.next(container);
+		container.validate();
+		System.out.println("TOGGLEVISIBLE");
 	}
 
 	public boolean isOverviewVisible() {
@@ -88,10 +85,9 @@ public class GenoWindow {
 	}
 
 	public void addContainer(Container swingContainer) {
-		container.setVisible(true);
-		frame.setVisible(true);
 		container.add(swingContainer, "2");
 		CardLayout cl = (CardLayout) container.getLayout();
 		cl.next(container);
+		container.validate();
 	}
 }

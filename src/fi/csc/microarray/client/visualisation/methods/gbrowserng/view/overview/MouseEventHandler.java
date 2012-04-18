@@ -1,9 +1,9 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import com.jogamp.newt.event.MouseEvent;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * Handles MouseEvents in Overview window. 
@@ -122,7 +122,7 @@ public class MouseEventHandler extends EventHandler {
 	private boolean handleClick() {
 		updateVariables();
 
-		if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
+		if (MouseEvent.MOUSE_CLICKED == event.getID()) {
 			if (event.getButton() == 1) {
 				return handleLeftClick();
 			} else if (event.getButton() == 3) {
@@ -131,11 +131,12 @@ public class MouseEventHandler extends EventHandler {
 		}
 
 		// MouseWheelEvents
-		if (MouseEvent.EVENT_MOUSE_WHEEL_MOVED == event.getEventType()) {
+		if (MouseEvent.MOUSE_WHEEL == event.getID()) {
+			MouseWheelEvent e = (MouseWheelEvent) event;
 			if (overview.isArcHighlightLocked()) {
-				linkSelection.updateArea(0.001f * event.getWheelRotation(), overview.getLinkCollection());
+				linkSelection.updateArea(0.001f * e.getWheelRotation(), overview.getLinkCollection());
 			} else {
-				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + event.getWheelRotation() * 0.05f));
+				geneCircle.setSize(Math.max(0.0f, geneCircle.getSize() + e.getWheelRotation() * 0.05f));
 				overview.updateCircleSize();
 			}
 		}

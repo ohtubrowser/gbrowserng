@@ -1,11 +1,11 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
-import com.jogamp.newt.event.MouseEvent;
-import com.jogamp.newt.event.NEWTEvent;
+import java.awt.AWTEvent;
+import java.awt.event.MouseEvent;
 
 public class GenoEvent {
 
-	public NEWTEvent event;
+	public AWTEvent event;
 	public int screenHalfWidth;
 	public int screenHalfHeight;
 

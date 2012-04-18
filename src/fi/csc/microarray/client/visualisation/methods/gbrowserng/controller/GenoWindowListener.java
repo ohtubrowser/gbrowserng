@@ -1,57 +1,63 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
-import com.jogamp.newt.event.NEWTEvent;
-import com.jogamp.newt.event.WindowEvent;
-import com.jogamp.newt.event.WindowListener;
-import com.jogamp.newt.event.WindowUpdateEvent;
-
+import java.awt.AWTEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class GenoWindowListener implements WindowListener {
 
-	private BlockingQueue<NEWTEvent> eventQueue;
-
-	public GenoWindowListener(BlockingQueue<NEWTEvent> eventQueue) {
+	private BlockingQueue<AWTEvent> eventQueue = null;
+	
+	public GenoWindowListener(BlockingQueue<AWTEvent> eventQueue) {
 		this.eventQueue = eventQueue;
 	}
-
-	public void windowDestroyNotify(WindowEvent e) {
+	
+	@Override
+	public void windowOpened(WindowEvent we) {
 		try {
-			this.eventQueue.put(e);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			eventQueue.put(we);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(GenoWindowListener.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	public void windowDestroyed(WindowEvent e) {
+	@Override
+	public void windowClosing(WindowEvent we) {
 		try {
-			this.eventQueue.put(e);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			eventQueue.put(we);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(GenoWindowListener.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	public void windowGainedFocus(WindowEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	public void windowLostFocus(WindowEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	public void windowMoved(WindowEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	public void windowRepaint(WindowUpdateEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	public void windowResized(WindowEvent e) {
+	@Override
+	public void windowClosed(WindowEvent we) {
 		try {
-			this.eventQueue.put(e);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			eventQueue.put(we);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(GenoWindowListener.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+
+	@Override
+	public void windowIconified(WindowEvent we) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent we) {
+	}
+
+	@Override
+	public void windowActivated(WindowEvent we) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent we) {
+	}
+
+	
 }

@@ -71,7 +71,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		PrimitiveBuffers.createBuffers();
 		OpenGLBuffers.initBuffers(gl);
 		//SessionViewCapsule.initFrameBuffer(gl);
-
+		
 		AssetManager.setInstance(new DesktopAssetManager());
 
 		GenoShaders.createShaders(gl);
@@ -97,6 +97,7 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		GlobalVariables.aspectRatio = (float)width / (float)height;
 		
 		overView.updateCircleSize();
+		System.out.println("RESIZING");
 	}
 
 	public GenosideComponent getRoot() {

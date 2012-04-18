@@ -3,9 +3,6 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
-import java.util.ArrayList;
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.MouseEvent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import com.soulaim.tech.math.Vector2;
 import javax.media.opengl.GL2;
@@ -21,6 +18,9 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow
 import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class ContextMenu {
 	OverView overview;
@@ -116,7 +116,7 @@ public class ContextMenu {
 					break;
 				}
 			}
-			if (MouseEvent.EVENT_MOUSE_CLICKED == event.getEventType()) {
+			if (MouseEvent.MOUSE_CLICKED == event.getID()) {
 				action(selections.get(selected).action);
 			}
 		}
@@ -124,13 +124,13 @@ public class ContextMenu {
 	}
 
 	public boolean handle(KeyEvent event) {
-		if(event.getKeyCode()==KeyEvent.VK_UP && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+		if(event.getKeyCode()==KeyEvent.VK_UP && event.getID() == KeyEvent.KEY_PRESSED) {
 			if(selected == 0) selected = selections.size()-1;
 			else selected--;	
-		} else if(event.getKeyCode()==KeyEvent.VK_DOWN && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+		} else if(event.getKeyCode()==KeyEvent.VK_DOWN && event.getID() == KeyEvent.KEY_PRESSED) {
 			if(selected == selections.size()-1) selected = 0;
 			else selected++;
-		} else if(event.getKeyCode()==KeyEvent.VK_ENTER && event.getEventType() == KeyEvent.EVENT_KEY_PRESSED) {
+		} else if(event.getKeyCode()==KeyEvent.VK_ENTER && event.getID() == KeyEvent.KEY_PRESSED) {
 			action(selected);
 			close=true;
 		}

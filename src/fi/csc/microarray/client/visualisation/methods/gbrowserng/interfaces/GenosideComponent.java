@@ -1,7 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.MouseEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import javax.media.opengl.GL2;
 
 public abstract class GenosideComponent {

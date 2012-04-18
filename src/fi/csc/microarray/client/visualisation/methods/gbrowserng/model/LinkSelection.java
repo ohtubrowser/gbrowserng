@@ -1,6 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import com.jogamp.newt.event.KeyEvent;
 import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
@@ -9,8 +8,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollec
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.awt.event.KeyEvent;
 import javax.media.opengl.GL2;
 
 public class LinkSelection {
@@ -129,7 +127,7 @@ public class LinkSelection {
 
 	public void handle(KeyEvent keyEvent) {
 		synchronized (linkSelectionLock) {
-			if (keyEvent.getEventType() == KeyEvent.EVENT_KEY_RELEASED) {
+			if (keyEvent.getID() == KeyEvent.KEY_RELEASED) {
 				int oldIndex = currentSelection.currentIndex;
 				if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
 					do {
@@ -147,10 +145,10 @@ public class LinkSelection {
 				}
 			}
 			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-				upKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+				upKeyDown = (keyEvent.getID() == KeyEvent.KEY_PRESSED);
 			}
 			if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-				downKeyDown = (keyEvent.getEventType() == KeyEvent.EVENT_KEY_PRESSED);
+				downKeyDown = (keyEvent.getID() == KeyEvent.KEY_PRESSED);
 			}
 		}
 	}

@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChipsterInterface {
 
-	public static ConcurrentLinkedQueue<ViewChromosome> getChromosomes(String karyotype, String seq, String[] chromosomes) {
-		return new CytobandLoader(karyotype, seq, chromosomes).getChromosomes();
+	public static ConcurrentLinkedQueue<ViewChromosome> getChromosomes(String karyotype, String seq, String coord, String[] chromosomes) {
+		return new CytobandLoader(karyotype, seq, coord, chromosomes).getChromosomes();
 	}
 	public static LinkCollection getConnections(ConcurrentLinkedQueue<ViewChromosome> chromosomes) {
 		return new ConnectionsLoader("ohtu-between-chrs.bam", "ohtu-between-chrs.bam.bai", chromosomes).getLinks();

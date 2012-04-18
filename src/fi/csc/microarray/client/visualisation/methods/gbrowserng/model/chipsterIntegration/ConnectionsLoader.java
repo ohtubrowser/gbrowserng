@@ -44,7 +44,7 @@ public class ConnectionsLoader implements AreaResultListener {
 				System.err.println("Cannot read BAI file " + bai + " !");
 				System.exit(2);
 			}
-			file = new SAMDataSource(bamfile, baifile);
+			file = new SAMDataSource(bamfile.toURI().toURL(), baifile.toURI().toURL());
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}

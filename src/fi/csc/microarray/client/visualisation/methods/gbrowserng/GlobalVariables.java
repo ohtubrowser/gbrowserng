@@ -17,4 +17,5 @@ public class GlobalVariables {
 	public static boolean devmode = true;
 	public static long filtering;
 	public static boolean debug;
+	public static int numCapsules = 8;
 }

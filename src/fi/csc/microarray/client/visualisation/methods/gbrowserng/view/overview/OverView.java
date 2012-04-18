@@ -1,7 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
@@ -21,6 +19,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
@@ -130,10 +130,10 @@ public class OverView extends GenosideComponent {
 	public void draw(GL2 gl) {
 		if (linkCollection.loading) {
 			drawArcs = false;
-			window.newtCanvasAWT.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			window.c.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		} else {
 			drawArcs = true;
-			window.newtCanvasAWT.setCursor(Cursor.getDefaultCursor());
+			window.c.setCursor(Cursor.getDefaultCursor());
 		}
 		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());

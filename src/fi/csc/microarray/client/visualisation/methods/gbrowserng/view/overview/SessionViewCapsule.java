@@ -1,7 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.MouseEvent;
 import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.shaders.Shader;
@@ -15,6 +13,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLi
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.nio.IntBuffer;
 import javax.media.opengl.GL2;
 

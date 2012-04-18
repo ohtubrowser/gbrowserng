@@ -1,15 +1,15 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.KeyListener;
-import com.jogamp.newt.event.NEWTEvent;
 
+import java.awt.AWTEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.concurrent.BlockingQueue;
 
 public class Keyboard implements KeyListener {
-	private BlockingQueue<NEWTEvent> eventQueue;
+	private BlockingQueue<AWTEvent> eventQueue;
 
-	public Keyboard(BlockingQueue<NEWTEvent> eventQueue) {
+	public Keyboard(BlockingQueue<AWTEvent> eventQueue) {
 		this.eventQueue = eventQueue;
 	}
 

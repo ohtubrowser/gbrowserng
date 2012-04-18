@@ -18,6 +18,7 @@ public class CytobandLoader implements AreaResultListener {
 
 	private String karyotypePath;
 	private String seqPath;
+	private String coordSystemPath;
 	private Queue<AreaRequest> areaRequestQueue;
 	private ConcurrentLinkedQueue<ViewChromosome> chrs;
 	private CytobandHandlerThread dataThread;
@@ -25,9 +26,10 @@ public class CytobandLoader implements AreaResultListener {
 	private AtomicInteger chromoId;
 	private String[] chromosomes;
 
-	public CytobandLoader(String k, String s, String[] chr) {
+	public CytobandLoader(String k, String s, String c, String[] chr) {
 		this.karyotypePath = k;
 		this.seqPath = s;
+		this.coordSystemPath = c;
 		this.areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
 		this.requestsReady = new AtomicInteger(0);
 		this.chromoId = new AtomicInteger(1);
@@ -38,8 +40,8 @@ public class CytobandLoader implements AreaResultListener {
 	public ConcurrentLinkedQueue<ViewChromosome> getChromosomes() {
 		CytobandDataSource file = null;
 		try {
-			file = new CytobandDataSource(new File(this.karyotypePath), new File(this.seqPath));
-		} catch (FileNotFoundException e) {
+			file = new CytobandDataSource(new File(this.karyotypePath).toURI().toURL(), new File(this.seqPath).toURI().toURL(), new File(this.coordSystemPath).toURI().toURL());
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
