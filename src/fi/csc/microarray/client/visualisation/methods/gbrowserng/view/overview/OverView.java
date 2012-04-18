@@ -271,8 +271,15 @@ public class OverView extends GenosideComponent {
 				chromosome = this.hoverCapsule.getChromosome().getChromosomeNumber();
 			}
 		}
+		
+		// calculate MB size by dividing by 1 million
+		double mBposition = position*1.0 / 1000000;
+		// calculate what result is with only 1 decimal point
+		int ix = (int)(mBposition * 10.0); // scale it 
+		mBposition = ((double)ix)/10.0;
+		
 		String chrom = "Chromosome " + chromosome;
-		String pos = "Position: " + position;
+		String pos = "Position: " + mBposition + "Mbp";
 		textRenderer.draw(chrom, 20, stringHeight + 20);
 		textRenderer.draw(pos, 20, 10);
 		textRenderer.endRendering();
