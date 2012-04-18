@@ -21,8 +21,6 @@ public class GenoWindow {
 	private boolean overviewVisible = true;
 
 	public GenoWindow(int width, int height) {
-		
-		GLProfile.initSingleton();
 		c = new GLCanvas(new GLCapabilities(GLProfile.getDefault()));
 
 		frame = new Frame("GenomeBrowserNG");

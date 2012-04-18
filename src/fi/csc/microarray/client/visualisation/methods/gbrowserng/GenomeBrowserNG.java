@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.swing.JLabel;
+import javax.media.opengl.GLProfile;
 
 /**
  * Main class of program. Opens the overview window containing the genome circle and shows links between chromosomes
@@ -185,6 +185,8 @@ public class GenomeBrowserNG {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		GLProfile.initSingleton();
+
 		// default values
 		boolean debug = false;
 		long filtering = 100000;
