@@ -1,14 +1,13 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
 import java.awt.AWTEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class GenoWindowListener implements WindowListener {
+public class GenoWindowListener implements WindowListener, ComponentListener {
 
 	private BlockingQueue<AWTEvent> eventQueue = null;
 	
@@ -57,6 +56,27 @@ public class GenoWindowListener implements WindowListener {
 
 	@Override
 	public void windowDeactivated(WindowEvent we) {
+	}
+
+	@Override
+	public void componentResized(ComponentEvent ce) {
+		try {
+			eventQueue.put(ce);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(GenoWindowListener.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent ce) {
+	}
+
+	@Override
+	public void componentShown(ComponentEvent ce) {
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent ce) {
 	}
 
 	

@@ -4,6 +4,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.Geno
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import java.awt.AWTEvent;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -46,7 +47,7 @@ public class EventHandler {
 	public void handleEvents() throws InterruptedException {
 		for (;;) {
 			AWTEvent event = this.eventQueue.take();
-			
+
 			genoEvent.event = event;
 			if (event instanceof KeyEvent) {
 				KeyEvent keyEvent = (KeyEvent) event;
@@ -64,15 +65,19 @@ public class EventHandler {
 				}
 			} else if (genoEvent.event instanceof MouseEvent) {
 				client.handle((MouseEvent) (genoEvent.event), genoEvent.getMouseGLX(), genoEvent.getMouseGLY());
-			} else if (event instanceof WindowEvent) {
-				if (event.getID() == WindowEvent.COMPONENT_RESIZED) {
+			} else if (event instanceof ComponentEvent) {
+				if (event.getID() == ComponentEvent.COMPONENT_RESIZED) {
 					genoEvent.setScreenSize(window.c.getWidth(), window.c.getHeight());
-				} else if (event.getID() == WindowEvent.WINDOW_CLOSED || event.getID() == WindowEvent.WINDOW_CLOSING) {
+				}
+			}
+			if (event instanceof WindowEvent) {
+				if (event.getID() == WindowEvent.WINDOW_CLOSED || event.getID() == WindowEvent.WINDOW_CLOSING) {
 					if (toggleVisible()) {
 						return;
 					}
 				}
 			}
 		}
+
 	}
 }

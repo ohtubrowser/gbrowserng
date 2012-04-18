@@ -59,9 +59,11 @@ public class GenoWindow {
 
 	public void toggleFullscreen() {
 		if (isFullscreen = !isFullscreen) {
+			frame.setUndecorated(true);
 			GlobalVariables.width = Toolkit.getDefaultToolkit().getScreenSize().width;
 			GlobalVariables.height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		} else {
+			frame.setUndecorated(false);
 			GlobalVariables.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
 			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
@@ -73,11 +75,9 @@ public class GenoWindow {
 
 	public void toggleVisible() {
 		overviewVisible = !overviewVisible;
-		System.out.println("Overview : " + overviewVisible);
 		CardLayout cl = (CardLayout) container.getLayout();
 		cl.next(container);
 		container.validate();
-		System.out.println("TOGGLEVISIBLE");
 	}
 
 	public boolean isOverviewVisible() {

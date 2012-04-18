@@ -150,6 +150,7 @@ public class GenomeBrowserNG {
 	public void addListeners() {
 		this.windowListener = new GenoWindowListener(eventQueue);
 		this.genoWindow.frame.addWindowListener(windowListener);
+		this.genoWindow.frame.addComponentListener(windowListener);
 		this.genoWindow.c.addMouseListener(new Mouse(eventQueue));
 		this.genoWindow.c.addMouseMotionListener(new Mouse(eventQueue));
 		this.genoWindow.c.addMouseWheelListener(new Mouse(eventQueue));

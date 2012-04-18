@@ -97,7 +97,6 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		GlobalVariables.aspectRatio = (float)width / (float)height;
 		
 		overView.updateCircleSize();
-		System.out.println("RESIZING");
 	}
 
 	public GenosideComponent getRoot() {
