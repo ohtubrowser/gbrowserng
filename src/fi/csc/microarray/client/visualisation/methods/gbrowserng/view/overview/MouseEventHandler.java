@@ -196,14 +196,14 @@ public class MouseEventHandler extends EventHandler {
 				relativePosition = geneCircle.getRelativePosition(cl.getAChromosome().getChromosomeNumber() - 1, ((float) cl.getaStart()) / cl.getAChromosome().length());
 			}
 
-			openNewAreaCapsule(relativePosition, mouseX, mouseY, cl, geneCircle);
+			openNewAreaCapsule(relativePosition, cl, geneCircle);
 
 		} else {
 			if (overview.isArcHighlightLocked()) {
 				overview.setArcHighlightLocked(false);
 				linkSelection.deactivate();
 			} else {
-				openNewAreaCapsule(pointerGenePosition, mouseX, mouseY, null, geneCircle);
+				openNewAreaCapsule(pointerGenePosition, null, geneCircle);
 			}
 		}
 	}
@@ -238,17 +238,14 @@ public class MouseEventHandler extends EventHandler {
 	 * Instantiates needed objects for creating Capsule, then creates Capsule.
 	 * Adds Capsule to the list of capsules in Overview-window, then sets Capsule to be updated so drawn on screen.
 	 * @param pointerGenePosition point on circle from where line from circle to Capsule begins
-	 * @param x
-	 * @param y
 	 * @param link Link associated with this capsule (null if this is an area capsule)
 	 * @param geneCircle GeneCircle to which to attach capsule
 	 */
-	private void openNewAreaCapsule(float pointerGenePosition, float x, float y, GeneralLink link, GeneCircle geneCircle) {
+	private void openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
 		SessionViewCapsule capsule = new SessionViewCapsule(link, pointerGenePosition, geneCircle);
 		capsule.setDimensions(0.2f, 0.1f);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
-		//sessions.add(capsule);
 		synchronized (overview.textureUpdateListLock) {
 			overview.addCapsuleToTextureUpdateList(capsule);
 			capsule.setNeedsTextureUpdate();
