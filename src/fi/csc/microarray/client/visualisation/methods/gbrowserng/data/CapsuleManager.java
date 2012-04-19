@@ -5,9 +5,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.S
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-/*
+/**
  * Capsulemanager manages the opened capsules and their position on the screen.
- * Capsules are added with addCapsule() method, no further actions required.
  */
 
 public class CapsuleManager {
@@ -35,10 +34,15 @@ public class CapsuleManager {
 		sessions.replace(startID, c);
 	}
 
+	/**
+	 * AddCapsule adds the capsule to the internal data structure.
+	 * @param c Capsule to be added
+	 * @param linkx Capsule's LinkGFX's x position. (For aligning the capsule to correct quad).
+	 * @param linky Capsule's LinkGFX's y position. (For aligning the capsule to correct quad).
+	 */
 	public static void addCapsule(SessionViewCapsule c, float linkx, float linky) {
 		int id=0;
 		float x=0, y=0;
-		System.out.println("Nextfree :" + nextFreeTopleft);
 		if(linkx < 0 && linky > 0) {
 			if(nextFreeTopleft != SLOTS_PER_QUAD) {
 				x=-1f + c.getDimensions().x;
@@ -90,9 +94,10 @@ public class CapsuleManager {
 		c.setCapsulePosition(x,y);
 		sessions.put(id, c);
 	}
-	
+
 	private static boolean replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-SLOTS_PER_QUAD-1 + nextfree, endID-1);
+		// This shouldn't be called when end==0, but for some reason it is.
 		if(end>0) {
 			for(int i=id; i<end; ++i) {
 				sessions.replace(i, sessions.get(i+1));
@@ -107,9 +112,13 @@ public class CapsuleManager {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * removeCapsule removes SessionViewCapsule from the internal data structure.
+	 * @param c Capsule to be removed.
+	 */
 	public static void removeCapsule(SessionViewCapsule c) {
-		System.out.println("Remove");
+		// removeCapsule gets called multiple times... Concurrency?
 		Iterator it = sessions.keySet().iterator();
 		while(it.hasNext()) {
 			int id = (Integer)it.next();
