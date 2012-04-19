@@ -97,7 +97,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	public void updateCircleSize() {
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			capsule.setRelativePosition(geneCircle);
 		}
 		for (GeneralLink link : linkCollection.getLinks()) {
@@ -182,7 +182,7 @@ public class OverView extends GenosideComponent {
 		}
 		*/
 
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			capsule.draw(gl);
 		}
 	}
@@ -328,7 +328,7 @@ public class OverView extends GenosideComponent {
 		fadeLinks(dt);
 
 		SessionViewCapsule killCapsule = null;
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			if (!capsule.isAlive()) {
 				killCapsule = capsule;
 			}

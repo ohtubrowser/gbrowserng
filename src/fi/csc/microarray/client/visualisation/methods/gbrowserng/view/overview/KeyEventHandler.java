@@ -64,7 +64,8 @@ public class KeyEventHandler extends EventHandler {
 				trackviewManager.clearContainer();
 				trackviewManager.openLinkSession(linkSelection.getActiveLink());
 				trackviewManager.toggleVisible();
-				sessions.add(trackviewManager.generateLinkCapsule(overview));
+
+				//sessions.add(trackviewManager.generateLinkCapsule(overview));
 			}
 			linkSelection.handle(event);
 	}

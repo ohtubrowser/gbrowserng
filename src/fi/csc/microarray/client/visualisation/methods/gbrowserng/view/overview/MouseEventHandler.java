@@ -66,7 +66,7 @@ public class MouseEventHandler extends EventHandler {
 		}
 
 		// allow capsules to update their states
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			capsule.handle(event, mouseX, mouseY);
 		}
 		return handleClick();
@@ -89,7 +89,7 @@ public class MouseEventHandler extends EventHandler {
 	}
 
 	private void setHoverCapsules(float x, float y) {
-		for (SessionViewCapsule capsule : sessions) { // TODO : hoverCapsule is calculated many times in this function
+		for (SessionViewCapsule capsule : sessions.values()) { // TODO : hoverCapsule is calculated many times in this function
 			if (capsule.inCapsule(x, y)) {
 				overview.setHoverCapsule(capsule);
 				break;
@@ -163,7 +163,7 @@ public class MouseEventHandler extends EventHandler {
 		}
 		
 		// what happens here ?
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			if (capsule.isDying()) {
 				continue;
 			}
@@ -209,7 +209,7 @@ public class MouseEventHandler extends EventHandler {
 	}
 	
 	private boolean handleRightClick() {
-		for (SessionViewCapsule capsule : sessions) {
+		for (SessionViewCapsule capsule : sessions.values()) {
 			if (capsule.isDying()) {
 				continue;
 			}
@@ -248,7 +248,7 @@ public class MouseEventHandler extends EventHandler {
 		capsule.setDimensions(0.2f, 0.1f);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
-		sessions.add(capsule);
+		//sessions.add(capsule);
 		synchronized (overview.textureUpdateListLock) {
 			overview.addCapsuleToTextureUpdateList(capsule);
 			capsule.setNeedsTextureUpdate();

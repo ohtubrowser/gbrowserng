@@ -6,6 +6,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollec
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.LinkSelection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.TrackviewManager;
+
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -16,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class EventHandler {
 	
 	protected OverView overview;
-	protected ConcurrentLinkedQueue<SessionViewCapsule> sessions;
+	protected ConcurrentHashMap<Integer, SessionViewCapsule> sessions;
 	protected ContextMenu contextMenu;
 	protected SessionViewCapsule hoverCapsule;
 	protected Vector2 mousePosition = new Vector2();
