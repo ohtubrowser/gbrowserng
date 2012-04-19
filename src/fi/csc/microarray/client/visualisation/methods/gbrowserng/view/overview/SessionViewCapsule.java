@@ -210,7 +210,8 @@ public class SessionViewCapsule {
 		Matrix4 modelViewMatrix = new Matrix4();
 
 		modelViewMatrix.makeTranslationMatrix(capsulePosition.x, capsulePosition.y, 0);
-		modelViewMatrix.scale(dimX * 0.5f, dimY * 0.5f, 1.0f);
+		modelViewMatrix.scale(CoordinateManager.toCircleCoordsX(dimX * 0.45f),
+							CoordinateManager.toCircleCoordsY(dimY * 0.45f), 1.0f);
 		gl.glEnable(gl.GL_BLEND);
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TEXRECTANGLE);
 		shader.start(gl);
