@@ -34,18 +34,5 @@ public class KeyEventHandlerTest {
 	public void tearDown() {
 	}
 
-	/**
-	 * Test of handle method, of class KeyEventHandler.
-	 */
-	@Test
-	public void testHandle() {
-		System.out.println("handle");
-		KeyEvent event = null;
-		KeyEventHandler instance = null;
-		boolean expResult = false;
-		boolean result = instance.handle(event);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+
 }
