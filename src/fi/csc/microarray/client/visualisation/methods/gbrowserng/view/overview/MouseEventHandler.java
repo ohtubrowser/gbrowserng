@@ -1,5 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.CapsuleManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import java.awt.event.MouseEvent;
@@ -47,9 +48,11 @@ public class MouseEventHandler extends EventHandler {
 		checkIfLastMouseClickNull(x, y, event);
 		setHoverCapsules(x, y);
 
+		/*
 		if (!activeSessions.isEmpty() && hoverCapsule != null) {
 			return hoverCapsule.handle(event, x, y);
 		}
+		*/
 
 		calculatePointerGenePosition();
 		geneCircle.updatePosition(pointerGenePosition);
@@ -243,7 +246,7 @@ public class MouseEventHandler extends EventHandler {
 	private void openNewAreaCapsule(float pointerGenePosition, float x, float y, GeneralLink link, GeneCircle geneCircle) {
 		SessionViewCapsule capsule = new SessionViewCapsule(link, pointerGenePosition, geneCircle);
 		capsule.setDimensions(0.2f, 0.1f);
-		capsule.setCapsulePosition(x, y);
+		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
 		sessions.add(capsule);
 		synchronized (overview.textureUpdateListLock) {

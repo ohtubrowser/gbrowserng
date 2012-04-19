@@ -27,10 +27,12 @@ public class KeyEventHandler extends EventHandler {
 		if (contextMenu != null) {
 			if (handleContextMenuCommands()) return true;
 		}
-		
+
+		/*
 		if (!activeSessions.isEmpty()) {
 			if (handleMouseOverCapsule()) return true;
 		}
+		*/
 
 		if (arcHighlightLocked) {
 			handleLockedArch();
@@ -54,15 +56,6 @@ public class KeyEventHandler extends EventHandler {
 			}
 			return true;
 		}
-			return false;
-	}
-
-	private boolean handleMouseOverCapsule() {
-			for (SessionViewCapsule capsule : activeSessions) {
-				if (capsule.inCapsule(mousePosition.x, mousePosition.y)) {
-					return capsule.handle(event);
-				}
-			}
 			return false;
 	}
 

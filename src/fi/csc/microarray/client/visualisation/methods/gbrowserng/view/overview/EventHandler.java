@@ -17,7 +17,6 @@ public class EventHandler {
 	
 	protected OverView overview;
 	protected ConcurrentLinkedQueue<SessionViewCapsule> sessions;
-	protected ConcurrentLinkedQueue<SessionViewCapsule> activeSessions;
 	protected ContextMenu contextMenu;
 	protected SessionViewCapsule hoverCapsule;
 	protected Vector2 mousePosition = new Vector2();
@@ -33,7 +32,6 @@ public class EventHandler {
 	
 	protected void updateVariables() {
 		this.sessions = overview.getSessions();
-		this.activeSessions = overview.getActiveSessions();
 		this.contextMenu = overview.getContextMenu();
 		this.hoverCapsule = overview.getHoverCapsule();
 		this.mousePosition = overview.getMousePosition();

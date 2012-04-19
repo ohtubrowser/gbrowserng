@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.CapsuleManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
@@ -22,6 +23,7 @@ import com.soulaim.tech.math.Vector2;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 
@@ -34,8 +36,7 @@ public class OverView extends GenosideComponent {
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	public GenoWindow window;
-	private ConcurrentLinkedQueue<SessionViewCapsule> sessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
-	private ConcurrentLinkedQueue<SessionViewCapsule> activeSessions = new ConcurrentLinkedQueue<SessionViewCapsule>();
+	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions = CapsuleManager.getSessions();//new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	final Object textureUpdateListLock = new Object();
@@ -175,12 +176,14 @@ public class OverView extends GenosideComponent {
 			textureUpdateList.clear();
 		}
 
+		/*
 		for (SessionViewCapsule capsule : activeSessions) {
-				capsule.drawToTexture(gl);
+			capsule.drawToTexture(gl);
 		}
+		*/
 
 		for (SessionViewCapsule capsule : sessions) {
-				capsule.draw(gl);
+			capsule.draw(gl);
 		}
 	}
 
@@ -350,15 +353,17 @@ public class OverView extends GenosideComponent {
 		this.hoverCapsule = capsule;
 	}
 
+	/*
 	public ConcurrentLinkedQueue<SessionViewCapsule> getActiveSessions() {
 		return this.activeSessions;
 	}
+	*/
 
 	public SessionViewCapsule getHoverCapsule() {
 		return this.hoverCapsule;
 	}
 
-	public ConcurrentLinkedQueue<SessionViewCapsule> getSessions() {
+	public ConcurrentHashMap<Integer, SessionViewCapsule> getSessions() {
 		return this.sessions;
 	}
 

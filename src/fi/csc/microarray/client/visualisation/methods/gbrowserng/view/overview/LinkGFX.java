@@ -28,6 +28,10 @@ public class LinkGFX {
 		this.capsule = c;
 		this.circlePos = circlePos;
 	}
+	
+	public Vector2 getXYPosition() {
+		return this.circlePos;
+	}
 
 	public void draw(GL2 gl) {
 

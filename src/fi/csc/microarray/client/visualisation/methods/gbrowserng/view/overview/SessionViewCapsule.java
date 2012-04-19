@@ -166,6 +166,10 @@ public class SessionViewCapsule extends GenosideComponent {
 		return linkData;
 	}
 
+	public LinkGFX getLinkGfX() {
+		return linkGFX;
+	}
+
 	public ViewChromosome getChromosome() {
 		return chr;
 	}
@@ -173,8 +177,12 @@ public class SessionViewCapsule extends GenosideComponent {
 	public long getChrPosition() {
 		return chrPosition;
 	}
+	
+	public Vector2 getDimensions() {
+		return new Vector2(this.dimX, this.dimY);
+	}
 
-	void setCapsulePosition(float x, float y) {
+	public void setCapsulePosition(float x, float y) {
 		capsulePosition.x = x;
 		capsulePosition.y = y;
 	}
