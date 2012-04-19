@@ -1,5 +1,8 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.shaders.Shader;
@@ -15,14 +18,18 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveR
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLProfile;
 
-public class SessionViewCapsule extends GenosideComponent {
+public class SessionViewCapsule {
 
 	private static IntBuffer frameBufferHandle = IntBuffer.allocate(1);
 	private IntBuffer textureHandle = IntBuffer.allocate(1);
 	private boolean needsTextureUpdate = true;
+	private Texture texture;
 
 	private final GeneralLink linkData;
 	private final GeneCircle geneCircle;
@@ -112,31 +119,32 @@ public class SessionViewCapsule extends GenosideComponent {
 				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(dimY)/2 > screen_y);
 	}
 
-	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
 		hover = inCapsule(screen_x, screen_y);
 		return hover;
 	}
 
-	@Override
 	public boolean handle(KeyEvent event) {
 		return false;
 	}
 
-	@Override
-	public void draw(GL2 gl) {
+	public void draw(GL2 gl, OverView overView) {
 		linkGFX.draw(gl);
 
 		gl.glEnable(GL2.GL_BLEND);
 		PrimitiveRenderer.drawRectangle(capsulePosition.x, capsulePosition.y, dimX/2, dimY/2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
 		gl.glDisable(GL2.GL_BLEND);
+		if (needsTextureUpdate) {
+			updateTexture(gl, overView);
+			needsTextureUpdate = false;
+		}
+		drawFromTexture(gl);
 	}
 
 	public void setNeedsTextureUpdate() {
 		needsTextureUpdate = true;
 	}
 
-	@Override
 	public void tick(float dt) {
 		if (dying) {
 			death += dt;
@@ -191,42 +199,10 @@ public class SessionViewCapsule extends GenosideComponent {
 		gl.glGenFramebuffers(1, frameBufferHandle);
 	}
 
-	private void genTexture(GL2 gl) {
-		gl.glGenTextures(1, textureHandle);
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
-		gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, 160, 120, 0, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, null);
-		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
-		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
-		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
-		updateTexture(gl);
-	}
+	public void updateTexture(GL2 gl, OverView overView) {
+		BufferedImage image = overView.getTrackviewManager().getImage(chr, chrPosition, chrPosition + 10000l);
 
-	public void updateTexture(GL2 gl) {
-		if (!textureCreated) {
-			textureCreated = true;
-			genTexture(gl);
-		}
-
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
-
-		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, frameBufferHandle.get(0));
-		gl.glFramebufferTexture2D(GL2.GL_FRAMEBUFFER, GL2.GL_COLOR_ATTACHMENT0, GL2.GL_TEXTURE_2D, textureHandle.get(0), 0);
-
-		if (gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER) != GL2.GL_FRAMEBUFFER_COMPLETE) {
-			System.out.println("FRAMEBUFFER ERROR --- ABANDON SHIP!\n");
-		}
-
-		IntBuffer oldViewPort = IntBuffer.allocate(4);
-
-		gl.glGetIntegerv(GL2.GL_VIEWPORT, oldViewPort);
-		gl.glViewport(0, 0, 160, 120);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		// render
-
-		//DRAW SWING IMAGE HERE
-		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
-		gl.glViewport(oldViewPort.get(0), oldViewPort.get(1), oldViewPort.get(2), oldViewPort.get(3));
+		texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
 	}
 
 	private void drawFromTexture(GL2 gl) {
@@ -241,7 +217,7 @@ public class SessionViewCapsule extends GenosideComponent {
 		ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
 		ShaderMemory.setUniformVec1(gl, shader, "alpha", 1.0f);
 
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureHandle.get(0));
+		texture.bind(gl);
 
 		PrimitiveBuffers.squareBuffer.rewind();
 		PrimitiveBuffers.squareTextureBuffer.rewind();

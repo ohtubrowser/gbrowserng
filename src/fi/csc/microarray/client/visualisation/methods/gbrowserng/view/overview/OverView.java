@@ -183,7 +183,7 @@ public class OverView extends GenosideComponent {
 		*/
 
 		for (SessionViewCapsule capsule : sessions.values()) {
-			capsule.draw(gl);
+			capsule.draw(gl, this);
 		}
 	}
 

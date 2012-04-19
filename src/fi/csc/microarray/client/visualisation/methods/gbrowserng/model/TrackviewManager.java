@@ -1,5 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
@@ -12,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -108,6 +111,37 @@ public class TrackviewManager extends Container {
 				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+
+	public BufferedImage getImage(GeneralLink l) {
+		BufferedImage image = null;
+		synchronized (switchLock) {
+			ViewChromosome a = l.getAChromosome();
+			regionA = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
+
+			try {
+				sessionA.setRegion(regionA);
+
+				image = sessionA.getPreview();
+			} catch (URISyntaxException ex) {
+				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return image;
+	}
+
+	public BufferedImage getImage(ViewChromosome c, long start, long end) {
+		BufferedImage image = null;
+		synchronized (switchLock) {
+			regionA = new Region(start, end, new Chromosome(c.getName()));
+			try {
+				sessionA.setRegion(regionA);
+				image = sessionA.getPreview();
+			} catch (URISyntaxException ex) {
+				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return image;
 	}
 
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
