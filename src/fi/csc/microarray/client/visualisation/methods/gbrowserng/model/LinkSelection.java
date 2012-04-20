@@ -6,7 +6,6 @@ import com.soulaim.tech.math.Matrix4;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
 import javax.media.opengl.GL2;

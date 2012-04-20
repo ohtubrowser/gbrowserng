@@ -1,4 +1,4 @@
-package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
+package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 
@@ -98,6 +98,7 @@ public class CapsuleManager {
 	private static boolean replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-SLOTS_PER_QUAD-1 + nextfree, endID-1);
 		// This shouldn't be called when end==0, but for some reason it is.
+		System.out.println(nextfree);
 		if(end>0) {
 			for(int i=id; i<end; ++i) {
 				sessions.replace(i, sessions.get(i+1));
@@ -123,10 +124,10 @@ public class CapsuleManager {
 		while(it.hasNext()) {
 			int id = (Integer)it.next();
 			if(sessions.get(id) == c) {
-				if(id<SLOTS_PER_QUAD) {if(replaceFrom(id, SLOTS_PER_QUAD, nextFreeTopleft)) nextFreeTopleft--;}
-				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) {if(replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft)) nextFreeBtmleft--;}
-				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) {if(replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright)) nextFreeTopright--;}
-				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) {if(replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright)) nextFreeBtmright--;}
+				if(id<SLOTS_PER_QUAD) replaceFrom(id, SLOTS_PER_QUAD, nextFreeTopleft--);
+				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft--);
+				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright);
+				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright);
 				return;
 			}
 		}

@@ -2,14 +2,14 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.CapsuleManager;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CapsuleManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 
 import java.awt.*;
@@ -24,7 +24,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.media.opengl.GL2;
 
 public class OverView extends GenosideComponent {

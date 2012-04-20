@@ -1,7 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
@@ -10,19 +9,16 @@ import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLProfile;
 
 public class SessionViewCapsule {
 

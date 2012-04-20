@@ -1,4 +1,4 @@
-package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
+package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import com.soulaim.tech.math.Matrix4;
