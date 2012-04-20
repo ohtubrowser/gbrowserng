@@ -43,7 +43,7 @@ public class MouseEventHandler extends EventHandler {
 		}
 
 		hoverCapsule = null;
-		setHoverCapsules(x, y);
+		setHoverCapsule(x, y);
 
 		/*
 		if (!activeSessions.isEmpty() && hoverCapsule != null) {
@@ -85,8 +85,9 @@ public class MouseEventHandler extends EventHandler {
 		return false;
 	}
 
-	private void setHoverCapsules(float x, float y) {
-		for (SessionViewCapsule capsule : sessions.values()) { // TODO : hoverCapsule is calculated many times in this function
+	private void setHoverCapsule(float x, float y) {
+		overview.setHoverCapsule(null);
+		for (SessionViewCapsule capsule : sessions.values()) {
 			if (capsule.inCapsule(x, y)) {
 				overview.setHoverCapsule(capsule);
 				break;
