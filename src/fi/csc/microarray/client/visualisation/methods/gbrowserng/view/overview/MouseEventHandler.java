@@ -17,7 +17,6 @@ import java.awt.event.MouseWheelEvent;
  */
 public class MouseEventHandler extends EventHandler {
 
-	private SimpleMouseEvent lastMouseClick;
 	private MouseEvent event;
 	private float mouseX, mouseY;
 	private GeneCircle geneCircle;
@@ -25,7 +24,6 @@ public class MouseEventHandler extends EventHandler {
 
 	public MouseEventHandler(OverView overview) {
 		super(overview);
-		this.lastMouseClick = null;
 	}
 
 	// method hard to understand - what happens and why in this particular order? needs to be divided into logical units with explanatory names
@@ -45,7 +43,6 @@ public class MouseEventHandler extends EventHandler {
 		}
 
 		hoverCapsule = null;
-		checkIfLastMouseClickNull(x, y, event);
 		setHoverCapsules(x, y);
 
 		/*
@@ -94,12 +91,6 @@ public class MouseEventHandler extends EventHandler {
 				overview.setHoverCapsule(capsule);
 				break;
 			}
-		}
-	}
-
-	private void checkIfLastMouseClickNull(float x, float y, MouseEvent event) {
-		if (lastMouseClick == null) {
-			lastMouseClick = new SimpleMouseEvent(x, y, event.getWhen());
 		}
 	}
 
@@ -220,7 +211,6 @@ public class MouseEventHandler extends EventHandler {
 			}
 		}
 		overview.openContextMenu(mouseX, mouseY);
-		lastMouseClick = new SimpleMouseEvent(mouseX, mouseY, event.getWhen());
 		return true;
 	}
 

@@ -35,7 +35,7 @@ public class TrackviewManager extends Container {
 
 	static {
 		try {
-			dataPath = "/cs/group2/home/gbrowsng/";
+			dataPath = "";
 
 	//		dataPath = "";
 			BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam").toURI().toURL();

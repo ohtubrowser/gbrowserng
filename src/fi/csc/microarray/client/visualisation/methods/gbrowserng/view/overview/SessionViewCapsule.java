@@ -51,6 +51,7 @@ public class SessionViewCapsule {
 	private boolean hover = false;
 	private LinkGFX linkGFX;
 	private boolean textureCreated;
+	private float timeSinceTextureUpdate = 0f;
 
 	public SessionViewCapsule(ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
 		this.linkData = linkData;
@@ -149,6 +150,11 @@ public class SessionViewCapsule {
 	public void tick(float dt) {
 		if (dying) {
 			death += dt;
+		}
+		timeSinceTextureUpdate += dt;
+		if (timeSinceTextureUpdate > 5f) {
+			needsTextureUpdate = true;
+			timeSinceTextureUpdate = 0f;
 		}
 	}
 
