@@ -10,7 +10,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 
 import javax.media.opengl.GL2;
 
-// TODO: This is NOT ready
 public class PrimitiveRenderer {
 	public static void drawRectangle(float x, float y, float width, float height, GL2 gl, Color color) {
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.PLAINMVP);

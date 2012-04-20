@@ -9,7 +9,7 @@ public class OpenGLBuffers {
 	public static float bezierStep;
 	public static int numBezierPoints = 50, circlePoints = 128;
 
-	public static int circleID, squareID, bezierID, centromereID;
+	public static int circleID, squareID, bezierID, centromereID, squareTexID;
 
 	public static void initBuffers(GL2 gl) {
 		initCircleBuffer(gl);
@@ -46,17 +46,21 @@ public class OpenGLBuffers {
 
 	private static void initSquareBuffer(GL2 gl) {
 		FloatBuffer squareBuffer = FloatBuffer.allocate(4 * 2);
-		squareBuffer.put(-1);
-		squareBuffer.put(-1);
-		squareBuffer.put(1);
-		squareBuffer.put(-1);
-		squareBuffer.put(-1);
-		squareBuffer.put(1);
-		squareBuffer.put(1);
-		squareBuffer.put(1);
+		squareBuffer.put(-1);squareBuffer.put(-1);
+		squareBuffer.put(1);squareBuffer.put(-1);
+		squareBuffer.put(-1);squareBuffer.put(1);
+		squareBuffer.put(1);squareBuffer.put(1);
 		squareBuffer.rewind();
 		
+		FloatBuffer squareTexBuffer = FloatBuffer.allocate(4 * 2);
+		squareTexBuffer.put(0);squareTexBuffer.put(0);
+		squareTexBuffer.put(1);squareTexBuffer.put(0);
+		squareTexBuffer.put(0);squareTexBuffer.put(1);
+		squareTexBuffer.put(1);squareTexBuffer.put(1);
+		squareTexBuffer.rewind();
+		
 		squareID = generateVBO(gl, squareBuffer);
+		squareTexID = generateVBO(gl, squareTexBuffer);
 	}
 
 	private static void initBezierBuffer(GL2 gl) {
