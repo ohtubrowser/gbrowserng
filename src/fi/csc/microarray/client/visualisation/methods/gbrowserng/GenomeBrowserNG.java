@@ -118,6 +118,8 @@ public class GenomeBrowserNG {
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
+		GlobalVariables.filtering = filtering;
+		GlobalVariables.debug = debug;
 		this.bam = bam;
 		this.bai = bai;
 		LinkCollection links;
@@ -128,8 +130,6 @@ public class GenomeBrowserNG {
 		}else {
 			links = useChipsterDataHuman();
 		}
-		GlobalVariables.filtering = filtering;
-		GlobalVariables.debug = debug;
 
 		this.eventQueue = new LinkedBlockingQueue<AWTEvent>();
 		this.genoWindow = new GenoWindow(width, height);

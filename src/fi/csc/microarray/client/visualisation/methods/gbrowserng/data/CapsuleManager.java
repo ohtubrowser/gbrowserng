@@ -45,8 +45,8 @@ public class CapsuleManager {
 		float x=0, y=0;
 		if(linkx < 0 && linky > 0) {
 			if(nextFreeTopleft != SLOTS_PER_QUAD) {
-				x=-1f + c.getDimensions().x;
-				y=(1f - (c.getDimensions().y / 2))-nextFreeTopleft*SLOT_HEIGHT;
+				x=-0.99f + (c.getDimensions().x/2);
+				y=(1f - (c.getDimensions().y))-nextFreeTopleft*SLOT_HEIGHT;
 				id=nextFreeTopleft;
 				nextFreeTopleft++;
 			}
@@ -57,7 +57,7 @@ public class CapsuleManager {
 		}
 		else if(linkx < 0 && linky < 0) {
 			if(nextFreeBtmleft!=SLOTS_PER_QUAD) {
-				x=-1f + c.getDimensions().x;
+				x=-0.99f + (c.getDimensions().x/2);
 				y=(0f - (c.getDimensions().y / 2))-nextFreeBtmleft*SLOT_HEIGHT;
 				id=SLOTS_PER_QUAD + nextFreeBtmleft;
 				nextFreeBtmleft++;
@@ -69,8 +69,8 @@ public class CapsuleManager {
 		}
 		else if(linkx > 0 && linky > 0) {
 			if(nextFreeTopright!=SLOTS_PER_QUAD) {
-				x=1f - c.getDimensions().x;
-				y=(1f - (c.getDimensions().y / 2))-nextFreeTopright*SLOT_HEIGHT;
+				x=0.99f - (c.getDimensions().x/2);
+				y=(1f - (c.getDimensions().y))-nextFreeTopright*SLOT_HEIGHT;
 				id=(SLOTS_PER_QUAD*2) + nextFreeTopright;
 				nextFreeTopright++;
 			}
@@ -81,7 +81,7 @@ public class CapsuleManager {
 		}
 		else if(linkx > 0 && linky < 0) {
 			if(nextFreeBtmright!=SLOTS_PER_QUAD) {
-				x=1f - c.getDimensions().x;
+				x=0.99f - (c.getDimensions().x/2);
 				y=(0f - (c.getDimensions().y / 2))-nextFreeBtmright*SLOT_HEIGHT;
 				id=(SLOTS_PER_QUAD*3) + nextFreeBtmright;
 				nextFreeBtmright++;
