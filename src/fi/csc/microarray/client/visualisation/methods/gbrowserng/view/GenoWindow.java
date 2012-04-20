@@ -56,12 +56,14 @@ public class GenoWindow {
 	}
 
 	public void toggleFullscreen() {
+		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		if (isFullscreen = !isFullscreen) {
-			frame.setUndecorated(true);
+			if(device.isFullScreenSupported())
+				device.setFullScreenWindow(frame);
 			GlobalVariables.width = Toolkit.getDefaultToolkit().getScreenSize().width;
 			GlobalVariables.height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		} else {
-			frame.setUndecorated(false);
+			device.setFullScreenWindow(null);
 			GlobalVariables.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
 			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
