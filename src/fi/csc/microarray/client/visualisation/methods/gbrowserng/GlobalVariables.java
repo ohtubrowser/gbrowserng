@@ -14,7 +14,6 @@ public class GlobalVariables {
 	public static int width;
 	public static int height;
 	public static final float linkSyncInterval = 3.0f;
-	public static boolean devmode = true;
 	public static long filtering;
 	public static boolean debug;
 	public static int numCapsules = 8;

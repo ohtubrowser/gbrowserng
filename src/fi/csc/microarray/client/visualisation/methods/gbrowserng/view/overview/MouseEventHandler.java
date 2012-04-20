@@ -243,7 +243,6 @@ public class MouseEventHandler extends EventHandler {
 	 */
 	private void openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
 		SessionViewCapsule capsule = new SessionViewCapsule(link, pointerGenePosition, geneCircle);
-		capsule.setDimensions(0.2f, 0.1f);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
 		synchronized (overview.textureUpdateListLock) {

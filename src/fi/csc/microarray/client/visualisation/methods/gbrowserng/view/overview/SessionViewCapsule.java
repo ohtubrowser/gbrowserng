@@ -45,7 +45,7 @@ public class SessionViewCapsule {
 
 	private float relativePosition;
 
-	private float dimX = 0.1f;
+	private float dimX = 0.2f;
 	private float dimY = 0.1f;
 	private boolean hover = false;
 	private LinkGFX linkGFX;
@@ -202,7 +202,7 @@ public class SessionViewCapsule {
 	public void updateTexture(GL2 gl, OverView overView) {
 		BufferedImage image = overView.getTrackviewManager().getImage(chr, chrPosition, chrPosition + 10000l);
 
-		texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
+		texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
 	}
 
 	private void drawFromTexture(GL2 gl) {
