@@ -3,7 +3,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
@@ -12,6 +11,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
@@ -46,6 +46,7 @@ public class SessionViewCapsule {
 	private boolean hover = false;
 	private LinkGFX linkGFX;
 	private boolean textureCreated;
+	private float timeSinceTextureUpdate = 0f;
 
 	public SessionViewCapsule(ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
 		this.linkData = linkData;
@@ -145,6 +146,11 @@ public class SessionViewCapsule {
 		if (dying) {
 			death += dt;
 		}
+		timeSinceTextureUpdate += dt;
+		if (timeSinceTextureUpdate > 5f) {
+			needsTextureUpdate = true;
+			timeSinceTextureUpdate = 0f;
+		}
 	}
 
 	public void die() {
@@ -216,19 +222,19 @@ public class SessionViewCapsule {
 
 		texture.bind(gl);
 
-		PrimitiveBuffers.squareBuffer.rewind();
-		PrimitiveBuffers.squareTextureBuffer.rewind();
-
-		int vertexPositionHandle = shader.getAttribLocation(gl, "vertexCoord");
-		int texPositionHandle = shader.getAttribLocation(gl, "texCoord");
-		gl.glEnableVertexAttribArray(vertexPositionHandle);
-		gl.glEnableVertexAttribArray(texPositionHandle);
-		gl.glVertexAttribPointer(vertexPositionHandle, 2, GL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareBuffer);
-		gl.glVertexAttribPointer(texPositionHandle, 2, GL2.GL_FLOAT, false, 0, PrimitiveBuffers.squareTextureBuffer);
-		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, PrimitiveBuffers.squareBuffer.capacity() / 2);
-
-		gl.glDisableVertexAttribArray(vertexPositionHandle);
-		gl.glDisableVertexAttribArray(texPositionHandle);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
+		gl.glEnableVertexAttribArray(0);
+		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
+		
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareTexID);
+		gl.glEnableVertexAttribArray(1);
+		gl.glVertexAttribPointer(1, 2, GL2.GL_FLOAT, false, 0, 0);
+		
+		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
+		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
+		
+		gl.glDisableVertexAttribArray(0);
+		gl.glDisableVertexAttribArray(1);
 		shader.stop(gl);
 		gl.glDisable(gl.GL_BLEND);
 

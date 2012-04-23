@@ -75,8 +75,10 @@ public class KeyEventHandler extends EventHandler {
 			overview.setDrawArcs();
 		} else if (KeyEvent.VK_Z == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() + 0.01f));
+			overview.updateCircleSize();
 		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() - 0.01f));
+			overview.updateCircleSize();
 		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
