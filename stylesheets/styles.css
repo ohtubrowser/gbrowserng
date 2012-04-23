@@ -19,7 +19,7 @@ body {
 }
 
 .wrapper {
-  width: 640px;
+  width: 1000px;
   margin: 0 auto;
   background: #DEDEDE;
   -moz-border-radius: 8px;
@@ -34,7 +34,7 @@ body {
   box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgba(0, 0, 0, 0.45) 0 3px 10px;
 }
 
-header, section, footer {
+header, section {
   display: block;
 }
 
@@ -122,7 +122,7 @@ header ul {
   -webkit-box-shadow: inset rgba(255, 255, 255, 0.45) 0 1px 0, inset rgba(0, 0, 0, 0.2) 0 -1px 0;
   -o-box-shadow: inset rgba(255, 255, 255, 0.45) 0 1px 0, inset rgba(0, 0, 0, 0.2) 0 -1px 0;
   box-shadow: inset rgba(255, 255, 255, 0.45) 0 1px 0, inset rgba(0, 0, 0, 0.2) 0 -1px 0;
-  width: 240px;
+  width: 295px;
 }
 header ul:before {
   content: '';
@@ -144,20 +144,28 @@ header ul:before {
   -o-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0, inset rgba(255, 255, 255, 0.7) 0 -1px 0;
   box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0, inset rgba(255, 255, 255, 0.7) 0 -1px 0;
 }
+
 header ul li {
-  width: 79px;
   float: left;
+  display: inline-block;
+  width: 90px;
+  padding-right: 6px;
+  border-left: 1px solid #8BBEF3;
   border-right: 1px solid #3A7CBE;
   height: 38px;
 }
-header ul li + li {
-  width: 78px;
+
+header ul li:first-child {
+  width: 90px;
+  border-right: 1px solid #3A7CBE;
+}
+
+header ul li:last-child {
   border-left: 1px solid #8BBEF3;
-}
-header ul li + li + li {
   border-right: none;
-  width: 79px;
+  width: 90px;
 }
+
 header ul a {
   line-height: 1;
   font-size: 11px;
@@ -166,11 +174,13 @@ header ul a {
   display: block;
   text-align: center;
   font-weight: 400;
+  padding-left: 6px;
   padding-top: 6px;
   height: 40px;
   text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
 }
 header ul a strong {
+  line-height: 26px;
   font-size: 14px;
   display: block;
   color: #fff;
@@ -289,21 +299,19 @@ hr {
 }
 
 footer {
-  width: 640px;
-  margin: 0 auto;
-  padding: 20px 0 0;
-  color: #ccc;
-  overflow: hidden;
+    margin: 0 -20px 20px;
+	height: 20px;
+	padding-left: 20px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	background-color: #ccc;
+}
+footer:first-child {
+	margin-top: -16px;
 }
 footer a {
-  color: #fff;
-  font-weight: bold;
-}
-footer p {
-  float: left;
-}
-footer p + p {
-  float: right;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 @media print, screen and (max-width: 740px) {
@@ -325,23 +333,6 @@ footer p + p {
     width: 100%;
   }
 
-  footer {
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
-    -o-border-radius: 0;
-    -ms-border-radius: 0;
-    -khtml-border-radius: 0;
-    border-radius: 0;
-    padding: 20px;
-    width: auto;
-  }
-  footer p {
-    float: none;
-    margin: 0;
-  }
-  footer p + p {
-    float: none;
-  }
 }
 @media print, screen and (max-width:580px) {
   header ul {
