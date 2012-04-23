@@ -126,8 +126,8 @@ public class CapsuleManager {
 			if(sessions.get(id) == c) {
 				if(id<SLOTS_PER_QUAD) replaceFrom(id, SLOTS_PER_QUAD, nextFreeTopleft--);
 				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft--);
-				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright);
-				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright);
+				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright--);
+				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright--);
 				return;
 			}
 		}
