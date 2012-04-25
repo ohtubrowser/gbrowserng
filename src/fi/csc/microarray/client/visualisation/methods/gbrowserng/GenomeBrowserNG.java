@@ -20,7 +20,7 @@ import javax.media.opengl.GLProfile;
  * Contains main and run methods, which together open the program. Contains methods to use either human or rat data for genome and links
  * @author Kristiina Paloheimo
  */
-public class GenomeBrowserNG {
+public class GenomeBrowserNG implements Runnable {
 
 	private BlockingQueue<AWTEvent> eventQueue;
 	private GenoWindowListener windowListener;
@@ -166,7 +166,7 @@ public class GenomeBrowserNG {
 	 * Thread started for GLEventListener. Upon exit from program by user, program terminated.
 	 * @throws InterruptedException
 	 */
-	public void run() throws InterruptedException {
+	public void runBlocking() throws InterruptedException {
 		this.genoWindow.open();
 		Thread t = new Thread(glListener);
 		t.start();
@@ -175,6 +175,27 @@ public class GenomeBrowserNG {
 		glListener.die();
 		t.join();
 		this.genoWindow.close();
+	}
+
+	/**
+	 * Runs GenomeBrowserNG in another thread and returns that thread.
+	 * @return Thread
+	 */
+	public Thread runThreaded() {
+		Thread t = new Thread(this);
+		t.start();
+		return t;
+	}
+	
+	/**
+	 * run method for Runnable interface
+	 */
+	public void run() {
+		try {
+			runBlocking();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -218,8 +239,7 @@ public class GenomeBrowserNG {
 				
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug, bam, bai).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug, bam, bai).runThreaded();
 	}
-
 
 }
