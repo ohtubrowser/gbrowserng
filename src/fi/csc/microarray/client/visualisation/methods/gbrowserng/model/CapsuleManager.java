@@ -1,4 +1,4 @@
-package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
+package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 
@@ -14,18 +14,18 @@ public class CapsuleManager {
 	private static final int SLOTS_PER_QUAD = 4;
 	private static final float SLOT_HEIGHT = 1.0f/SLOTS_PER_QUAD;
 	
-	private static int nextFreeTopleft = 0;
-	private static int nextFreeBtmleft = 0;
-	private static int nextFreeTopright = 0;
-	private static int nextFreeBtmright = 0;
+	private int nextFreeTopleft = 0;
+	private int nextFreeBtmleft = 0;
+	private int nextFreeTopright = 0;
+	private int nextFreeBtmright = 0;
 
-	private static ConcurrentHashMap<Integer, SessionViewCapsule> sessions = new ConcurrentHashMap<Integer, SessionViewCapsule>();
+	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions = new ConcurrentHashMap<Integer, SessionViewCapsule>();
 	
-	public static ConcurrentHashMap<Integer, SessionViewCapsule> getSessions() {
+	public ConcurrentHashMap<Integer, SessionViewCapsule> getSessions() {
 		return sessions;
 	}
 
-	private static void replaceFirst(SessionViewCapsule c, int startID) {
+	private void replaceFirst(SessionViewCapsule c, int startID) {
 		c.setCapsulePosition(sessions.get(startID).getCapsulePosition().x, sessions.get(startID).getCapsulePosition().y);
 		for(int i=startID+SLOTS_PER_QUAD-1; i>startID; i--) {
 			sessions.replace(i, sessions.get(i-1));
@@ -40,7 +40,7 @@ public class CapsuleManager {
 	 * @param linkx Capsule's LinkGFX's x position. (For aligning the capsule to correct quad).
 	 * @param linky Capsule's LinkGFX's y position. (For aligning the capsule to correct quad).
 	 */
-	public static void addCapsule(SessionViewCapsule c, float linkx, float linky) {
+	public void addCapsule(SessionViewCapsule c, float linkx, float linky) {
 		int id=0;
 		float x=0, y=0;
 		if(linkx < 0 && linky > 0) {
@@ -95,9 +95,10 @@ public class CapsuleManager {
 		sessions.put(id, c);
 	}
 
-	private static boolean replaceFrom(int id, int endID, int nextfree) {
+	private boolean replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-SLOTS_PER_QUAD-1 + nextfree, endID-1);
 		// This shouldn't be called when end==0, but for some reason it is.
+		System.out.println(nextfree);
 		if(end>0) {
 			for(int i=id; i<end; ++i) {
 				sessions.replace(i, sessions.get(i+1));
@@ -117,16 +118,16 @@ public class CapsuleManager {
 	 * removeCapsule removes SessionViewCapsule from the internal data structure.
 	 * @param c Capsule to be removed.
 	 */
-	public static void removeCapsule(SessionViewCapsule c) {
+	public void removeCapsule(SessionViewCapsule c) {
 		// removeCapsule gets called multiple times... Concurrency?
 		Iterator it = sessions.keySet().iterator();
 		while(it.hasNext()) {
 			int id = (Integer)it.next();
 			if(sessions.get(id) == c) {
-				if(id<SLOTS_PER_QUAD) {if(replaceFrom(id, SLOTS_PER_QUAD, nextFreeTopleft)) nextFreeTopleft--;}
-				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) {if(replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft)) nextFreeBtmleft--;}
-				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) {if(replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright)) nextFreeTopright--;}
-				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) {if(replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright)) nextFreeBtmright--;}
+				if(id<SLOTS_PER_QUAD) replaceFrom(id, SLOTS_PER_QUAD, nextFreeTopleft--);
+				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft--);
+				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright--);
+				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright--);
 				return;
 			}
 		}

@@ -18,8 +18,10 @@ public class LinkCollection {
 	public final Object linkSyncLock = new Object();
 	private float timeUntilSync = GlobalVariables.linkSyncInterval;
 	public boolean loading = false;
+	public GlobalVariables globals;
 
-	public LinkCollection() {
+	public LinkCollection(GlobalVariables globals) {
+		this.globals = globals;
 	}
 	
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
@@ -46,7 +48,7 @@ public class LinkCollection {
 			}
 			newLinksToAdd.clear();
 		}
-		if (GlobalVariables.filtering != 0) filterLinks(GlobalVariables.filtering);
+		if (globals.filtering != 0) filterLinks(globals.filtering);
 		updateColors();
 		loading = false;
 	}
@@ -115,7 +117,7 @@ public class LinkCollection {
 	public void updateNewLinkPositions(GeneCircle geneCircle) {
 		synchronized (linkSyncLock) {
 			for (GeneralLink link : newLinksToAdd) {
-				link.calculatePositions(geneCircle);
+				link.calculatePositions(globals, geneCircle);
 			}
 		}
 	}

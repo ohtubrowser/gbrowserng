@@ -79,13 +79,13 @@ public class KeyEventHandler extends EventHandler {
 		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() - 0.01f));
 			overview.updateCircleSize();
-		} else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
+		}/* else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			Random r = new Random();
 			for (int i = 0; i < 1000; ++i) {
 				ViewChromosome begin = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
 				ViewChromosome end = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
 				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
 			}
-		}
+		}*/
 	}
 }

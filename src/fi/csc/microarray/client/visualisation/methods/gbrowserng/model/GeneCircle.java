@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import com.soulaim.tech.math.Vector2;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
@@ -14,14 +15,17 @@ public class GeneCircle {
 	private final float minimizedChromosomeSize = 0.007f;
 	private float minimumChromosomeSlice;
 	private float size;
-	private ViewChromosome chromosome = Genome.getChromosome(0);
+	private ViewChromosome chromosome;
 	private long chromosomePosition = 0;
 	private float[] chromosomeBoundaries;
 	private Vector2[] chromosomeBoundariesPositions;
 	public final Object tickdrawLock = new Object();
 	public boolean animating = true;
+	public Genome Genome;
 
-	public GeneCircle() {
+	public GeneCircle(GlobalVariables globals) {
+		Genome = globals.genome;
+		chromosome = globals.genome.getChromosome(0);
 		tick(0f);
 		animating = true;
 	}

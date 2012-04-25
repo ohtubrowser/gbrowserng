@@ -4,8 +4,8 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import javax.media.opengl.GL2;
 
@@ -83,7 +83,7 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		return bCirclePos;
 	}
 
-	public void calculatePositions(GeneCircle geneCircle) {
+	public void calculatePositions(GlobalVariables globals, GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
 		Vector2 aXYPos = geneCircle.getXYPosition(aCirclePos);
@@ -98,10 +98,10 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		bX *= 0.9495;
 		bY *= 0.9495;
 
-		aX = CoordinateManager.toCircleCoordsX(aX);
-		aY = CoordinateManager.toCircleCoordsY(aY);
-		bX = CoordinateManager.toCircleCoordsX(bX);
-		bY = CoordinateManager.toCircleCoordsY(bY);
+		aX = CoordinateManager.toCircleCoordsX(globals, aX);
+		aY = CoordinateManager.toCircleCoordsY(globals, aY);
+		bX = CoordinateManager.toCircleCoordsX(globals, bX);
+		bY = CoordinateManager.toCircleCoordsY(globals, bY);
 	}
 
 	public static void beginDrawing(GL2 gl, float zoomLevel) {

@@ -20,7 +20,7 @@ import javax.media.opengl.GLProfile;
  * Contains main and run methods, which together open the program. Contains methods to use either human or rat data for genome and links
  * @author Kristiina Paloheimo
  */
-public class GenomeBrowserNG {
+public class GenomeBrowserNG implements Runnable {
 
 	private BlockingQueue<AWTEvent> eventQueue;
 	private GenoWindowListener windowListener;
@@ -28,7 +28,8 @@ public class GenomeBrowserNG {
 	private GenoGLListener glListener;
 	private GenoWindow genoWindow;
 	private EventHandler eventHandler;
-	private static String bam, bai;
+	private String bam, bai;
+	public GlobalVariables globals;
 
 	/**
 	 * Returns the created EventHandler
@@ -76,7 +77,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataRat() {
+	public LinkCollection useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt", "coord_system.txt",
@@ -84,9 +85,9 @@ public class GenomeBrowserNG {
 					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (ViewChromosome c : chromosomeData) {
-			Genome.addChromosome(c);
+			globals.genome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
+		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataHuman() {
+	public LinkCollection useChipsterDataHuman() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -103,9 +104,9 @@ public class GenomeBrowserNG {
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (ViewChromosome c : chromosomeData) {
-			Genome.addChromosome(c);
+			globals.genome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
+		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
 
 	/**
@@ -118,8 +119,10 @@ public class GenomeBrowserNG {
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
-		GlobalVariables.filtering = filtering;
-		GlobalVariables.debug = debug;
+		this.globals = new GlobalVariables();
+		globals.genome = new Genome();
+		globals.filtering = filtering;
+		globals.debug = debug;
 		this.bam = bam;
 		this.bai = bai;
 		LinkCollection links;
@@ -132,8 +135,8 @@ public class GenomeBrowserNG {
 		}
 
 		this.eventQueue = new LinkedBlockingQueue<AWTEvent>();
-		this.genoWindow = new GenoWindow(width, height);
-		OverView overView = new OverView(this.genoWindow, links);
+		this.genoWindow = new GenoWindow(globals, width, height);
+		OverView overView = new OverView(globals, this.genoWindow, links);
 			
 		this.genoWindow.addContainer(overView.getTrackviewManager());
 
@@ -163,7 +166,7 @@ public class GenomeBrowserNG {
 	 * Thread started for GLEventListener. Upon exit from program by user, program terminated.
 	 * @throws InterruptedException
 	 */
-	public void run() throws InterruptedException {
+	public void runBlocking() throws InterruptedException {
 		this.genoWindow.open();
 		Thread t = new Thread(glListener);
 		t.start();
@@ -172,6 +175,27 @@ public class GenomeBrowserNG {
 		glListener.die();
 		t.join();
 		this.genoWindow.close();
+	}
+
+	/**
+	 * Runs GenomeBrowserNG in another thread and returns that thread.
+	 * @return Thread
+	 */
+	public Thread runThreaded() {
+		Thread t = new Thread(this);
+		t.start();
+		return t;
+	}
+	
+	/**
+	 * run method for Runnable interface
+	 */
+	public void run() {
+		try {
+			runBlocking();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -215,8 +239,7 @@ public class GenomeBrowserNG {
 				
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		double fraction = 0.8d;
-		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug, bam, bai).run();
+		new GenomeBrowserNG((int) (dim.width * fraction), (int) (dim.height * fraction), filtering, genome, debug, bam, bai).runThreaded();
 	}
-
 
 }
