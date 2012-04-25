@@ -113,7 +113,7 @@ public class GeneCircleGFX {
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
 
-		for (ViewChromosome c : Genome.getChromosomes()) {
+		for (ViewChromosome c : globals.genome.getChromosomes()) {
 			if (!c.isMinimized()) {
 				Matrix4 modelMatrix = CoordinateManager.getCircleMatrix(globals);
 				modelMatrix.rotate(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.getCentromereRelativePosition()), 0, 0, 1);

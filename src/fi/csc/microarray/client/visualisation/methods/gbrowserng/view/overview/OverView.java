@@ -28,7 +28,7 @@ import javax.media.opengl.GL2;
 
 public class OverView extends GenosideComponent {
 
-	public GeneCircle geneCircle = new GeneCircle();
+	public GeneCircle geneCircle;
 	private GeneCircleGFX geneCircleGFX;
 	private GenoFPSCounter tickCounter = new GenoFPSCounter();
 	private GenoFPSCounter drawCounter = new GenoFPSCounter();
@@ -54,6 +54,7 @@ public class OverView extends GenosideComponent {
 	// initialize object and neede parts
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
 		this.globals = globals;
+		geneCircle = new GeneCircle(globals);
 		geneCircleGFX = new GeneCircleGFX(globals, geneCircle);
 		drawArcs = false;
 		this.window = window;
@@ -93,7 +94,7 @@ public class OverView extends GenosideComponent {
 	}
 
 	private void initChromoNames() {
-		for (ViewChromosome chromosome : Genome.getChromosomes()) {
+		for (ViewChromosome chromosome : globals.genome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
 		}
 	}
@@ -202,12 +203,12 @@ public class OverView extends GenosideComponent {
 		for (Vector2 v : chromobounds) {
 			// Rotation needs to be done first because of coordinate modification.
 			Vector2 rotationv = new Vector2(v);
-			float angle = rotationv.relativeAngle(chromobounds[i % Genome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
+			float angle = rotationv.relativeAngle(chromobounds[i % globals.genome.getNumChromosomes()]) / 2; // Rotate the numbers to the center of the chromosome.
 			rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 
 			// Convert to circlecoords using the rotated vector.
 			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(globals, rotationv));
-			String chromoname = Genome.getChromosome(i - 1).getName();
+			String chromoname = globals.genome.getChromosome(i - 1).getName();
 
 			float bound = vv.relativeAngle(new Vector2(0f, 1f));
 			bound = bound > 0 ? bound : (float) Math.PI * 2 + bound;

@@ -4,18 +4,9 @@ import java.util.ArrayList;
 
 public class Genome {
 
-	private static final ArrayList<ViewChromosome> abstractGenomeData = new ArrayList<ViewChromosome>();
-	private static String name = "empty";
+	private ArrayList<ViewChromosome> abstractGenomeData = new ArrayList<ViewChromosome>();
 
-	public static void setName(String name) {
-		Genome.name = name;
-	}
-
-	public static String getName() {
-		return name;
-	}
-
-	public static long getTotalLength() {
+	public long getTotalLength() {
 		long ans = 0;
 		for (ViewChromosome a : abstractGenomeData) {
 			ans += a.isAnimating() ? a.length() * a.getAnimationProgress() :
@@ -24,7 +15,7 @@ public class Genome {
 		return ans;
 	}
 
-	public static long getStartPoint(int id) {
+	public long getStartPoint(int id) {
 		if (id == 0) {
 			return 0;
 		} else {
@@ -32,7 +23,7 @@ public class Genome {
 		}
 	}
 
-	public static long getEndPoint(int id) {
+	public long getEndPoint(int id) {
 		long ans = 0;
 		for (int i = 0; i <= id; ++i) {
 			ans += abstractGenomeData.get(i).length();
@@ -40,15 +31,15 @@ public class Genome {
 		return ans;
 	}
 
-	public static void addChromosome(ViewChromosome chromosome) {
+	public void addChromosome(ViewChromosome chromosome) {
 		abstractGenomeData.add(chromosome);
 	}
 
-	public static int getNumChromosomes() {
+	public int getNumChromosomes() {
 		return abstractGenomeData.size();
 	}
 
-	public static ViewChromosome getChromosomeByPosition(long position) {
+	public ViewChromosome getChromosomeByPosition(long position) {
 		for (int i = 0; i < getNumChromosomes(); ++i) {
 			if (getEndPoint(i) >= position) {
 				return abstractGenomeData.get(i);
@@ -57,16 +48,15 @@ public class Genome {
 		return abstractGenomeData.get(0);
 	}
 
-	public static ViewChromosome getChromosome(int id) {
+	public ViewChromosome getChromosome(int id) {
 		return abstractGenomeData.get(id);
 	}
 
-	public static void clear() {
+	public void clear() {
 		abstractGenomeData.clear();
-		name = "empty";
 	}
 
-	public static ArrayList<ViewChromosome> getChromosomes() {
+	public ArrayList<ViewChromosome> getChromosomes() {
 		return abstractGenomeData;
 	}
 }

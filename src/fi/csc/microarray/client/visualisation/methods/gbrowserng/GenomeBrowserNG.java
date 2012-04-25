@@ -84,7 +84,7 @@ public class GenomeBrowserNG {
 					"13", "14", "15", "16", "17", "18", "19", "20", "X"});
 
 		for (ViewChromosome c : chromosomeData) {
-			Genome.addChromosome(c);
+			globals.genome.addChromosome(c);
 		}
 		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
@@ -103,7 +103,7 @@ public class GenomeBrowserNG {
 				new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X"});
 		for (ViewChromosome c : chromosomeData) {
-			Genome.addChromosome(c);
+			globals.genome.addChromosome(c);
 		}
 		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
@@ -119,6 +119,7 @@ public class GenomeBrowserNG {
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
 		GlobalVariables globals = new GlobalVariables();
+		globals.genome = new Genome();
 		globals.filtering = filtering;
 		globals.debug = debug;
 		this.bam = bam;

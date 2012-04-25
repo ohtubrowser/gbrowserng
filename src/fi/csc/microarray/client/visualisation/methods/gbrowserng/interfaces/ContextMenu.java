@@ -91,9 +91,9 @@ public class ContextMenu {
 	}
 
 	private void minimizeAllButOne(ViewChromosome chromosome) {
-		int chromosomes = Genome.getNumChromosomes();
+		int chromosomes = overview.globals.genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = Genome.getChromosome(i);
+			ViewChromosome c = overview.globals.genome.getChromosome(i);
 			if (c != chromosome) {
 				c.setMinimized(true);
 			} else c.setMinimized(false);
@@ -101,9 +101,9 @@ public class ContextMenu {
 	}
 	
 	private void restoreAll(ViewChromosome chromosome) {
-		int chromosomes = Genome.getNumChromosomes();
+		int chromosomes = overview.globals.genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
-			ViewChromosome c = Genome.getChromosome(i);
+			ViewChromosome c = overview.globals.genome.getChromosome(i);
 			c.setMinimized(false);
 		}
 	}

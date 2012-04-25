@@ -1,5 +1,7 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
+
 /**
  * Determines variables used throughout program.
  * Genome colors are initialized here in addition to static variables determined in code. 
@@ -17,4 +19,5 @@ public class GlobalVariables {
 	public float aspectRatio = 1.0f;
 	public int width;
 	public int height;
+	public Genome genome;
 }
