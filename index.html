@@ -29,17 +29,25 @@
 			-->
 			</header>
 			<section>
-			<footer id="index"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></footer>
+			<nav id="index"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></nav>
 			<h2>What is Genome Browser NG?</h2>
 			<div id="mainscr"><a href="images/mainscr.png"><img src="images/mainscr.png" height="400px" alt="Screenshot"/></a></div>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in lorem vel lacus cursus rhoncus ut quis nulla. Sed sapien lorem, laoreet in tempor ut, hendrerit ac nibh. Suspendisse auctor risus ac nisl convallis mattis. Praesent vehicula lacus nec mauris consequat eleifend. Nam eget mi nulla, in sodales sem. Phasellus scelerisque libero sed risus ultrices vehicula. Suspendisse mollis dignissim diam, at rutrum arcu eleifend vitae. Fusce fermentum convallis urna, in scelerisque ipsum convallis sit amet. Nunc interdum sollicitudin nibh ultricies interdum. Curabitur molestie facilisis sem at luctus. Duis aliquam pellentesque mollis. Etiam augue arcu, sollicitudin ut aliquet in, egestas a massa. Quisque at eleifend lectus.</p>
-			<p>Suspendisse ornare pellentesque ipsum, tempor volutpat nunc mollis vel. Nunc id dapibus risus. Cras non augue non velit rutrum auctor ac eu eros. Quisque dui sem, scelerisque non tincidunt adipiscing, egestas eget arcu. Aenean dolor eros, pulvinar eu pulvinar ut, molestie eget mauris. Nulla dictum viverra semper. Phasellus viverra malesuada velit. Nunc risus arcu, ornare eu feugiat sed, tincidunt eget nisl. Sed vel venenatis lorem. Curabitur non massa et lorem vulputate blandit. Aliquam placerat viverra metus, quis aliquet urna volutpat a. Proin aliquet placerat odio, in hendrerit ante consequat sit amet. Nam urna orci, convallis a ultricies quis, iaculis viverra mauris. Duis nec massa mauris.</p>
-			<footer id="video"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></footer>
+			<p>This project develops genome browser software that builds on game-like user interface design and powerful Java-based OpenGL graphics libraries. The genome browser uses some of the basic principles found from previous similar browser software, but introduces a new kind of user interface that allows significantly more flexible data navigation.</p>
+			<p>
+			The high level goal of the project is to develop the genome browser into a such state that it can be used in real life use cases to visualize data on fusion genes. In other words, the target set of functionalities are a focused subset of the general genome browser, but nevertheless, constitute a useful application that is an improvement over the existing genome browser software. The work will be centered on developing further the circular view mode of the prototype.
+			</p>
+			<p>
+			The focus of this project are fusion genes and other chromosomal rearrangements. Chromosomal rearrangements are drastic mutations where large parts of the chromosome have "switched places". The discovery and visualizations of these are of paramount importance to many disciplines in medical research, a prominent example being cancer genetics. Fusion genes are a result of small scale chromosomal rearrangements and have been observed in many cancer types.  Databases like the Catalogue Of Somatic Mutations In Cancer - (COSMIC), currently contain information of more than 7000 such genes. One can distinguish several types of rearrangement events depending on if they are  affecting a single gene or rather a part of, or a whole, chromosome and whether the pieces of DNA have been inverted upon fusion.
+			</p>
+			<p>
+			Genome browsing is based on the idea of a reference genome: to navigate genomic coordinates The reference genome is used to infer coordinates for everything that is shown in the visualization. If the actual genome under study has major rearrangements, it will result in some pairs of sequencing reads to align to completely different locations of the reference genome. For designers of genome browser software, this is a challenge. Almost all data that genome browsers show is strongly local: if you are interested in basepairs 100000-100100 of chromosome 1, then you can view only that area and will see everything relevant. But rearrangements are an exception, because you can have paired reads where one pair is in your view and the other in some completely different, remote, location. Typical browsers have troubles in communicating this to the user.
+			</p>
+			<nav id="video"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></nav>
 			<h2>Check out the video!</h2>
 				<p>This is a placeholder video to test embedding from Youtube.</p>
 				<p><iframe width="560" height="315" src="http://www.youtube.com/embed/WBE8Mn9ts6A" frameborder="0" allowfullscreen></iframe></p>
 
-			<footer id="howto"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></footer>
+			<nav id="howto"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></nav>
 			<h2>How do I use this visualization?</h2>
 
 			<div class="screenshot"><img src="images/screen1.png" alt="Screenshot 1"/></div>
@@ -67,7 +75,7 @@
 -d       		debug-mode
 -p [data path]         sets the data path
 </code></pre>
-			<footer id="download"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></footer>
+			<nav id="download"><a href="#index">Index</a> - <a href="#video">Usage video</a> - <a href="#howto">How to use</a> - <a href="#download">Download</a></nav>
 			<h2>Download</h2>
 			<p>Grab your own copy from <a href="jar">here</a> or clone the source code from <a href="http://www.github.com/ohtubrowser/gbrowserng">GitHub</a>.</p>
 			<!--
