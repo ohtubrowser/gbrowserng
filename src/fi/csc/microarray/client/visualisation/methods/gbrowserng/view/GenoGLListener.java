@@ -92,9 +92,9 @@ public class GenoGLListener implements GLEventListener, Runnable {
 		PrimitiveRenderer.onSurfaceChanged(width, height);
 		TextRenderer.getInstance().onSurfaceChanged(width, height);
 
-		GlobalVariables.width = width;
-		GlobalVariables.height = height;
-		GlobalVariables.aspectRatio = (float)width / (float)height;
+		overView.globals.width = width;
+		overView.globals.height = height;
+		overView.globals.aspectRatio = (float)width / (float)height;
 		
 		overView.updateCircleSize();
 	}

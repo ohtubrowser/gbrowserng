@@ -96,8 +96,8 @@ public class MouseEventHandler extends EventHandler {
 	}
 
 	private void calculatePointerGenePosition() {
-		double xCoordinates = CoordinateManager.toCircleCoordsX(mouseY);		// right naming of variable?
-		double yCoordinates = CoordinateManager.toCircleCoordsY(-mouseX);		// right naming of variable?
+		double xCoordinates = CoordinateManager.toCircleCoordsX(globals, mouseY);		// right naming of variable?
+		double yCoordinates = CoordinateManager.toCircleCoordsY(globals, -mouseX);		// right naming of variable?
 		float value1 = (float) (Math.atan2(xCoordinates, yCoordinates) / Math.PI);	// what calculation happens here?
 
 		pointerGenePosition = 1.0f - (value1 * 0.5f + 0.5f);				// what calculation happens here?
@@ -137,7 +137,7 @@ public class MouseEventHandler extends EventHandler {
 		}
 		
 		linkSelection.mouseMove(pointInsideCircle(mouseX, mouseY, geneCircle), mouseX, mouseY);
-		overview.setMousePositionX(CoordinateManager.toCircleCoordsY(mouseX), CoordinateManager.toCircleCoordsX(mouseY));
+		overview.setMousePositionX(CoordinateManager.toCircleCoordsY(globals, mouseX), CoordinateManager.toCircleCoordsX(globals, mouseY));
 		return false;
 	}
 	
@@ -160,7 +160,7 @@ public class MouseEventHandler extends EventHandler {
 				continue;
 			}
 			if (capsule.handle(event, mouseX, mouseY)) {
-				openSession(capsule);
+				capsule.openSession();
 				return true;
 			}
 		}
@@ -233,7 +233,7 @@ public class MouseEventHandler extends EventHandler {
 	 * @param geneCircle GeneCircle to which to attach capsule
 	 */
 	private void openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
-		SessionViewCapsule capsule = new SessionViewCapsule(link, pointerGenePosition, geneCircle);
+		SessionViewCapsule capsule = new SessionViewCapsule(overview, link, pointerGenePosition, geneCircle);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
 		synchronized (overview.textureUpdateListLock) {
@@ -244,16 +244,16 @@ public class MouseEventHandler extends EventHandler {
 
 	public boolean pointOnCircle(float x, float y, GeneCircle geneCircle) {
 		float size = geneCircle.getSize();
-		float a = CoordinateManager.toCircleCoordsX(size);
-		float b = CoordinateManager.toCircleCoordsY(size);
+		float a = CoordinateManager.toCircleCoordsX(globals, size);
+		float b = CoordinateManager.toCircleCoordsY(globals, size);
 		float s = Math.abs(x * x / (a * a) + y * y / (b * b));
 		return (s < 1.0f && s > 0.8f);
 	}
 
 	private boolean pointInsideCircle(float x, float y, GeneCircle geneCircle) {
 		float size = geneCircle.getSize();
-		float a = CoordinateManager.toCircleCoordsX(size);
-		float b = CoordinateManager.toCircleCoordsY(size);
+		float a = CoordinateManager.toCircleCoordsX(globals, size);
+		float b = CoordinateManager.toCircleCoordsY(globals, size);
 		float s = Math.abs(x * x / (a * a) + y * y / (b * b));
 		return (s < 0.9f);
 	}

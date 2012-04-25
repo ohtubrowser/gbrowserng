@@ -28,9 +28,12 @@ public class ConnectionsLoader implements AreaResultListener {
 	public SAMHandlerThread dataThread;
 	public Queue<AreaRequest> areaRequestQueue = new ConcurrentLinkedQueue<AreaRequest>();
 	private ConcurrentLinkedQueue<ViewChromosome> chromosomes;
-	private LinkCollection links = new LinkCollection();
+	private LinkCollection links;
+	public GlobalVariables globals;
 
-	public ConnectionsLoader(String bam, String bai, ConcurrentLinkedQueue<ViewChromosome> chromosomes) {
+	public ConnectionsLoader(GlobalVariables globals, String bam, String bai, ConcurrentLinkedQueue<ViewChromosome> chromosomes) {
+		links = new LinkCollection(globals);
+		this.globals = globals;
 		this.chromosomes = chromosomes;
 
 		SAMDataSource file = null;
@@ -61,7 +64,7 @@ public class ConnectionsLoader implements AreaResultListener {
 
 	public void requestData() {
 		for (ViewChromosome c : this.chromosomes) {
-			if(GlobalVariables.debug && c.getName().compareTo("15") != 0) continue;
+			if(globals.debug && c.getName().compareTo("15") != 0) continue;
 			areaRequestQueue.add(new AreaRequest(
 					new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
 					new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{

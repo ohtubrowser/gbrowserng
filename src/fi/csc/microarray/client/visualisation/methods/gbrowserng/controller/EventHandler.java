@@ -28,7 +28,7 @@ public class EventHandler {
 	public void toggleFullscreen() {
 		this.window.toggleFullscreen();
 		//genoEvent.setScreenSize(GlobalVariables.width, GlobalVariables.height);
-		System.out.println("Screen size " + GlobalVariables.width + "x" + GlobalVariables.height);
+		//System.out.println("Screen size " + GlobalVariables.width + "x" + GlobalVariables.height);
 	}
 
 	public void resolution(int width, int height) {
