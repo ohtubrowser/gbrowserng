@@ -1,6 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CapsuleManager;
+import com.jogamp.graph.curve.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import java.awt.event.MouseEvent;
@@ -175,21 +175,12 @@ public class MouseEventHandler extends EventHandler {
 			overview.setArcHighlightLocked(true);
 			linkSelection.update(pointerGenePosition, linkCollection);
 		} else if (overview.isArcHighlightLocked() && pointInsideCircle(mouseX, mouseY, geneCircle)) {
-			trackviewManager.openLinkSession(overview.getLinkSelection().getActiveLink());
-			trackviewManager.toggleVisible();
+			GeneralLink cl = overview.getLinkSelection().getActiveLink();
+			// calculate position on circle where to draw capsule
+			float relativePosition = geneCircle.getRelativePosition(cl.getEndChromosome().getChromosomeNumber()-1, ((float) cl.getEndPosition()) / cl.getEndChromosome().length());
 
-			GeneralLink cl = overview.getTrackviewManager().getLink();
-			float relativePosition = 0;
-
-			// calcualted position on circle where to draw capsule
-			if (cl.isaocc()) {
-				relativePosition = geneCircle.getRelativePosition(cl.getBChromosome().getChromosomeNumber() - 1, ((float) cl.getbStart()) / cl.getBChromosome().length());
-			} else {
-				relativePosition = geneCircle.getRelativePosition(cl.getAChromosome().getChromosomeNumber() - 1, ((float) cl.getaStart()) / cl.getAChromosome().length());
-			}
-
-			openNewAreaCapsule(relativePosition, cl, geneCircle);
-
+			SessionViewCapsule c = openNewAreaCapsule(relativePosition, cl, geneCircle);
+			c.openSession();
 		} else {
 			if (overview.isArcHighlightLocked()) {
 				overview.setArcHighlightLocked(false);
@@ -215,15 +206,6 @@ public class MouseEventHandler extends EventHandler {
 		return true;
 	}
 
-	private void openSession(SessionViewCapsule capsule) {
-		if (capsule.isLinkSession()) {
-			trackviewManager.openLinkSession(capsule.getLink());
-		} else {
-			trackviewManager.openAreaSession(capsule.getChromosome(), capsule.getChrPosition(), capsule.getChrPosition()+1000); // TODO : zoom level
-		}
-		trackviewManager.toggleVisible();
-	}
-
 	/**
 	 * Opens a new capsule in the overview window.
 	 * Instantiates needed objects for creating Capsule, then creates Capsule.
@@ -231,8 +213,10 @@ public class MouseEventHandler extends EventHandler {
 	 * @param pointerGenePosition point on circle from where line from circle to Capsule begins
 	 * @param link Link associated with this capsule (null if this is an area capsule)
 	 * @param geneCircle GeneCircle to which to attach capsule
+	 * 
+	 * @return generated capsule
 	 */
-	private void openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
+	private SessionViewCapsule openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
 		SessionViewCapsule capsule = new SessionViewCapsule(overview, link, pointerGenePosition, geneCircle);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
@@ -240,6 +224,7 @@ public class MouseEventHandler extends EventHandler {
 			overview.addCapsuleToTextureUpdateList(capsule);
 			capsule.setNeedsTextureUpdate();
 		}
+		return capsule;
 	}
 
 	public boolean pointOnCircle(float x, float y, GeneCircle geneCircle) {

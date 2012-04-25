@@ -1,15 +1,22 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
+import java.awt.image.BufferedImage;
+import java.net.URISyntaxException;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Capsulemanager manages the opened capsules and their position on the screen.
  */
 
-public class CapsuleManager {
+public class CapsuleManager implements PreviewManager.PreviewUpdateListener {
 	
 	private static final int SLOTS_PER_QUAD = 4;
 	private static final float SLOT_HEIGHT = 1.0f/SLOTS_PER_QUAD;
@@ -18,9 +25,14 @@ public class CapsuleManager {
 	private int nextFreeBtmleft = 0;
 	private int nextFreeTopright = 0;
 	private int nextFreeBtmright = 0;
+	
+	private GBrowserPreview previewSession;
 
 	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions = new ConcurrentHashMap<Integer, SessionViewCapsule>();
+	LinkedList<SessionViewCapsule> recentlyUpdatedCapsules = new LinkedList<SessionViewCapsule>();
 	
+	private boolean waitingForUpdate = false;
+
 	public ConcurrentHashMap<Integer, SessionViewCapsule> getSessions() {
 		return sessions;
 	}
@@ -93,8 +105,10 @@ public class CapsuleManager {
 		}
 		c.setCapsulePosition(x,y);
 		sessions.put(id, c);
+		if(!waitingForUpdate)
+			updateCapsuleImage(null);
 	}
-
+	
 	private boolean replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-SLOTS_PER_QUAD-1 + nextfree, endID-1);
 		// This shouldn't be called when end==0, but for some reason it is.
@@ -128,8 +142,51 @@ public class CapsuleManager {
 				else if(id>=SLOTS_PER_QUAD && id<SLOTS_PER_QUAD*2) replaceFrom(id, SLOTS_PER_QUAD*2, nextFreeBtmleft--);
 				else if(id>=SLOTS_PER_QUAD*2 && id<SLOTS_PER_QUAD*3) replaceFrom(id, SLOTS_PER_QUAD*3, nextFreeTopright--);
 				else if(id>=SLOTS_PER_QUAD*3 && id<SLOTS_PER_QUAD*4) replaceFrom(id, SLOTS_PER_QUAD*4, nextFreeBtmright--);
+				if(sessions.isEmpty())
+				{
+					recentlyUpdatedCapsules.clear();
+					waitingForUpdate = false;
+				}
 				return;
 			}
 		}
 	}
+
+	public void setPreviewSession(GBrowserPreview p) {
+		previewSession = p;
+		previewSession.addPreviewUpdateListener(this);
+	}
+	
+	public void updateCapsuleImage(BufferedImage i) {
+		boolean updated = false;
+		if(!recentlyUpdatedCapsules.isEmpty() && i != null) {
+			System.out.println(recentlyUpdatedCapsules.getLast().getRegion1().toString() + " <--");
+			recentlyUpdatedCapsules.getLast().setPreviewImage(i);
+		}
+		for(SessionViewCapsule c : sessions.values()) {
+			if(!recentlyUpdatedCapsules.contains(c))
+			{
+				recentlyUpdatedCapsules.add(c);
+				updated = true;
+				try {
+					previewSession.setRegion(c.getRegion1());
+				} catch (URISyntaxException ex) {
+					Logger.getLogger(CapsuleManager.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				waitingForUpdate = true;
+				break;
+			}
+		}
+		if(!updated && !recentlyUpdatedCapsules.isEmpty()) {
+			recentlyUpdatedCapsules.clear();
+			updateCapsuleImage(i);
+		}
+	}
+	
+	@Override
+	public void PreviewUpdated() {
+		System.out.println(previewSession.getRegion().toString());
+		updateCapsuleImage(previewSession.getPreview());
+	}
+	
 }

@@ -51,6 +51,7 @@ public class OverView extends GenosideComponent {
 	private boolean circleNeedsUpdate = false;
 	public GlobalVariables globals;
 	public CapsuleManager CapsuleManager;
+	public SessionViewCapsule activeCapsule;
 
 	// initialize object and neede parts
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
@@ -64,7 +65,7 @@ public class OverView extends GenosideComponent {
 		window.overView = this;
 		initTextRenderers();
 		initChromoNames();
-		trackviewManager = new TrackviewManager(window);
+		trackviewManager = new TrackviewManager(window); // MUST INITIALIZE CAPSULEMANAGER BEFORE TRACKVIEWMANAGER
 		this.linkCollection = linkCollection;
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
@@ -121,16 +122,6 @@ public class OverView extends GenosideComponent {
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
 		return mouseEventHandler.handle(event, screen_x, screen_y, this.geneCircle);
-	}
-
-	// handle sessions
-	public void openSession(SessionViewCapsule capsule) {
-		if (capsule.isLinkSession()) {
-			trackviewManager.openLinkSession(capsule.getLink());
-		} else {
-			trackviewManager.openAreaSession(capsule.getChromosome(), capsule.getChrPosition(), capsule.getChrPosition()+1000);
-		}
-		trackviewManager.toggleVisible();
 	}
 
 	// drawing things + fading things

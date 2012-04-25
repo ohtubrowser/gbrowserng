@@ -8,6 +8,7 @@ import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
@@ -18,40 +19,36 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.net.URISyntaxException;
 import java.nio.IntBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL2;
 
-public class SessionViewCapsule {
+public class SessionViewCapsule implements PreviewManager.PreviewUpdateListener {
 
+	private Region region1 = null, region2 = null;
 	private static IntBuffer frameBufferHandle = IntBuffer.allocate(1);
-	private IntBuffer textureHandle = IntBuffer.allocate(1);
 	private boolean needsTextureUpdate = true;
 	private Texture texture;
-
 	private final GeneralLink linkData;
 	private final GeneCircle geneCircle;
 	private final ViewChromosome chr;
 	private final long chrPosition;
-	
 	private boolean dying = false;
-	private float death = 0;
 	private Color backGroundColor = new Color(0, 0, 0, 1.0f);
-
 	private Vector2 capsulePosition = new Vector2(0.4f, 0.5f);
 	private Vector2 circlePosition = new Vector2(1, 0);
-
 	private float relativePosition;
-
 	private float dimX = 0.2f;
 	private float dimY = 0.1f;
 	private boolean hover = false;
 	private LinkGFX linkGFX;
-	private boolean textureCreated;
 	private float timeSinceTextureUpdate = 0f;
 	public GlobalVariables globals;
 	public OverView overView;
-	private PreviewManager.GBrowserPreview previewA;
-	private PreviewManager.GBrowserPreview previewB;
+	private BufferedImage previewImage;
+	private GBrowserPreview previewSession;
 
 	public SessionViewCapsule(OverView overView, ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
 		this.globals = overView.globals;
@@ -62,10 +59,9 @@ public class SessionViewCapsule {
 		this.chrPosition = chrPosition;
 		setRelativePosition(geneCircle);
 		linkGFX = new LinkGFX(this, circlePosition);
-		Region regionA = new Region(chrPosition,
-									chrPosition+10000,
-									new Chromosome(chr.getName()));
-		previewA = overView.getTrackviewManager().getPreview(regionA); 
+		region1 = new Region(chrPosition,
+				chrPosition + 10000,
+				new Chromosome(chr.getName()));
 	}
 
 	public SessionViewCapsule(OverView overView, GeneralLink link, float relativePosition, GeneCircle geneCircle) {
@@ -77,28 +73,40 @@ public class SessionViewCapsule {
 		setRelativePosition(relativePosition);
 
 		relativePosition -= 0.25f;
-		if(relativePosition < 0)
-			relativePosition+=1.0f;
+		if (relativePosition < 0) {
+			relativePosition += 1.0f;
+		}
 
 		this.chr = geneCircle.getChromosomeByRelativePosition(relativePosition);
 		this.chrPosition = geneCircle.getPositionInChr(chr, relativePosition);
 
 		linkGFX = new LinkGFX(this, circlePosition);
 		if (link != null) {
-			Region regionA = new Region(link.getaStart(),
-										link.getaStart()+10000,
-										new Chromosome(link.getAChromosome().getName()));
-			Region regionB = new Region(link.getbStart(),
-										link.getbStart()+10000,
-										new Chromosome(link.getBChromosome().getName()));
-			previewA = overView.getTrackviewManager().getPreview(regionA);
-			previewB = overView.getTrackviewManager().getPreview(regionB);
+			region1 = new Region(link.getaStart(),
+					link.getaStart() + 10000,
+					new Chromosome(link.getAChromosome().getName()));
+			region2 = new Region(link.getbStart(),
+					link.getbStart() + 10000,
+					new Chromosome(link.getBChromosome().getName()));
+		} else {
+			region1 = new Region(chrPosition,
+					chrPosition + 10000,
+					new Chromosome(chr.getName()));
 		}
-		else {
-			Region regionA = new Region(chrPosition,
-										chrPosition+10000,
-										new Chromosome(chr.getName()));
-			previewA = overView.getTrackviewManager().getPreview(regionA);
+	}
+
+	@Override
+	public void PreviewUpdated() {
+		
+	}
+
+	public void updatePreview(final GBrowserPreview p) {
+		try {
+			previewSession = p;
+			previewSession.setRegion(region1);
+			previewSession.addPreviewUpdateListener(this);
+		} catch (URISyntaxException ex) {
+			Logger.getLogger(SessionViewCapsule.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -107,7 +115,7 @@ public class SessionViewCapsule {
 	}
 
 	public void setRelativePosition(GeneCircle geneCircle) {
-		float t = geneCircle.getRelativePosition(chr.getChromosomeNumber()-1, chrPosition);
+		float t = geneCircle.getRelativePosition(chr.getChromosomeNumber() - 1, chrPosition);
 		setRelativePosition(t);
 	}
 
@@ -119,7 +127,6 @@ public class SessionViewCapsule {
 	public Vector2 getGeneCirclePosition() {
 		return circlePosition;
 	}
-
 
 	private void updateGeneCirclePosition() {
 		circlePosition.x = geneCircle.getSize();
@@ -139,10 +146,10 @@ public class SessionViewCapsule {
 	}
 
 	public boolean inCapsule(float screen_x, float screen_y) {
-		return (capsulePosition.x - CoordinateManager.toCircleCoordsX(globals, dimX)/2 < screen_x
-				&& capsulePosition.x + CoordinateManager.toCircleCoordsX(globals, dimX)/2 > screen_x
-				&& capsulePosition.y - CoordinateManager.toCircleCoordsY(globals, dimY)/2 < screen_y
-				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(globals, dimY)/2 > screen_y);
+		return (capsulePosition.x - CoordinateManager.toCircleCoordsX(globals, dimX) / 2 < screen_x
+				&& capsulePosition.x + CoordinateManager.toCircleCoordsX(globals, dimX) / 2 > screen_x
+				&& capsulePosition.y - CoordinateManager.toCircleCoordsY(globals, dimY) / 2 < screen_y
+				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(globals, dimY) / 2 > screen_y);
 	}
 
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
@@ -158,7 +165,7 @@ public class SessionViewCapsule {
 		linkGFX.draw(gl);
 
 		gl.glEnable(GL2.GL_BLEND);
-		PrimitiveRenderer.drawRectangle(globals, capsulePosition.x, capsulePosition.y, dimX/2, dimY/2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
+		PrimitiveRenderer.drawRectangle(globals, capsulePosition.x, capsulePosition.y, dimX / 2, dimY / 2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
 		gl.glDisable(GL2.GL_BLEND);
 		if (needsTextureUpdate) {
 			updateTexture(gl, overView);
@@ -172,9 +179,6 @@ public class SessionViewCapsule {
 	}
 
 	public void tick(float dt) {
-		if (dying) {
-			death += dt;
-		}
 		timeSinceTextureUpdate += dt;
 		if (timeSinceTextureUpdate > 5f) {
 			needsTextureUpdate = true;
@@ -193,10 +197,13 @@ public class SessionViewCapsule {
 
 	void drawToTexture(GL2 gl) {
 		/*
-		sessionView.updateTexture(gl);
-		needsTextureUpdate = false;*/
+		 * sessionView.updateTexture(gl);
+		 * needsTextureUpdate
+		 * =
+		 * false;
+		 */
 	}
-	
+
 	public boolean isLinkSession() {
 		return linkData != null;
 	}
@@ -216,7 +223,7 @@ public class SessionViewCapsule {
 	public long getChrPosition() {
 		return chrPosition;
 	}
-	
+
 	public Vector2 getDimensions() {
 		return new Vector2(this.dimX, this.dimY);
 	}
@@ -231,9 +238,8 @@ public class SessionViewCapsule {
 	}
 
 	public void updateTexture(GL2 gl, OverView overView) {
-		BufferedImage image = previewA.getPreview();
-
-		texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
+		if(previewImage != null)
+			texture = AWTTextureIO.newTexture(gl.getGLProfile(), previewImage, false);
 	}
 
 	private void drawFromTexture(GL2 gl) {
@@ -242,26 +248,27 @@ public class SessionViewCapsule {
 
 		modelViewMatrix.makeTranslationMatrix(capsulePosition.x, capsulePosition.y, 0);
 		modelViewMatrix.scale(CoordinateManager.toCircleCoordsX(globals, dimX * 0.45f),
-							CoordinateManager.toCircleCoordsY(globals, dimY * 0.45f), 1.0f);
+				CoordinateManager.toCircleCoordsY(globals, dimY * 0.45f), 1.0f);
 		gl.glEnable(gl.GL_BLEND);
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TEXRECTANGLE);
 		shader.start(gl);
 		ShaderMemory.setUniformMat4(gl, shader, "modelViewMatrix", modelViewMatrix);
 		ShaderMemory.setUniformVec1(gl, shader, "alpha", 1.0f);
 
-		texture.bind(gl);
+		if(texture != null)
+			texture.bind(gl);
 
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareID);
 		gl.glEnableVertexAttribArray(0);
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, 0, 0);
-		
+
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, OpenGLBuffers.squareTexID);
 		gl.glEnableVertexAttribArray(1);
 		gl.glVertexAttribPointer(1, 2, GL2.GL_FLOAT, false, 0, 0);
-		
+
 		gl.glDrawArrays(GL2.GL_TRIANGLE_STRIP, 0, 4);
 		gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-		
+
 		gl.glDisableVertexAttribArray(0);
 		gl.glDisableVertexAttribArray(1);
 		shader.stop(gl);
@@ -270,11 +277,31 @@ public class SessionViewCapsule {
 	}
 
 	public void openSession() {
-		if (previewB == null) {
-			overView.getTrackviewManager().showPreview(previewA);
+		if (region2 == null) {
+			overView.getTrackviewManager().openAreaSession(region1);
+		} else {
+			overView.getTrackviewManager().openLinkSession(region1, region2);
 		}
-		else {
-			overView.getTrackviewManager().showPreviews(previewA, previewB, linkData);
+		overView.activeCapsule = this;
+		overView.getTrackviewManager().toggleVisible();
+	}
+
+	public void setRegion(Region region1, Region region2) {
+		try {
+			this.region1 = region1.clone();
+			if (this.region2 != null) {
+				this.region2 = region2.clone();
+			}
+		} catch (CloneNotSupportedException ex) {
+			System.err.println("clone not supported");
 		}
+	}
+
+	public void setPreviewImage(BufferedImage i) {
+		previewImage = i;
+	}
+
+	public Region getRegion1() {
+		return region1;	
 	}
 }

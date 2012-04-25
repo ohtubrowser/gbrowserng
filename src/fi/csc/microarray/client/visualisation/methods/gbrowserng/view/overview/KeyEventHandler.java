@@ -61,9 +61,9 @@ public class KeyEventHandler extends EventHandler {
 
 	private void handleLockedArch() {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-				trackviewManager.clearContainer();
+/*				trackviewManager.clearContainer();
 				trackviewManager.openLinkSession(linkSelection.getActiveLink());
-				trackviewManager.toggleVisible();
+				trackviewManager.toggleVisible();*/
 
 				//sessions.add(trackviewManager.generateLinkCapsule(overview));
 			}
