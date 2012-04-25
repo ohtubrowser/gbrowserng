@@ -35,9 +35,9 @@ public class TrackviewManager extends Container {
 
 	static {
 		try {
-	//		dataPath = "/cs/group2/home/gbrowsng/";
+			dataPath = "/cs/group2/home/gbrowsng/";
 
-			dataPath = "";
+	//		dataPath = "";
 			BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam").toURI().toURL();
 			BAI_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam.bai").toURI().toURL();
 			CYTOBAND_FILE = new File(dataPath + "karyotypeHuman.txt").toURI().toURL();
@@ -72,11 +72,9 @@ public class TrackviewManager extends Container {
 
 	public void clearContainer() {
 		removeAll();
-		//add(new JLabel("HALLOO"), BorderLayout.EAST);
 	}
 
 	public void openLinkSession(GeneralLink l) {
-		synchronized (switchLock) {
 				clearContainer();
 				ViewChromosome a = l.getAChromosome();
 				ViewChromosome b = l.getBChromosome();
@@ -94,11 +92,9 @@ public class TrackviewManager extends Container {
 			} catch (URISyntaxException ex) {
 				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
 	}
 
 	public void openAreaSession(ViewChromosome c, long start, long end) {
-		synchronized (switchLock) {
 				clearContainer();
 				regionA = new Region(start, end, new Chromosome(c.getName()));
 			try {
@@ -110,7 +106,6 @@ public class TrackviewManager extends Container {
 			} catch (URISyntaxException ex) {
 				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
 	}
 
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
@@ -142,7 +137,6 @@ public class TrackviewManager extends Container {
 	}
 	
 	public void showPreview(GBrowserPreview preview) {
-		synchronized (switchLock) {
 			clearContainer();
 			try {
 				add(preview.getJComponent(), BorderLayout.CENTER);
@@ -153,11 +147,9 @@ public class TrackviewManager extends Container {
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
-		}
 	}
 	
 	public void showPreviews(GBrowserPreview preview1, GBrowserPreview preview2, GeneralLink link) {
-		synchronized (switchLock) {
 			clearContainer();
 			try {
 				add(previewManager.getSplitJComponent(preview1, preview2), BorderLayout.CENTER);
@@ -168,6 +160,5 @@ public class TrackviewManager extends Container {
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
-		}
 	}
 }
