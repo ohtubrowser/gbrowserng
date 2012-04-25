@@ -105,7 +105,7 @@ public class SessionViewCapsule {
 	}
 
 	public boolean isAlive() {
-		return death < 1.0f;
+		return !dying;
 	}
 
 	public void setDimensions(float x, float y) {

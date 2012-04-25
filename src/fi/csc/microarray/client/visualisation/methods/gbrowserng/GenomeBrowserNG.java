@@ -28,7 +28,8 @@ public class GenomeBrowserNG {
 	private GenoGLListener glListener;
 	private GenoWindow genoWindow;
 	private EventHandler eventHandler;
-	private static String bam, bai;
+	private String bam, bai;
+	public GlobalVariables globals;
 
 	/**
 	 * Returns the created EventHandler
@@ -76,7 +77,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataRat(GlobalVariables globals) {
+	public LinkCollection useChipsterDataRat() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt", "coord_system.txt",
@@ -95,7 +96,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataHuman(GlobalVariables globals) {
+	public LinkCollection useChipsterDataHuman() {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -118,7 +119,7 @@ public class GenomeBrowserNG {
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
-		GlobalVariables globals = new GlobalVariables();
+		this.globals = new GlobalVariables();
 		globals.genome = new Genome();
 		globals.filtering = filtering;
 		globals.debug = debug;
@@ -126,11 +127,11 @@ public class GenomeBrowserNG {
 		this.bai = bai;
 		LinkCollection links;
 		if (data==0) {
-			links = useChipsterDataHuman(globals);
+			links = useChipsterDataHuman();
 		} else if(data==1) {
-			links = useChipsterDataRat(globals);
+			links = useChipsterDataRat();
 		}else {
-			links = useChipsterDataHuman(globals);
+			links = useChipsterDataHuman();
 		}
 
 		this.eventQueue = new LinkedBlockingQueue<AWTEvent>();

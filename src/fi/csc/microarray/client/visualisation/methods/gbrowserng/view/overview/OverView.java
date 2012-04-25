@@ -35,7 +35,7 @@ public class OverView extends GenosideComponent {
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	public GenoWindow window;
-	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions = CapsuleManager.getSessions();//new ConcurrentLinkedQueue<SessionViewCapsule>();
+	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions;//new ConcurrentLinkedQueue<SessionViewCapsule>();
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	final Object textureUpdateListLock = new Object();
@@ -50,12 +50,15 @@ public class OverView extends GenosideComponent {
 	private boolean drawArcs;
 	private boolean circleNeedsUpdate = false;
 	public GlobalVariables globals;
+	public CapsuleManager CapsuleManager;
 
 	// initialize object and neede parts
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
 		this.globals = globals;
 		geneCircle = new GeneCircle(globals);
 		geneCircleGFX = new GeneCircleGFX(globals, geneCircle);
+		CapsuleManager = new CapsuleManager();
+		sessions = CapsuleManager.getSessions();
 		drawArcs = false;
 		this.window = window;
 		initTextRenderers();
