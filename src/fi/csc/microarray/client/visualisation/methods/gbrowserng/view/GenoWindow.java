@@ -52,7 +52,7 @@ public class GenoWindow {
 		this.animator.stop();
 		frame.setVisible(false);
 		c.destroy();
-		frame.dispose(); // This causes a sigsegv because of a jogl bug
+		frame.dispose();
 	}
 
 	public void toggleFullscreen() {
