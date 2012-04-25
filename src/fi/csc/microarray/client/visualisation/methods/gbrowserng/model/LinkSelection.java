@@ -19,11 +19,13 @@ public class LinkSelection {
 	private float mouseX, mouseY;
 	private boolean mouseInsideCircle = false;
 	private GeneCircle geneCircle;
+	public GlobalVariables globals;
 
-	public LinkSelection(GeneCircle geneCircle) {
+	public LinkSelection(GlobalVariables globals, GeneCircle geneCircle) {
 		begin = 0.0f;
 		end = 1.0f;
 		area = GlobalVariables.selectSize;
+		this.globals = globals;
 		this.geneCircle = geneCircle;
 	}
 
@@ -80,7 +82,7 @@ public class LinkSelection {
 
 		ShaderMemory.setUniformVec4(gl, shader, "color", 1.0f, 1.0f, 0.0f, 1.0f);
 
-		Matrix4 modelMatrix = CoordinateManager.getCircleMatrix();
+		Matrix4 modelMatrix = CoordinateManager.getCircleMatrix(globals);
 		float length = geneCircle.getSize() * 0.0505f;
 		float width = geneCircle.getSize() * 0.015f;
 
@@ -106,7 +108,7 @@ public class LinkSelection {
 
 		angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 
-		modelMatrix = CoordinateManager.getCircleMatrix();
+		modelMatrix = CoordinateManager.getCircleMatrix(globals);
 		modelMatrix.translate(x, y, 0);
 		modelMatrix.rotate(angle + 90f, 0, 0, 1);
 		modelMatrix.scale(width, length, 0.2f);

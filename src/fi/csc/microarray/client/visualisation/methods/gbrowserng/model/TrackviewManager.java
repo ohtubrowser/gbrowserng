@@ -35,9 +35,9 @@ public class TrackviewManager extends Container {
 
 	static {
 		try {
-			dataPath = "/cs/group2/home/gbrowsng/";
+	//		dataPath = "/cs/group2/home/gbrowsng/";
 
-	//		dataPath = "";
+			dataPath = "";
 			BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam").toURI().toURL();
 			BAI_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam.bai").toURI().toURL();
 			CYTOBAND_FILE = new File(dataPath + "karyotypeHuman.txt").toURI().toURL();
@@ -145,7 +145,7 @@ public class TrackviewManager extends Container {
 	}
 
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
-		return new SessionViewCapsule(currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
+		return new SessionViewCapsule(genoWindow.globals, currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
 	}
 
 	public void toggleVisible() {

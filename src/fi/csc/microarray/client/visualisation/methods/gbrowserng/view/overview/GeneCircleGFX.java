@@ -5,6 +5,7 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
@@ -20,8 +21,10 @@ public class GeneCircleGFX {
 	private float hilightTarget = 0;
 	private Vector2 mousePos = new Vector2();
 	private GeneCircle geneCircle;
+	public GlobalVariables globals;
 
-	public GeneCircleGFX(GeneCircle geneCircle) {
+	public GeneCircleGFX(GlobalVariables globals, GeneCircle geneCircle) {
+		this.globals = globals;
 		this.geneCircle = geneCircle;
 	}
 
@@ -82,7 +85,7 @@ public class GeneCircleGFX {
 					 * dx
 					 */ x) / (float) Math.PI;
 
-			modelMatrix=CoordinateManager.getCircleMatrix();
+			modelMatrix=CoordinateManager.getCircleMatrix(globals);
 			modelMatrix.translate(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
 			modelMatrix.scale(width, length, 0.2f);
@@ -112,7 +115,7 @@ public class GeneCircleGFX {
 
 		for (ViewChromosome c : Genome.getChromosomes()) {
 			if (!c.isMinimized()) {
-				Matrix4 modelMatrix = CoordinateManager.getCircleMatrix();
+				Matrix4 modelMatrix = CoordinateManager.getCircleMatrix(globals);
 				modelMatrix.rotate(360.f * geneCircle.getRelativePosition(c.getChromosomeNumber() - 1, c.getCentromereRelativePosition()), 0, 0, 1);
 				modelMatrix.translate(geneCircle.getSize() * 0.95f, 0.0f, 0);
 				modelMatrix.scale(geneCircle.getSize() * 0.05f, geneCircle.getSize() * 0.02f, 1.0f);

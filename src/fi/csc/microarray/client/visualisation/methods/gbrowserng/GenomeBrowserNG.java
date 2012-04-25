@@ -76,7 +76,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataRat() {
+	public static LinkCollection useChipsterDataRat(GlobalVariables globals) {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData("ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/karyotype.txt.gz",
 //                        " ftp://ftp.ensembl.org/pub/release-65/mysql/rattus_norvegicus_core_65_34/seq_region.txt.gz",
 		ConcurrentLinkedQueue<ViewChromosome> chromosomeData = ChipsterInterface.getChromosomes("karyotype.txt", "seq_region.txt", "coord_system.txt",
@@ -86,7 +86,7 @@ public class GenomeBrowserNG {
 		for (ViewChromosome c : chromosomeData) {
 			Genome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
+		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class GenomeBrowserNG {
 	 * For the links between chromosomes needed files are chrs.bam and chrs.bam.bai
 	 * @return a queue of links between chromosomes
 	 */
-	public static LinkCollection useChipsterDataHuman() {
+	public static LinkCollection useChipsterDataHuman(GlobalVariables globals) {
 //                ConcurrentLinkedQueue<long[]> chromosomeData = ChipsterInterface.getData(
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/karyotype.txt.gz", 
 //				"ftp://ftp.ensembl.org/pub/release-65/mysql/homo_sapiens_core_65_37/seq_region.txt.gz", 
@@ -105,7 +105,7 @@ public class GenomeBrowserNG {
 		for (ViewChromosome c : chromosomeData) {
 			Genome.addChromosome(c);
 		}
-		return ChipsterInterface.getConnections(chromosomeData, bam, bai);
+		return ChipsterInterface.getConnections(globals, chromosomeData, bam, bai);
 	}
 
 	/**
@@ -118,22 +118,23 @@ public class GenomeBrowserNG {
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
-		GlobalVariables.filtering = filtering;
-		GlobalVariables.debug = debug;
+		GlobalVariables globals = new GlobalVariables();
+		globals.filtering = filtering;
+		globals.debug = debug;
 		this.bam = bam;
 		this.bai = bai;
 		LinkCollection links;
 		if (data==0) {
-			links = useChipsterDataHuman();
+			links = useChipsterDataHuman(globals);
 		} else if(data==1) {
-			links = useChipsterDataRat();
+			links = useChipsterDataRat(globals);
 		}else {
-			links = useChipsterDataHuman();
+			links = useChipsterDataHuman(globals);
 		}
 
 		this.eventQueue = new LinkedBlockingQueue<AWTEvent>();
-		this.genoWindow = new GenoWindow(width, height);
-		OverView overView = new OverView(this.genoWindow, links);
+		this.genoWindow = new GenoWindow(globals, width, height);
+		OverView overView = new OverView(globals, this.genoWindow, links);
 			
 		this.genoWindow.addContainer(overView.getTrackviewManager());
 

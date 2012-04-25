@@ -7,14 +7,14 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng;
  * @author Kristiina Paloheimo
  */
 public class GlobalVariables {
-	public static float aspectRatio = 1.0f;
 	public static final float animationConstant = 20f;
 	public static final float chromosomeAnimationConstant = 0.4f;
 	public static final float selectSize = 0.01f;
-	public static int width;
-	public static int height;
 	public static final float linkSyncInterval = 3.0f;
-	public static long filtering;
-	public static boolean debug;
-	public static int numCapsules = 8;
+
+	public long filtering;
+	public boolean debug;
+	public float aspectRatio = 1.0f;
+	public int width;
+	public int height;
 }

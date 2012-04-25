@@ -19,8 +19,14 @@ public class GenoWindow {
 	public Frame frame;
 	public Container container;
 	private boolean overviewVisible = true;
+	public GlobalVariables globals;
 
-	public GenoWindow(int width, int height) {
+	public GenoWindow(GlobalVariables globals, int width, int height) {
+		this.globals = globals;
+		globals.width = width;
+		globals.height = height;
+		globals.aspectRatio = (float)width / (float)height;
+
 		c = new GLCanvas(new GLCapabilities(GLProfile.getDefault()));
 
 		frame = new Frame("GenomeBrowserNG");
@@ -60,12 +66,12 @@ public class GenoWindow {
 		if (isFullscreen = !isFullscreen) {
 			if(device.isFullScreenSupported())
 				device.setFullScreenWindow(frame);
-			GlobalVariables.width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			GlobalVariables.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+			globals.width = Toolkit.getDefaultToolkit().getScreenSize().width;
+			globals.height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		} else {
 			device.setFullScreenWindow(null);
-			GlobalVariables.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
-			GlobalVariables.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
+			globals.width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8);
+			globals.height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8);
 		}
 	}
 	

@@ -2,6 +2,7 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
 
 import com.soulaim.tech.math.Vector2;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.ContextMenu;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.LinkSelection;
@@ -26,8 +27,10 @@ public class EventHandler {
 	protected TrackviewManager trackviewManager;
 	protected LinkSelection linkSelection;
 	protected LinkCollection linkCollection;
+	public GlobalVariables globals;
 	
 	public EventHandler(OverView overview) {
+		this.globals = overview.globals;
 		this.overview = overview;
 		updateVariables();
 	}

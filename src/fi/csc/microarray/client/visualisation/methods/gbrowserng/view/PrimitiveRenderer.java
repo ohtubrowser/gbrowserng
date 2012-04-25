@@ -11,7 +11,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoSh
 import javax.media.opengl.GL2;
 
 public class PrimitiveRenderer {
-	public static void drawRectangle(float x, float y, float width, float height, GL2 gl, Color color) {
+	public static void drawRectangle(GlobalVariables globals, float x, float y, float width, float height, GL2 gl, Color color) {
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.PLAINMVP);
 
 		shader.start(gl);
@@ -23,7 +23,7 @@ public class PrimitiveRenderer {
 		
 		Matrix4 modelMatrix = new Matrix4();
 		modelMatrix.makeTranslationMatrix(x, y, 0);
-		modelMatrix.scale(width, height*GlobalVariables.aspectRatio, 0.0f);
+		modelMatrix.scale(width, height*globals.aspectRatio, 0.0f);
 
 		ShaderMemory.setUniformMat4(gl, shader, "MVP", modelMatrix);
 

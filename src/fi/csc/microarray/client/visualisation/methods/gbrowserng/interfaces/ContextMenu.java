@@ -145,21 +145,21 @@ public class ContextMenu {
 		gl.glEnable(GL2.GL_BLEND);
 
 		if(shadow>0) {
-			PrimitiveRenderer.drawRectangle(x + convertW(width + shadow) * .5f, y - convertH(selHeight * (selections.size() - 1) + shadow) * .5f, convertW(width + border) * .5f, convertH((selHeight * selections.size()) + border) * .5f / GlobalVariables.aspectRatio, gl, shadowColor);
+			PrimitiveRenderer.drawRectangle(overview.globals, x + convertW(width + shadow) * .5f, y - convertH(selHeight * (selections.size() - 1) + shadow) * .5f, convertW(width + border) * .5f, convertH((selHeight * selections.size()) + border) * .5f / overview.globals.aspectRatio, gl, shadowColor);
 		}
 
 		if(border>0) {
-			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - convertH(selHeight*(selections.size()-1))*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / GlobalVariables.aspectRatio, gl, borderColor);
+			PrimitiveRenderer.drawRectangle(overview.globals, x+convertW(width)*.5f, y - convertH(selHeight*(selections.size()-1))*.5f, convertW(width+border)*.5f, convertH((selHeight*selections.size())+border)*.5f / overview.globals.aspectRatio, gl, borderColor);
 		}
 
 		for(int i = 0; i<selections.size(); i++) {
 			Color color = menuColor;
 			if(i==selected) color = selectColor;
-			PrimitiveRenderer.drawRectangle(x+convertW(width)*.5f, y - i*convertH(selHeight), convertW(width)*.5f, convertH(selHeight)*.5f / GlobalVariables.aspectRatio, gl, color);
+			PrimitiveRenderer.drawRectangle(overview.globals, x+convertW(width)*.5f, y - i*convertH(selHeight), convertW(width)*.5f, convertH(selHeight)*.5f / overview.globals.aspectRatio, gl, color);
 		}
 		gl.glDisable(GL2.GL_BLEND);
 
-		int swidth = GlobalVariables.width, sheight = GlobalVariables.height;
+		int swidth = overview.globals.width, sheight = overview.globals.height;
 		textRenderer.beginRendering(swidth, sheight);
 		int hw = swidth/2, hh = sheight/2;
 		for(int i = 0; i<selections.size(); i++) {
@@ -191,42 +191,42 @@ public class ContextMenu {
 	}
 
 	private float convertW(int c) {
-		int hw = GlobalVariables.width/2;
+		int hw = overview.globals.width/2;
 		return ((float)c)/hw;
 	}
 
 	private float convertH(int c) {
-		int hh = GlobalVariables.height/2;
+		int hh = overview.globals.height/2;
 		return ((float)c)/hh;
 	}
 
 	private int convertW(float c) {
-		int hw = GlobalVariables.width/2;
+		int hw = overview.globals.width/2;
 		return (int)(hw*c);
 	}
 
 	private int convertH(float c) {
-		int hh = GlobalVariables.height/2;
+		int hh = overview.globals.height/2;
 		return (int)(hh*c);
 	}
 
 	private int convertX(float c) {
-		int hw = GlobalVariables.width/2;
+		int hw = overview.globals.width/2;
 		return (int)(hw+(hw*c));
 	}
 
 	private int convertY(float c) {
-		int hh = GlobalVariables.height/2;
+		int hh = overview.globals.height/2;
 		return (int)(hh+(hh*c));
 	}
 
 	private float convertX(int c) {
-		int hw = GlobalVariables.width/2;
+		int hw = overview.globals.width/2;
 		return ((float)c)/hw+1f;
 	}
 
 	private float convertY(int c) {
-		int hh = GlobalVariables.height/2;
+		int hh = overview.globals.height/2;
 		return ((float)c)/hh+1f;
 	}
 }

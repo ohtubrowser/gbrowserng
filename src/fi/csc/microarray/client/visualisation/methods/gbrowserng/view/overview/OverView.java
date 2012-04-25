@@ -29,7 +29,7 @@ import javax.media.opengl.GL2;
 public class OverView extends GenosideComponent {
 
 	public GeneCircle geneCircle = new GeneCircle();
-	private GeneCircleGFX geneCircleGFX = new GeneCircleGFX(geneCircle);
+	private GeneCircleGFX geneCircleGFX;
 	private GenoFPSCounter tickCounter = new GenoFPSCounter();
 	private GenoFPSCounter drawCounter = new GenoFPSCounter();
 	private Vector2 mousePosition = new Vector2();
@@ -49,9 +49,12 @@ public class OverView extends GenosideComponent {
 	private KeyEventHandler keyEventHandler;
 	private boolean drawArcs;
 	private boolean circleNeedsUpdate = false;
+	public GlobalVariables globals;
 
 	// initialize object and neede parts
-	public OverView(GenoWindow window, LinkCollection linkCollection) {
+	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
+		this.globals = globals;
+		geneCircleGFX = new GeneCircleGFX(globals, geneCircle);
 		drawArcs = false;
 		this.window = window;
 		initTextRenderers();
@@ -60,7 +63,7 @@ public class OverView extends GenosideComponent {
 		this.linkCollection = linkCollection;
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
-		linkSelection = new LinkSelection(geneCircle);
+		linkSelection = new LinkSelection(globals, geneCircle);
 		mouseEventHandler = new MouseEventHandler(this);
 		keyEventHandler = new KeyEventHandler(this);
 	}
@@ -100,7 +103,7 @@ public class OverView extends GenosideComponent {
 			capsule.setRelativePosition(geneCircle);
 		}
 		for (GeneralLink link : linkCollection.getLinks()) {
-			link.calculatePositions(geneCircle);
+			link.calculatePositions(globals, geneCircle);
 		}
 	}
 
@@ -135,7 +138,7 @@ public class OverView extends GenosideComponent {
 			drawArcs = true;
 			window.c.setCursor(Cursor.getDefaultCursor());
 		}
-		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix();
+		Matrix4 geneCircleModelMatrix = CoordinateManager.getCircleMatrix(globals);
 		geneCircleModelMatrix.scale(geneCircle.getSize(), geneCircle.getSize(), geneCircle.getSize());
 
 		if (drawArcs) {
@@ -159,8 +162,8 @@ public class OverView extends GenosideComponent {
 		}
 
 		drawCapsules(gl);
-		renderText(GlobalVariables.width, GlobalVariables.height);
-		drawNumbers(GlobalVariables.width, GlobalVariables.height);
+		renderText(globals.width, globals.height);
+		drawNumbers(globals.width, globals.height);
 
 		if (contextMenu != null) {
 			contextMenu.draw(gl);
@@ -203,7 +206,7 @@ public class OverView extends GenosideComponent {
 			rotationv.rotate((angle < 0) ? angle : -((float) Math.PI - angle)); // Fix the >180 angle.
 
 			// Convert to circlecoords using the rotated vector.
-			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(rotationv));
+			Vector2 vv = new Vector2(CoordinateManager.toCircleCoords(globals, rotationv));
 			String chromoname = Genome.getChromosome(i - 1).getName();
 
 			float bound = vv.relativeAngle(new Vector2(0f, 1f));
@@ -245,7 +248,7 @@ public class OverView extends GenosideComponent {
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
 		int stringHeight = (int) textRenderer.getBounds("TEXT").getHeight();
-		if(GlobalVariables.debug == true) {
+		if(globals.debug == true) {
 			String fps = "Tick: " + tickCounter.getMillis() + "ms";
 			textRenderer.draw(fps, 20, height - stringHeight);
 			String draw = "Draw: " + drawCounter.getMillis() + "ms";

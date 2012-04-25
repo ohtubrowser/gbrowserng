@@ -7,6 +7,7 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
@@ -47,8 +48,10 @@ public class SessionViewCapsule {
 	private LinkGFX linkGFX;
 	private boolean textureCreated;
 	private float timeSinceTextureUpdate = 0f;
+	public GlobalVariables globals;
 
-	public SessionViewCapsule(ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
+	public SessionViewCapsule(GlobalVariables globals, ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
+		this.globals = globals;
 		this.linkData = linkData;
 		this.geneCircle = geneCircle;
 		this.chr = chr;
@@ -57,7 +60,8 @@ public class SessionViewCapsule {
 		linkGFX = new LinkGFX(this, circlePosition);
 	}
 
-	public SessionViewCapsule(GeneralLink link, float relativePosition, GeneCircle geneCircle) {
+	public SessionViewCapsule(GlobalVariables globals, GeneralLink link, float relativePosition, GeneCircle geneCircle) {
+		this.globals = globals;
 		this.linkData = link;
 		this.geneCircle = geneCircle;
 
@@ -96,8 +100,8 @@ public class SessionViewCapsule {
 		circlePosition.x = geneCircle.getSize();
 		circlePosition.y = 0;
 		circlePosition.rotate(2 * (float) Math.PI * relativePosition);
-		circlePosition.x = CoordinateManager.toCircleCoordsX(circlePosition.x);
-		circlePosition.y = CoordinateManager.toCircleCoordsY(circlePosition.y);
+		circlePosition.x = CoordinateManager.toCircleCoordsX(globals, circlePosition.x);
+		circlePosition.y = CoordinateManager.toCircleCoordsY(globals, circlePosition.y);
 	}
 
 	public boolean isAlive() {
@@ -110,10 +114,10 @@ public class SessionViewCapsule {
 	}
 
 	public boolean inCapsule(float screen_x, float screen_y) {
-		return (capsulePosition.x - CoordinateManager.toCircleCoordsX(dimX)/2 < screen_x
-				&& capsulePosition.x + CoordinateManager.toCircleCoordsX(dimX)/2 > screen_x
-				&& capsulePosition.y - CoordinateManager.toCircleCoordsY(dimY)/2 < screen_y
-				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(dimY)/2 > screen_y);
+		return (capsulePosition.x - CoordinateManager.toCircleCoordsX(globals, dimX)/2 < screen_x
+				&& capsulePosition.x + CoordinateManager.toCircleCoordsX(globals, dimX)/2 > screen_x
+				&& capsulePosition.y - CoordinateManager.toCircleCoordsY(globals, dimY)/2 < screen_y
+				&& capsulePosition.y + CoordinateManager.toCircleCoordsY(globals, dimY)/2 > screen_y);
 	}
 
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
@@ -129,7 +133,7 @@ public class SessionViewCapsule {
 		linkGFX.draw(gl);
 
 		gl.glEnable(GL2.GL_BLEND);
-		PrimitiveRenderer.drawRectangle(capsulePosition.x, capsulePosition.y, dimX/2, dimY/2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
+		PrimitiveRenderer.drawRectangle(globals, capsulePosition.x, capsulePosition.y, dimX/2, dimY/2, gl, hover ? new Color(1.0f, 0.0f, 0.0f, 1.0f) : backGroundColor);
 		gl.glDisable(GL2.GL_BLEND);
 		if (needsTextureUpdate) {
 			updateTexture(gl, overView);
@@ -212,8 +216,8 @@ public class SessionViewCapsule {
 		Matrix4 modelViewMatrix = new Matrix4();
 
 		modelViewMatrix.makeTranslationMatrix(capsulePosition.x, capsulePosition.y, 0);
-		modelViewMatrix.scale(CoordinateManager.toCircleCoordsX(dimX * 0.45f),
-							CoordinateManager.toCircleCoordsY(dimY * 0.45f), 1.0f);
+		modelViewMatrix.scale(CoordinateManager.toCircleCoordsX(globals, dimX * 0.45f),
+							CoordinateManager.toCircleCoordsY(globals, dimY * 0.45f), 1.0f);
 		gl.glEnable(gl.GL_BLEND);
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.TEXRECTANGLE);
 		shader.start(gl);
