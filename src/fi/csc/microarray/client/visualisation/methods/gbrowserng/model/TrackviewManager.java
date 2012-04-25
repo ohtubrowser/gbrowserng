@@ -113,39 +113,8 @@ public class TrackviewManager extends Container {
 		}
 	}
 
-	public BufferedImage getImage(GeneralLink l) {
-		BufferedImage image = null;
-		synchronized (switchLock) {
-			ViewChromosome a = l.getAChromosome();
-			regionA = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
-
-			try {
-				sessionA.setRegion(regionA);
-
-				image = sessionA.getPreview();
-			} catch (URISyntaxException ex) {
-				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		return image;
-	}
-
-	public BufferedImage getImage(ViewChromosome c, long start, long end) {
-		BufferedImage image = null;
-		synchronized (switchLock) {
-			regionA = new Region(start, end, new Chromosome(c.getName()));
-			try {
-				sessionA.setRegion(regionA);
-				image = sessionA.getPreview();
-			} catch (URISyntaxException ex) {
-				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		return image;
-	}
-
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
-		return new SessionViewCapsule(genoWindow.globals, currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
+		return new SessionViewCapsule(genoWindow.overView, currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
 	}
 
 	public void toggleVisible() {
@@ -161,5 +130,44 @@ public class TrackviewManager extends Container {
 
 	public GeneralLink getLink() {
 		return currentLink;
+	}
+
+	public GBrowserPreview getPreview(Region region) {
+		try {
+			return previewManager.createPreview(region, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, CYTOBAND_COORD_SYSTEM_FILE, GTF_ANNOTATION_FILE);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public void showPreview(GBrowserPreview preview) {
+		synchronized (switchLock) {
+			clearContainer();
+			try {
+				add(preview.getJComponent(), BorderLayout.CENTER);
+				validate();
+				repaint();
+				currentLink = null;
+				toggleVisible();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void showPreviews(GBrowserPreview preview1, GBrowserPreview preview2, GeneralLink link) {
+		synchronized (switchLock) {
+			clearContainer();
+			try {
+				add(previewManager.getSplitJComponent(preview1, preview2), BorderLayout.CENTER);
+				validate();
+				repaint();
+				currentLink = link;
+				toggleVisible();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

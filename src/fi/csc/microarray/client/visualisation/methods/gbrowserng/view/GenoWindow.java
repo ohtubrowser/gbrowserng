@@ -3,6 +3,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.view;
 import com.jogamp.opengl.util.Animator;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
+
 import java.awt.*;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
@@ -20,6 +22,7 @@ public class GenoWindow {
 	public Container container;
 	private boolean overviewVisible = true;
 	public GlobalVariables globals;
+	public OverView overView;
 
 	public GenoWindow(GlobalVariables globals, int width, int height) {
 		this.globals = globals;

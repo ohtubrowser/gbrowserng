@@ -7,12 +7,12 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
+import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
@@ -49,19 +49,28 @@ public class SessionViewCapsule {
 	private boolean textureCreated;
 	private float timeSinceTextureUpdate = 0f;
 	public GlobalVariables globals;
+	public OverView overView;
+	private PreviewManager.GBrowserPreview previewA;
+	private PreviewManager.GBrowserPreview previewB;
 
-	public SessionViewCapsule(GlobalVariables globals, ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
-		this.globals = globals;
+	public SessionViewCapsule(OverView overView, ViewChromosome chr, long chrPosition, GeneralLink linkData, GeneCircle geneCircle) {
+		this.globals = overView.globals;
+		this.overView = overView;
 		this.linkData = linkData;
 		this.geneCircle = geneCircle;
 		this.chr = chr;
 		this.chrPosition = chrPosition;
 		setRelativePosition(geneCircle);
 		linkGFX = new LinkGFX(this, circlePosition);
+		Region regionA = new Region(chrPosition,
+									chrPosition+10000,
+									new Chromosome(chr.getName()));
+		previewA = overView.getTrackviewManager().getPreview(regionA); 
 	}
 
-	public SessionViewCapsule(GlobalVariables globals, GeneralLink link, float relativePosition, GeneCircle geneCircle) {
-		this.globals = globals;
+	public SessionViewCapsule(OverView overView, GeneralLink link, float relativePosition, GeneCircle geneCircle) {
+		this.globals = overView.globals;
+		this.overView = overView;
 		this.linkData = link;
 		this.geneCircle = geneCircle;
 
@@ -75,6 +84,22 @@ public class SessionViewCapsule {
 		this.chrPosition = geneCircle.getPositionInChr(chr, relativePosition);
 
 		linkGFX = new LinkGFX(this, circlePosition);
+		if (link != null) {
+			Region regionA = new Region(link.getaStart(),
+										link.getaStart()+10000,
+										new Chromosome(link.getAChromosome().getName()));
+			Region regionB = new Region(link.getbStart(),
+										link.getbStart()+10000,
+										new Chromosome(link.getBChromosome().getName()));
+			previewA = overView.getTrackviewManager().getPreview(regionA);
+			previewB = overView.getTrackviewManager().getPreview(regionB);
+		}
+		else {
+			Region regionA = new Region(chrPosition,
+										chrPosition+10000,
+										new Chromosome(chr.getName()));
+			previewA = overView.getTrackviewManager().getPreview(regionA);
+		}
 	}
 
 	public Vector2 getCapsulePosition() {
@@ -206,7 +231,7 @@ public class SessionViewCapsule {
 	}
 
 	public void updateTexture(GL2 gl, OverView overView) {
-		BufferedImage image = overView.getTrackviewManager().getImage(chr, chrPosition, chrPosition + 10000l);
+		BufferedImage image = previewA.getPreview();
 
 		texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
 	}
@@ -244,4 +269,12 @@ public class SessionViewCapsule {
 
 	}
 
+	public void openSession() {
+		if (previewB == null) {
+			overView.getTrackviewManager().showPreview(previewA);
+		}
+		else {
+			overView.getTrackviewManager().showPreviews(previewA, previewB, linkData);
+		}
+	}
 }

@@ -61,6 +61,7 @@ public class OverView extends GenosideComponent {
 		sessions = CapsuleManager.getSessions();
 		drawArcs = false;
 		this.window = window;
+		window.overView = this;
 		initTextRenderers();
 		initChromoNames();
 		trackviewManager = new TrackviewManager(window);

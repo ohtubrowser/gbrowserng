@@ -160,7 +160,7 @@ public class MouseEventHandler extends EventHandler {
 				continue;
 			}
 			if (capsule.handle(event, mouseX, mouseY)) {
-				openSession(capsule);
+				capsule.openSession();
 				return true;
 			}
 		}
@@ -233,7 +233,7 @@ public class MouseEventHandler extends EventHandler {
 	 * @param geneCircle GeneCircle to which to attach capsule
 	 */
 	private void openNewAreaCapsule(float pointerGenePosition, GeneralLink link, GeneCircle geneCircle) {
-		SessionViewCapsule capsule = new SessionViewCapsule(globals, link, pointerGenePosition, geneCircle);
+		SessionViewCapsule capsule = new SessionViewCapsule(overview, link, pointerGenePosition, geneCircle);
 		CapsuleManager.addCapsule(capsule, capsule.getLinkGfX().getXYPosition().x, capsule.getLinkGfX().getXYPosition().y);
 
 		synchronized (overview.textureUpdateListLock) {
