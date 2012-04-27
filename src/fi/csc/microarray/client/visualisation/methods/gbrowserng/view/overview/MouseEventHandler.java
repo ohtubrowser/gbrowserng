@@ -190,7 +190,15 @@ public class MouseEventHandler extends EventHandler {
 
 			openNewAreaCapsule(relativePosition, cl, geneCircle);
 
-		} else {
+		} else if (pointInsideCircle(mouseX, mouseY, geneCircle)) {
+			GeneralLink cl = overview.activeLink;
+			trackviewManager.openLinkSession(cl);
+			trackviewManager.toggleVisible();
+
+			openNewAreaCapsule(geneCircle.getRelativePosition(cl.getBChromosome().getChromosomeNumber() - 1, ((float) cl.getbStart()) / cl.getBChromosome().length()),
+					cl, geneCircle);
+		}
+		else {
 			if (overview.isArcHighlightLocked()) {
 				overview.setArcHighlightLocked(false);
 				linkSelection.deactivate();

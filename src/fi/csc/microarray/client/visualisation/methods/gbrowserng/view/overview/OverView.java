@@ -51,6 +51,7 @@ public class OverView extends GenosideComponent {
 	private boolean circleNeedsUpdate = false;
 	public GlobalVariables globals;
 	public CapsuleManager CapsuleManager;
+	public GeneralLink activeLink;
 
 	// initialize object and neede parts
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
@@ -152,9 +153,23 @@ public class OverView extends GenosideComponent {
 				linkSelection.draw(gl);
 			} else {
 				synchronized (linkCollection.linkSyncLock) {
+					int i = 0;
+					GeneralLink activeLink = null;
 					for (GeneralLink link : linkCollection.getLinks()) {
-						link.draw(gl);
+						if (activeLink == null && i < 1000
+								&& link.isHit(CoordinateManager.fromCircleCoordsY(globals, mousePosition.x),
+									CoordinateManager.fromCircleCoordsX(globals, mousePosition.y))) {
+							activeLink = link;
+							i++;
+						}
+						else {
+							link.draw(gl);
+						}
 					}
+					if (activeLink != null) {
+						activeLink.draw(gl, 0f, 0f, 1f);
+					}
+					this.activeLink = activeLink;
 				}
 			}
 			GeneralLink.endDrawing(gl);
