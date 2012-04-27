@@ -54,11 +54,20 @@ public class ContextMenu {
 		border = 4;
 		shadow = 6;
 		selections = new ArrayList<Selection>();
+		
+		boolean noMin = true;
+		
+		int chromosomes = overview.globals.genome.getNumChromosomes();
+		for (int i = 0; i < chromosomes; ++i) {
+			ViewChromosome c = overview.globals.genome.getChromosome(i);
+			if(c.isMinimized()) noMin = false;
+		}
+
 
 		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
-		selections.add(new Selection("Restore all",3));
+		if(!noMin) selections.add(new Selection("Restore all",3));
 //		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",4));
 //		else selections.add(new Selection("Fullscreen","F",4));
 		
