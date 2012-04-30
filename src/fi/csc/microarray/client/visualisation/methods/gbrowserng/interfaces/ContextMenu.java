@@ -68,9 +68,7 @@ public class ContextMenu {
 		else selections.add(new Selection("Restore",1));
 		selections.add(new Selection("Maximize",2));
 		if(!noMin) selections.add(new Selection("Restore all",3));
-//		if(window.isFullscreen()) selections.add(new Selection("Windowed mode","F",4));
-//		else selections.add(new Selection("Fullscreen","F",4));
-		
+
 		selected = 0;
 		initTextRenderers();
 	}
@@ -89,10 +87,6 @@ public class ContextMenu {
 			restoreAll(chromosome);
 			geneCircle.animating = true;
 		} 
-//		else if(selections.get(selected).action==4) {
-//			window.toggleFullscreen();
-//			overview.updateCircleSize();
-//		}
 		close = true;
 	}
 

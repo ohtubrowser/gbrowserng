@@ -35,7 +35,7 @@ public class OverView extends GenosideComponent {
 	private Vector2 mousePosition = new Vector2();
 	private SessionViewCapsule hoverCapsule = null;
 	public GenoWindow window;
-	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions;//new ConcurrentLinkedQueue<SessionViewCapsule>();
+	private ConcurrentHashMap<Integer, SessionViewCapsule> sessions;
 	private LinkedList<SessionViewCapsule> textureUpdateList = new LinkedList<SessionViewCapsule>();
 	private ArrayList<ChromoName> chromoNames = new ArrayList<ChromoName>();
 	final Object textureUpdateListLock = new Object();
@@ -53,7 +53,6 @@ public class OverView extends GenosideComponent {
 	public CapsuleManager CapsuleManager;
 	public GeneralLink activeLink;
 
-	// initialize object and neede parts
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
 		this.globals = globals;
 		geneCircle = new GeneCircle(globals);
@@ -113,7 +112,6 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	// handle events
 	@Override
 	public boolean handle(KeyEvent event) {
 		return this.keyEventHandler.handle(event);
@@ -124,7 +122,6 @@ public class OverView extends GenosideComponent {
 		return mouseEventHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
 
-	// handle sessions
 	public void openSession(SessionViewCapsule capsule) {
 		if (capsule.isLinkSession()) {
 			trackviewManager.openLinkSession(capsule.getLink());
@@ -134,7 +131,6 @@ public class OverView extends GenosideComponent {
 		trackviewManager.toggleVisible();
 	}
 
-	// drawing things + fading things
 	@Override
 	public void draw(GL2 gl) {
 		if (linkCollection.loading) {
@@ -197,12 +193,6 @@ public class OverView extends GenosideComponent {
 			}
 			textureUpdateList.clear();
 		}
-
-		/*
-		for (SessionViewCapsule capsule : activeSessions) {
-			capsule.drawToTexture(gl);
-		}
-		*/
 
 		for (SessionViewCapsule capsule : sessions.values()) {
 			capsule.draw(gl, this);
@@ -332,7 +322,6 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	// tick - used for ?
 	@Override
 	public void tick(float dt) {
 		if (geneCircle.animating) {
@@ -362,7 +351,6 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
-	// getters and setters 
 	public GenoFPSCounter getDrawCounter() {
 		return drawCounter;
 	}
@@ -374,12 +362,6 @@ public class OverView extends GenosideComponent {
 	public void setHoverCapsule(SessionViewCapsule capsule) {
 		this.hoverCapsule = capsule;
 	}
-
-	/*
-	public ConcurrentLinkedQueue<SessionViewCapsule> getActiveSessions() {
-		return this.activeSessions;
-	}
-	*/
 
 	public SessionViewCapsule getHoverCapsule() {
 		return this.hoverCapsule;

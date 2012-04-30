@@ -45,12 +45,6 @@ public class MouseEventHandler extends EventHandler {
 		hoverCapsule = null;
 		setHoverCapsule(x, y);
 
-		/*
-		if (!activeSessions.isEmpty() && hoverCapsule != null) {
-			return hoverCapsule.handle(event, x, y);
-		}
-		*/
-
 		calculatePointerGenePosition();
 		geneCircle.updatePosition(pointerGenePosition);
 
@@ -96,13 +90,17 @@ public class MouseEventHandler extends EventHandler {
 	}
 
 	private void calculatePointerGenePosition() {
-		double xCoordinates = CoordinateManager.toCircleCoordsX(globals, mouseY);		// right naming of variable?
-		double yCoordinates = CoordinateManager.toCircleCoordsY(globals, -mouseX);		// right naming of variable?
-		float value1 = (float) (Math.atan2(xCoordinates, yCoordinates) / Math.PI);	// what calculation happens here?
+		double cx = CoordinateManager.toCircleCoordsX(globals, mouseY);
+		// x-axis is negated to make tracking begin from the mathematical zero angle.
+		double cy = CoordinateManager.toCircleCoordsY(globals, -mouseX);
 
-		pointerGenePosition = 1.0f - (value1 * 0.5f + 0.5f);				// what calculation happens here?
+		// Maps position of the mouse to a relative position on a circle.
+		// Using range [0,1) counterclockwise, starting from mathematical zero angle.
+		float v = (float) (Math.atan2(cx, cy) / Math.PI);
+		pointerGenePosition = 1.0f - (v * 0.5f + 0.5f);
 
-		// explain what happens here 
+		// Locks the relative position on a certain point if
+		// the mouse cursor is over a chromosome name.
 		for (ChromoName chromoName : overview.getChromoNames()) {
 			if (chromoName.isOver(mouseX, mouseY)) {
 				synchronized (geneCircle.tickdrawLock) {
@@ -125,7 +123,6 @@ public class MouseEventHandler extends EventHandler {
 			}
 		}
 
-		// MouseWheelEvents
 		if (MouseEvent.MOUSE_WHEEL == event.getID()) {
 			MouseWheelEvent e = (MouseWheelEvent) event;
 			if (overview.isArcHighlightLocked()) {
@@ -153,8 +150,9 @@ public class MouseEventHandler extends EventHandler {
 			overview.closeContextMenu();
 			return true;
 		}
-		
-		// what happens here ?
+
+		// Open session if clicked on a capsule.
+		// Dying capsule won't be opened.
 		for (SessionViewCapsule capsule : sessions.values()) {
 			if (capsule.isDying()) {
 				continue;

@@ -30,21 +30,6 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		initLinkColor();
 	}
 
-	/**
-	 * Returns coordinates of ending point of link.
-	 * Every link occurs twice, so tbis method checks whether this is 1st or 2nd occurence and determines the terminating point accordingly.
-	 * If 1st occurence, method returns b-chromsome end position.
-	 * If 2nd occurence, method returns a-chromosome end position.
-	 * @return
-	 */
-	public float[] getLinkEndPositions() {
-		if (aOcc) {
-			return new float[]{bX, bY};
-		} else {
-			return new float[]{aX, aY};
-		}
-	}
-
 	public static GeneralLink createComparisonObject(ViewChromosome aC, ViewChromosome bC, long aS, long bS, boolean aOcc) {
 		return new GeneralLink(aC, bC, aS, bS, aOcc);
 	}
@@ -73,14 +58,6 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		if (this.opacity < 0.0f) {
 			this.opacity = 0.0f;
 		}
-	}
-
-	public float getStartPos() {
-		return aCirclePos;
-	}
-
-	public float getEndPos() {
-		return bCirclePos;
 	}
 
 	public void calculatePositions(GlobalVariables globals, GeneCircle geneCircle) {
@@ -249,20 +226,10 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		return aOcc ? bStart : aStart;
 	}
 
-	/**
-	 * @return the counter
-	 */
 	public long getCounter() {
 		return counter;
 	}
 
-	/**
-	 * @param counter the counter to set
-	 */
-	public void setCounter(long counter) {
-		this.counter = counter;
-	}
-	
 	public void addCounter(long value) {
 		counter += value;
 	}

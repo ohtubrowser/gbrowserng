@@ -36,14 +36,12 @@ public class TrackviewManager extends Container {
 	static {
 		try {
 			dataPath = "/cs/group2/home/gbrowsng/";
-//
-//			dataPath = "";
 			BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam").toURI().toURL();
 			BAI_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam.bai").toURI().toURL();
 			CYTOBAND_FILE = new File(dataPath + "karyotypeHuman.txt").toURI().toURL();
 			CYTOBAND_REGION_FILE = new File(dataPath + "seq_regionHuman.txt").toURI().toURL();
 
-	//ftp://ftp.ensembl.org/pub/release-65/gtf/homo_sapiens/Homo_sapiens.GRCh37.65.gtf.gz
+			//ftp://ftp.ensembl.org/pub/release-65/gtf/homo_sapiens/Homo_sapiens.GRCh37.65.gtf.gz
 			GTF_ANNOTATION_FILE = new File(dataPath + "Homo_sapiens.GRCh37.65.gtf").toURI().toURL();
 			CYTOBAND_COORD_SYSTEM_FILE = new File(dataPath + "coord_system.txt").toURI().toURL();
 		} catch (MalformedURLException ex) {
@@ -72,7 +70,6 @@ public class TrackviewManager extends Container {
 
 	public void clearContainer() {
 		removeAll();
-		//add(new JLabel("HALLOO"), BorderLayout.EAST);
 	}
 
 	public void openLinkSession(GeneralLink l) {

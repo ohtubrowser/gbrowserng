@@ -22,7 +22,6 @@ public class LinkGFX {
 	private float velocity = 5.0f;
 
 	private float alpha = 1.0f;
-	private float target_alpha = 1.0f;
 
 	public LinkGFX(SessionViewCapsule c, Vector2 circlePos) {
 		this.capsule = c;
@@ -84,15 +83,6 @@ public class LinkGFX {
 		if(time < -1.3f / velocity)
 			time += 2.6f / velocity;
 
-		alpha += (target_alpha - alpha) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
+		alpha += (1.0f - alpha) * (Math.min(1.0f, GlobalVariables.animationConstant*dt));
 	}
-
-	public void hide() {
-		target_alpha = -0.1f;
-	}
-
-	public void show() {
-		target_alpha = 1.0f;
-	}
-
 }

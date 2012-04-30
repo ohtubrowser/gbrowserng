@@ -84,15 +84,13 @@ public class CytobandLoader implements AreaResultListener {
 		for (RegionContent r : contents) {
 			Cytoband cband = (Cytoband) r.values.get(ColumnType.VALUE);
 			if (name == null)
-				name = new String(cband.getRegion().start.chr.toNormalisedString()); // Not sure about this
+				name = new String(cband.getRegion().start.chr.toNormalisedString());
 			if (cband.getStain() == Cytoband.Stain.ACEN) {
 				if (acenstart == null) acenstart = r.region.start.bp;
 				else if (acenend == null) acenend = r.region.end.bp;
 			}
 			chromosomeLength = r.region.end.bp;
 		}
-		// This id system is stupid.
-
 		if (acenstart != null && acenend != null) {
 			chrs.add(new ViewChromosome(chromoId.getAndAdd(1), name, chromosomeLength, (acenstart+acenend)/2));
 		} else {

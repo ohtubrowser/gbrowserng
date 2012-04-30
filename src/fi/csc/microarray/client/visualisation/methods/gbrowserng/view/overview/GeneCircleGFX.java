@@ -76,15 +76,7 @@ public class GeneCircleGFX {
 			x = 0.9495f * chromopositions[i].x;
 			y = 0.9495f * chromopositions[i].y;
 
-			//float dy = 0.9495f*vec.y;
-			//float dx = 0.9495f*vec.x;
-
-			float angle = 180f * (float) Math.atan2(/*
-					 * dy
-					 */y, /*
-					 * dx
-					 */ x) / (float) Math.PI;
-
+			float angle = 180f * (float) Math.atan2(y, x) / (float) Math.PI;
 			modelMatrix=CoordinateManager.getCircleMatrix(globals);
 			modelMatrix.translate(x, y, 0);
 			modelMatrix.rotate(angle + 90f, 0, 0, 1);
@@ -133,9 +125,5 @@ public class GeneCircleGFX {
 	public void tick(float dt) {
 		time += dt;
 		hilight += (1.0f - Math.pow(0.1f, dt)) * (hilightTarget - hilight);
-	}
-
-	public void setHilight(float value) {
-		hilightTarget = value;
 	}
 }

@@ -61,7 +61,6 @@ public class ViewChromosome {
     public void setMinimized(boolean minimized) {
         this.minimized = minimized;
         animating = true;
-        //animationProgress = minimized ? 1f : 0f;
     }
 
     public boolean isAnimating() {

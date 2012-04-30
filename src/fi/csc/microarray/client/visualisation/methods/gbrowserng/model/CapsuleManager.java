@@ -97,7 +97,6 @@ public class CapsuleManager {
 
 	private boolean replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-SLOTS_PER_QUAD-1 + nextfree, endID-1);
-		// This shouldn't be called when end==0, but for some reason it is.
 		System.out.println(nextfree);
 		if(end>0) {
 			for(int i=id; i<end; ++i) {
@@ -119,7 +118,6 @@ public class CapsuleManager {
 	 * @param c Capsule to be removed.
 	 */
 	public void removeCapsule(SessionViewCapsule c) {
-		// removeCapsule gets called multiple times... Concurrency?
 		Iterator it = sessions.keySet().iterator();
 		while(it.hasNext()) {
 			int id = (Integer)it.next();

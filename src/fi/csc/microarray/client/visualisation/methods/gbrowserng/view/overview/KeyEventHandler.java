@@ -28,12 +28,6 @@ public class KeyEventHandler extends EventHandler {
 			if (handleContextMenuCommands()) return true;
 		}
 
-		/*
-		if (!activeSessions.isEmpty()) {
-			if (handleMouseOverCapsule()) return true;
-		}
-		*/
-
 		if (arcHighlightLocked) {
 			handleLockedArch();
 		}
@@ -44,8 +38,8 @@ public class KeyEventHandler extends EventHandler {
 
 	}
 
-	private boolean handleContextMenuCommands() {	
-			if ((event.getKeyCode() == KeyEvent.VK_DOWN
+	private boolean handleContextMenuCommands() {
+		if ((event.getKeyCode() == KeyEvent.VK_DOWN
 				|| event.getKeyCode() == KeyEvent.VK_UP
 				|| event.getKeyCode() == KeyEvent.VK_ENTER)) {
 
@@ -56,7 +50,7 @@ public class KeyEventHandler extends EventHandler {
 			}
 			return true;
 		}
-			return false;
+		return false;
 	}
 
 	private void handleLockedArch() {
@@ -64,8 +58,6 @@ public class KeyEventHandler extends EventHandler {
 				trackviewManager.clearContainer();
 				trackviewManager.openLinkSession(linkSelection.getActiveLink());
 				trackviewManager.toggleVisible();
-
-				//sessions.add(trackviewManager.generateLinkCapsule(overview));
 			}
 			linkSelection.handle(event);
 	}
@@ -79,13 +71,6 @@ public class KeyEventHandler extends EventHandler {
 		} else if (KeyEvent.VK_A == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
 			overview.geneCircle.setSize(Math.max(0.0f, overview.geneCircle.getSize() - 0.01f));
 			overview.updateCircleSize();
-		}/* else if (KeyEvent.VK_SPACE == event.getKeyCode() && event.getID() == KeyEvent.KEY_PRESSED) {
-			Random r = new Random();
-			for (int i = 0; i < 1000; ++i) {
-				ViewChromosome begin = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
-				ViewChromosome end = Genome.getChromosome(r.nextInt(Genome.getNumChromosomes()));
-				linkCollection.addToQueue(begin, end, r.nextInt((int) begin.length()), r.nextInt((int) end.length()));
-			}
-		}*/
+		}
 	}
 }

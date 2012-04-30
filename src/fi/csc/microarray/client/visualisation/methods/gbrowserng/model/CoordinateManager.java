@@ -27,13 +27,4 @@ public class CoordinateManager {
 	public static float fromCircleCoordsY(GlobalVariables globals, float y) {
 		return y / globals.aspectRatio;
 	}
-	
-	/*
-	public static int toCircleCoordsX(int x) {
-		return x;
-	}
-	public static int toCircleCoordsY(int y) {
-		return y;
-	}
-	*/
 }
