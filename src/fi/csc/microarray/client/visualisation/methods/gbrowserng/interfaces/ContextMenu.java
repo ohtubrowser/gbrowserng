@@ -55,19 +55,33 @@ public class ContextMenu {
 		shadow = 6;
 		selections = new ArrayList<Selection>();
 		
-		boolean noMin = true;
-		
 		int chromosomes = overview.globals.genome.getNumChromosomes();
+		int minimized=0;
 		for (int i = 0; i < chromosomes; ++i) {
 			ViewChromosome c = overview.globals.genome.getChromosome(i);
-			if(c.isMinimized()) noMin = false;
+			if(c.isMinimized()) minimized++;
 		}
+		boolean oneMaximized = minimized==overview.globals.genome.getNumChromosomes()-1;
 
-
-		if(!chromosome.isMinimized()) selections.add(new Selection("Minimize",0));
-		else selections.add(new Selection("Restore",1));
-		selections.add(new Selection("Maximize",2));
-		if(!noMin) selections.add(new Selection("Restore all",3));
+		if (oneMaximized)
+		{
+			if(this.chromosome.isMinimized()) {
+				selections.add(new Selection("Open",1));
+				selections.add(new Selection("Maximize",2));
+			}
+			selections.add(new Selection("Open all",3));
+		}
+		else {
+			if(this.chromosome.isMinimized()) {
+				selections.add(new Selection("Open",1));
+				selections.add(new Selection("Maximize",2));
+			}
+			else {
+				selections.add(new Selection("Close",0));
+				selections.add(new Selection("Maximize",2));
+			}
+			if(minimized>0) selections.add(new Selection("Open all",3));
+		}
 
 		selected = 0;
 		initTextRenderers();
