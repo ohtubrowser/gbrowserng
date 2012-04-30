@@ -14,6 +14,9 @@ public class GlobalVariables {
 	public static final float selectSize = 0.01f;
 	public static final float linkSyncInterval = 3.0f;
 
+	public final int SLOTS_PER_QUAD = 4;
+	public final float SLOT_HEIGHT = 1.0f/SLOTS_PER_QUAD;
+
 	public long filtering;
 	public boolean debug;
 	public float aspectRatio = 1.0f;

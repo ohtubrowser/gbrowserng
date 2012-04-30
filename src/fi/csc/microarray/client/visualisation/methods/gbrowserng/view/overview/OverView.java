@@ -57,7 +57,7 @@ public class OverView extends GenosideComponent {
 		this.globals = globals;
 		geneCircle = new GeneCircle(globals);
 		geneCircleGFX = new GeneCircleGFX(globals, geneCircle);
-		CapsuleManager = new CapsuleManager();
+		CapsuleManager = new CapsuleManager(globals);
 		sessions = CapsuleManager.getSessions();
 		drawArcs = false;
 		this.window = window;
