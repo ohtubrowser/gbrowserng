@@ -1,6 +1,3 @@
-/*
- * Context menu
- */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
@@ -11,8 +8,6 @@ import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 import com.jogamp.opengl.util.awt.TextRenderer;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import com.soulaim.tech.gles.Color;
@@ -179,7 +174,6 @@ public class ContextMenu {
 
 		int swidth = overview.globals.width, sheight = overview.globals.height;
 		textRenderer.beginRendering(swidth, sheight);
-		int hw = swidth/2, hh = sheight/2;
 		for(int i = 0; i<selections.size(); i++) {
 			textRenderer.setColor(0f, 0f, 0f, 1f);
 			textRenderer.draw(selections.get(i).name, convertX(x)+5, convertY(y)-i*selHeight-5);
