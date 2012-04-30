@@ -28,6 +28,12 @@ public class CapsuleManager {
 		return sessions;
 	}
 
+	/**
+	 * Cycles the sessions so that c is added to the head of the session
+	 * list and the last session is thrown away.
+	 * @param c Session to be added
+	 * @param startID Id of the first session in this quad (0..3 * SLOTS_PER_QUAD)
+	 */
 	private void replaceFirst(SessionViewCapsule c, int startID) {
 		c.setCapsulePosition(sessions.get(startID).getCapsulePosition().x, sessions.get(startID).getCapsulePosition().y);
 		for(int i=startID+globals.SLOTS_PER_QUAD-1; i>startID; i--) {
@@ -98,22 +104,22 @@ public class CapsuleManager {
 		sessions.put(id, c);
 	}
 
-	private boolean replaceFrom(int id, int endID, int nextfree) {
+	/**
+	 * Cycles sessions one slot backwards, freeing up a slot from the end of the quad.
+	 * @param id Id to remove.
+	 * @param endID The last id of current quad.
+	 * @param nextfree Next free slot of current quad.
+	 */
+	private void replaceFrom(int id, int endID, int nextfree) {
 		int end = Math.min(endID-globals.SLOTS_PER_QUAD-1 + nextfree, endID-1);
-		System.out.println(nextfree);
 		if(end>0) {
 			for(int i=id; i<end; ++i) {
 				sessions.replace(i, sessions.get(i+1));
 				sessions.get(i).setCapsulePosition(sessions.get(i).getCapsulePosition().x, sessions.get(i).getCapsulePosition().y+globals.SLOT_HEIGHT);
 			}
 			sessions.remove(end);
-			return true;
 		}
-		else
-		{
-			sessions.remove(end);
-			return false;
-		}
+		else sessions.remove(end);
 	}
 
 	/**
