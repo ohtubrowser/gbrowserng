@@ -64,7 +64,7 @@ public class ConnectionsLoader implements AreaResultListener {
 
 	public void requestData() {
 		for (ViewChromosome c : this.chromosomes) {
-			if(globals.debug && c.getName().compareTo("15") != 0) continue;
+			if(false && c.getName().compareTo("15") != 0) continue;
 			areaRequestQueue.add(new AreaRequest(
 					new Region(0l, 270000000l, new fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome(c.getName())),
 					new HashSet<ColumnType>(Arrays.asList(new ColumnType[]{

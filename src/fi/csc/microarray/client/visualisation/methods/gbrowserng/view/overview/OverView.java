@@ -52,6 +52,7 @@ public class OverView extends GenosideComponent {
 	public GlobalVariables globals;
 	public CapsuleManager CapsuleManager;
 	public GeneralLink activeLink;
+	private Thread linkSyncThread;
 
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
 		this.globals = globals;
@@ -68,6 +69,11 @@ public class OverView extends GenosideComponent {
 		this.linkCollection = linkCollection;
 		geneCircle.setSize(0.485f);
 		updateCircleSize();
+		this.linkCollection.setOverview(this);
+
+		linkSyncThread = new Thread(linkCollection);
+		linkSyncThread.start();
+
 		linkSelection = new LinkSelection(globals, geneCircle);
 		mouseEventHandler = new MouseEventHandler(this);
 		keyEventHandler = new KeyEventHandler(this);
@@ -148,25 +154,22 @@ public class OverView extends GenosideComponent {
 			if (arcHighlightLocked) {
 				linkSelection.draw(gl);
 			} else {
-				synchronized (linkCollection.linkSyncLock) {
-					int i = 0;
-					GeneralLink activeLink = null;
-					for (GeneralLink link : linkCollection.getLinks()) {
-						if (activeLink == null && i < 1000
-								&& link.isHit(CoordinateManager.fromCircleCoordsY(globals, mousePosition.x),
-									CoordinateManager.fromCircleCoordsX(globals, mousePosition.y))) {
-							activeLink = link;
-							i++;
-						}
-						else {
-							link.draw(gl);
-						}
+				int i = 0;
+				GeneralLink activeLink = null;
+				for (GeneralLink link : linkCollection.getLinks()) {
+					if (activeLink == null && i < 1000
+							&& link.isHit(CoordinateManager.fromCircleCoordsY(globals, mousePosition.x),
+							CoordinateManager.fromCircleCoordsX(globals, mousePosition.y))) {
+						activeLink = link;
+						i++;
+					} else {
+						link.draw(gl);
 					}
-					if (activeLink != null) {
-						activeLink.draw(gl, 0f, 0f, 1f);
-					}
-					this.activeLink = activeLink;
 				}
+				if (activeLink != null) {
+					activeLink.draw(gl, 0f, 0f, 1f);
+				}
+				this.activeLink = activeLink;
 			}
 			GeneralLink.endDrawing(gl);
 		}
@@ -269,8 +272,8 @@ public class OverView extends GenosideComponent {
 		// Mouse hover information
 		long position = 0;
 		int chromosome = 0;
-		if (arcHighlightLocked && linkSelection.mouseInCircle()) {
-			GeneralLink link = linkSelection.getActiveLink();
+		if ((arcHighlightLocked || activeLink != null) && linkSelection.mouseInCircle()) {
+			GeneralLink link = !arcHighlightLocked ? activeLink : linkSelection.getActiveLink();
 			if (link != null) {
 				String counter = "Links " + link.getCounter();
 				textRenderer.draw(counter, 20, 2 * stringHeight + 30);
@@ -303,21 +306,20 @@ public class OverView extends GenosideComponent {
 	private void fadeLinks(float dt) {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
-		synchronized (linkCollection.linkSyncLock) {
-			for (int i = 0; i < linkCollection.numLinks(); ++i) {
-				GeneralLink link = linkCollection.valueAt(i);
-				if (!link.isMinimized()) {
-					if (linkSelection.inSelection(i)) {
-						link.fadeIn(dt * 16);
-					} else if (!arcHighlightLocked
-							&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
-						link.fadeDim(dt * 8);
-					} else {
-						link.fadeOut(dt * 8);
-					}
+		ArrayList<GeneralLink> tempLinks = linkCollection.getLinks();
+		for (int i = 0; i < tempLinks.size(); ++i) {
+			GeneralLink link = tempLinks.get(i);
+			if (!link.isMinimized()) {
+				if (linkSelection.inSelection(i)) {
+					link.fadeIn(dt * 16);
+				} else if (!arcHighlightLocked
+						&& ((link.getAChromosome() == thisChromo) || (link.getBChromosome() == thisChromo))) {
+					link.fadeDim(dt * 8);
 				} else {
 					link.fadeOut(dt * 8);
 				}
+			} else {
+				link.fadeOut(dt * 8);
 			}
 		}
 	}
@@ -333,7 +335,6 @@ public class OverView extends GenosideComponent {
 		}
 
 		linkSelection.tick(dt, linkCollection);
-		linkCollection.tick(dt, geneCircle);
 		geneCircleGFX.tick(dt);
 
 		fadeLinks(dt);

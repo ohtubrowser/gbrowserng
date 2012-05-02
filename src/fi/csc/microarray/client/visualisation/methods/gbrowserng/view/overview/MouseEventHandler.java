@@ -173,7 +173,7 @@ public class MouseEventHandler extends EventHandler {
 			overview.setArcHighlightLocked(true);
 			linkSelection.update(pointerGenePosition, linkCollection);
 		} else if (overview.isArcHighlightLocked() && pointInsideCircle(mouseX, mouseY, geneCircle)) {
-			GeneralLink cl = overview.getTrackviewManager().getLink();
+			GeneralLink cl = overview.getLinkSelection().getActiveLink();
 			float relativePosition = geneCircle.getRelativePosition(cl.getEndChromosome().getChromosomeNumber() - 1, ((float) cl.getEndPosition()) / cl.getEndChromosome().length());
 
 			SessionViewCapsule c = openNewAreaCapsule(relativePosition, cl, geneCircle);
