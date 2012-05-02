@@ -14,7 +14,7 @@ void main()
 {
     float dot = mouse.x * vertexPosition.x + mouse.y * vertexPosition.y;
 
-    angle = max(0.0, 1.0 - acos(dot) * 6.0);
+    angle = max(0.0, 1.0 - acos(dot) * 7.0);
 
     vec4 vertexPos = modelMatrix * vec4(vertexPosition, 0.0, 1.0);
 
