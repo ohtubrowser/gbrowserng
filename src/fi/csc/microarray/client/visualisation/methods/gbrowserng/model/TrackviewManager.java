@@ -14,6 +14,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -21,7 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class TrackviewManager extends Container {
 
@@ -55,6 +57,7 @@ public class TrackviewManager extends Container {
 	private Region regionA = new Region(0l, 1l, new Chromosome("1")), regionB = new Region(0l, 1l, new Chromosome("1")); // TODO : need some good defaults
 	public final Object switchLock = new Object();
 	private GeneralLink currentLink;
+	private JButton closeButton = new JButton("Close");
 
 	public TrackviewManager(GenoWindow window) {
 			setLayout(new BorderLayout());
@@ -67,47 +70,50 @@ public class TrackviewManager extends Container {
 		} catch (URISyntaxException ex) {
 			Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				toggleVisible();
+			}
+		});
 	}
 
 	public void clearContainer() {
 		removeAll();
+		add(closeButton, BorderLayout.NORTH);
 	}
 
 	public void openLinkSession(GeneralLink l) {
-		synchronized (switchLock) {
-				clearContainer();
-				ViewChromosome a = l.getAChromosome();
-				ViewChromosome b = l.getBChromosome();
-				regionA = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
-				regionB = new Region(l.getbStart(), l.getbStart() + 10000, new Chromosome(b.getName()));
-	
-			try {
-				sessionA.setRegion(regionA);
-				sessionB.setRegion(regionB);
+			clearContainer();
+			ViewChromosome a = l.getAChromosome();
+			ViewChromosome b = l.getBChromosome();
+			regionA = new Region(l.getaStart(), l.getaStart() + 10000, new Chromosome(a.getName()));
+			regionB = new Region(l.getbStart(), l.getbStart() + 10000, new Chromosome(b.getName()));
 
-				add(previewManager.getSplitJComponent(sessionA, sessionB), BorderLayout.CENTER);
-				validate();
-				repaint();
-				currentLink = l;
-			} catch (URISyntaxException ex) {
-				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
+		try {
+			sessionA.setRegion(regionA);
+			sessionB.setRegion(regionB);
+
+			add(previewManager.getSplitJComponent(sessionA, sessionB), BorderLayout.CENTER);
+			validate();
+			repaint();
+			currentLink = l;
+		} catch (URISyntaxException ex) {
+			Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
 	public void openAreaSession(ViewChromosome c, long start, long end) {
-		synchronized (switchLock) {
-				clearContainer();
-				regionA = new Region(start, end, new Chromosome(c.getName()));
-			try {
-				sessionA.setRegion(regionA);
-				add(sessionA.getJComponent(), BorderLayout.CENTER);
-				validate();
-				repaint();
-				currentLink = null;
-			} catch (URISyntaxException ex) {
-				Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
+			clearContainer();
+			regionA = new Region(start, end, new Chromosome(c.getName()));
+		try {
+			sessionA.setRegion(regionA);
+			add(sessionA.getJComponent(), BorderLayout.CENTER);
+			validate();
+			repaint();
+			currentLink = null;
+		} catch (URISyntaxException ex) {
+			Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -140,32 +146,28 @@ public class TrackviewManager extends Container {
 	}
 	
 	public void showPreview(GBrowserPreview preview) {
-		synchronized (switchLock) {
-			clearContainer();
-			try {
-				add(preview.getJComponent(), BorderLayout.CENTER);
-				validate();
-				repaint();
-				currentLink = null;
-				toggleVisible();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
+		clearContainer();
+		try {
+			add(preview.getJComponent(), BorderLayout.CENTER);
+			validate();
+			repaint();
+			currentLink = null;
+			toggleVisible();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 	}
 	
 	public void showPreviews(GBrowserPreview preview1, GBrowserPreview preview2, GeneralLink link) {
-		synchronized (switchLock) {
-			clearContainer();
-			try {
-				add(previewManager.getSplitJComponent(preview1, preview2), BorderLayout.CENTER);
-				validate();
-				repaint();
-				currentLink = link;
-				toggleVisible();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
+		clearContainer();
+		try {
+			add(previewManager.getSplitJComponent(preview1, preview2), BorderLayout.CENTER);
+			validate();
+			repaint();
+			currentLink = link;
+			toggleVisible();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 	}
 }
