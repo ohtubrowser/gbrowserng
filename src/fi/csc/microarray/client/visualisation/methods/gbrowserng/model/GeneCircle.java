@@ -135,6 +135,10 @@ public class GeneCircle {
 	public float getSize() {
 		return size;
 	}
+	
+	public float getMinimumChromosomeSlice() {
+		return minimumChromosomeSlice;
+	}
 
 	public void setSize(float size) {
 		this.size = size;
