@@ -17,6 +17,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * Handles the drawing and functionality of a context menu opened by right clicking.
+ * @author Elias Laitala
+ */
+
 public class ContextMenu {
 	OverView overview;
 	GenoWindow window;
@@ -35,6 +40,14 @@ public class ContextMenu {
 	private Color borderColor = new Color(0.5f,0.6f,0.5f,0.9f);
 	private Color shadowColor = new Color(0f,0f,0f,0.7f);
 
+	/**
+	 * The constructor.
+	 * @param chromosome	the chromosome selected by the mouse position
+	 * @param geneCircle	the GeneCircle object
+	 * @param mx			mouse x position in the window as a floating point Gl coordinate
+	 * @param my			mouse y position
+	 * @param overview		the OverView object
+	 */
 	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, OverView overview) {
 		this.overview = overview;
 		this.window = overview.window;
@@ -82,6 +95,10 @@ public class ContextMenu {
 		initTextRenderers();
 	}
 
+	/**
+	 * Performs an action and closes the menu.
+	 * @param selection		the number of the action to be performed
+	 */
 	private void action(int selection) {
 		if(selections.get(selected).action==0) {
 			chromosome.setMinimized(true);
@@ -93,16 +110,16 @@ public class ContextMenu {
 			minimizeAllButOne(chromosome);
 			geneCircle.animating = true;
 		} else if(selections.get(selected).action==3) {
-			restoreAll(chromosome);
+			restoreAll();
 			geneCircle.animating = true;
 		} 
 		close = true;
 	}
 
-	public ViewChromosome getChromosome() {
-		return chromosome;
-	}
-
+	/**
+	 * Maximizes the selected chromosome.
+	 * @param chromosome	the chromosome to be maximized
+	 */
 	private void minimizeAllButOne(ViewChromosome chromosome) {
 		int chromosomes = overview.globals.genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
@@ -113,7 +130,10 @@ public class ContextMenu {
 		}
 	}
 	
-	private void restoreAll(ViewChromosome chromosome) {
+	/**
+	 * Restores all minimized chromosomes.
+	 */
+	private void restoreAll() {
 		int chromosomes = overview.globals.genome.getNumChromosomes();
 		for (int i = 0; i < chromosomes; ++i) {
 			ViewChromosome c = overview.globals.genome.getChromosome(i);
@@ -121,6 +141,13 @@ public class ContextMenu {
 		}
 	}
 
+	/**
+	 * Handles mouse movement and clicking within the menu.
+	 * @param event		the mouse event
+	 * @param mx		mouse x
+	 * @param my		mouse y
+	 * @return 
+	 */
 	public boolean handle(MouseEvent event, float mx, float my) {
 		if(inComponent(mx,my)) {
 			for(int i = 0; i<selections.size(); i++) {
@@ -136,6 +163,11 @@ public class ContextMenu {
 		return true;
 	}
 
+	/**
+	 * Handles keyboard use of the menu. The selected action can be changed with up and down keys and selected with enter.
+	 * @param event		key event
+	 * @return 
+	 */
 	public boolean handle(KeyEvent event) {
 		if(event.getKeyCode()==KeyEvent.VK_UP && event.getID() == KeyEvent.KEY_PRESSED) {
 			if(selected == 0) selected = selections.size()-1;
@@ -150,10 +182,18 @@ public class ContextMenu {
 		return true;
 	}
 
+	/**
+	 * Returns a boolean value about is the menu to be closed.
+	 * @return is the menu to be closed
+	 */
 	public boolean close() {
 		return close;
 	}
 
+	/**
+	 * Draws the menu on the screen.
+	 * @param gl gl interface
+	 */
 	public void draw(GL2 gl) {
 		gl.glEnable(GL2.GL_BLEND);
 
@@ -183,12 +223,21 @@ public class ContextMenu {
 		textRenderer.endRendering();
 	}
 
+	/**
+	 * Checks if the mouse cursor is inside the menu.
+	 * @param mx	mouse x position
+	 * @param my	mouse y position
+	 * @return 
+	 */
 	public boolean inComponent(float mx, float my) {
 		if(mx < x || mx > x + convertW(width)) return false;
 		if(my < y - convertH(selHeight) * 0.5f - convertH(selHeight)*(selections.size()-1) || my > y + convertH(selHeight) * 0.5f) return false;
 		return true;
 	}
 
+	/**
+	 * Initializes a text renderer for writing text in the menu.
+	 */
 	private void initTextRenderers() {
 		Font font;
 		float fontSize = 16f;
@@ -202,56 +251,74 @@ public class ContextMenu {
 		this.textRenderer = new com.jogamp.opengl.util.awt.TextRenderer(font, true, true);
 	}
 
+	/**
+	 * Converts a width value from integer to float.
+	 * @param c	value to be converted
+	 * @return 
+	 */
 	private float convertW(int c) {
 		int hw = overview.globals.width/2;
 		return ((float)c)/hw;
 	}
 
+	/**
+	 * Converts a height value from integer to float.
+	 * @param c value to be converted
+	 * @return 
+	 */
 	private float convertH(int c) {
 		int hh = overview.globals.height/2;
 		return ((float)c)/hh;
 	}
 
-	private int convertW(float c) {
-		int hw = overview.globals.width/2;
-		return (int)(hw*c);
-	}
-
-	private int convertH(float c) {
-		int hh = overview.globals.height/2;
-		return (int)(hh*c);
-	}
-
+	/**
+	 * Converts a screen x coordinate value to integer.
+	 * @param c
+	 * @return 
+	 */
 	private int convertX(float c) {
 		int hw = overview.globals.width/2;
 		return (int)(hw+(hw*c));
 	}
 
+	/**
+	 * Converts a screen x coordinate value to integer.
+	 * @param c
+	 * @return 
+	 */
 	private int convertY(float c) {
 		int hh = overview.globals.height/2;
 		return (int)(hh+(hh*c));
 	}
 
-	private float convertX(int c) {
-		int hw = overview.globals.width/2;
-		return ((float)c)/hw+1f;
-	}
-
-	private float convertY(int c) {
-		int hh = overview.globals.height/2;
-		return ((float)c)/hh+1f;
-	}
 }
 
+/**
+ * A data structure for menu options.
+ * @author Elias Laitala
+ */
 class Selection {
 	String name;
 	String shortcut;
 	int action;
+	
+	/**
+	 * A constructor that creates an action without a shortcut key.
+	 * @param name		name of the action
+	 * @param action	number of the action
+	 */
 	public Selection(String name, int action) {
 		this.name = name;
 		this.shortcut = "";
 		this.action = action;
 	}
+	
+	/**
+	 * A constructor that creates an action with a shortcut key.
+	 * @param name		name of the action
+	 * @param shortcut	shortcut key
+	 * @param action	number of the action
+	 */
 	public Selection(String name, String shortcut, int action) {
 		this.name = name;
 		this.shortcut = shortcut;
