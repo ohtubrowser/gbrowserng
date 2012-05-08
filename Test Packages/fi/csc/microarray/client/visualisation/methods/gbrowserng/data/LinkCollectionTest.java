@@ -7,6 +7,8 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import java.util.ArrayList;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -45,20 +47,24 @@ public class LinkCollectionTest {
 		System.out.println("syncAdditions");
 		GlobalVariables variables = new GlobalVariables();
 		LinkCollection instance = new LinkCollection(variables);
+		instance.addToQueue(getGeneralLink());
 		instance.syncAdditions();
-	}
 
+	}
+	
 	/**
 	 * Test of filterLinks method, of class LinkCollection.
 	 */
 	@Test
 	public void testFilterLinks() {
 		System.out.println("filterLinks");
-		long minDistance = 0L;
-//		LinkCollection instance = new LinkCollection();
-//		instance.filterLinks(minDistance);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		long minDistance = 100L;
+		LinkCollection instance = getCollection();
+		ArrayList<GeneralLink> links = getLinks();
+		ArrayList<GeneralLink> resultLinks = instance.filterLinks(minDistance, links);
+		int expected = 1;
+		int result = resultLinks.size();
+		assertEquals(expected, result);
 	}
 
 	/**
@@ -84,12 +90,12 @@ public class LinkCollectionTest {
 	public void testValueAt() {
 		System.out.println("valueAt");
 		int index = 0;
-//		LinkCollection instance = new LinkCollection();
+		LinkCollection instance = getCollection();
 		GeneralLink expResult = null;
 //		GeneralLink result = instance.valueAt(index);
 //		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		fail("Overview needed for testing, not yet implemented");
 	}
 
 	/**
@@ -99,25 +105,22 @@ public class LinkCollectionTest {
 	public void testGetLinks() {
 		System.out.println("getLinks");
 		LinkCollection instance = getCollection();
-		ArrayList expResult = null;
 		ArrayList result = instance.getLinks();
-		assertEquals(expResult, result);
+		assertTrue(result.isEmpty());
 	}
 
 	/**
 	 * Test of numLinks method, of class LinkCollection.
 	 */
 	@Test
-	public void testNumLinks() {
+	public void testNumLinksEmpty() {
 		System.out.println("numLinks");
-//		LinkCollection instance = new LinkCollection();
-//		int expResult = 0;
-//		int result = instance.numLinks();
-//		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		LinkCollection instance = getCollection();
+		int expResult = 0;
+		int result = instance.numLinks();
+		assertEquals(expResult, result);
 	}
-
+	
 	/**
 	 * Test of tick method, of class LinkCollection.
 	 */
@@ -129,7 +132,7 @@ public class LinkCollectionTest {
 //		LinkCollection instance = new LinkCollection();
 //		instance.tick(dt, geneCircle);
 		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		fail("Overview needed for testing, not yet implemented");
 	}
 	
 	private LinkCollection getCollection() {
@@ -144,11 +147,49 @@ public class LinkCollectionTest {
 	@Test
 	public void testAddToQueue_GeneralLink() {
 		System.out.println("addToQueue");
-//		GeneralLink l = new GeneralLink();
-//		LinkCollection instance = 
-//		instance.addToQueue(l);
+		GeneralLink link = getGeneralLink();
+		LinkCollection instance = getCollection();
+		instance.addToQueue(link);
+		int expected = 2;
+		int result = instance.queueSize();
+		assertEquals(expected, result);
 	}
-
+	
+	
+	/**
+	 * Test of addToQueue method, of class LinkCollection.
+	 */
+	@Test
+	public void testAddToQueue_HundredThousand_GeneralLinks() {
+		System.out.println("addToQueue");
+		LinkCollection instance = getCollection();
+		for (int i = 0; i < 100000; i++) {
+			GeneralLink link = getGeneralLink();
+			instance.addToQueue(link);
+		}
+		int expected = 200000;
+		int result = instance.queueSize();
+		assertEquals(expected, result);
+	}
+	
+	
+	
+	/**
+	 * Test of addToQueue method, of class LinkCollection.
+	 */
+	@Test
+	public void testAddToQueue_Million_GeneralLinks() {
+		System.out.println("addToQueue");
+		LinkCollection instance = getCollection();
+		for (int i = 0; i < 1000000; i++) {
+		GeneralLink link = getGeneralLink();
+		instance.addToQueue(link);
+		}
+		int expected = 2000000;
+		int result = instance.queueSize();
+		assertEquals(expected, result);
+	}
+	
 	/**
 	 * Test of updateNewLinkPositions method, of class LinkCollection.
 	 */
@@ -159,6 +200,25 @@ public class LinkCollectionTest {
 //		LinkCollection instance = new LinkCollection();
 //		instance.updateNewLinkPositions(geneCircle);
 		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		fail("Overview neede for testing, not yet implemented.");
+	}
+	
+	private GeneralLink getGeneralLink() {
+		ViewChromosome aChr = new ViewChromosome(1, 50);
+			ViewChromosome bChr = new ViewChromosome(2, 50);
+		GeneralLink link = new GeneralLink(aChr, bChr, 100, 100, true);
+		return link;
+	}
+
+	private ArrayList<GeneralLink> getLinks() {
+		
+		ViewChromosome aChr = new ViewChromosome(1, 500);
+		ViewChromosome bChr = new ViewChromosome(2, 500);
+		GeneralLink linkA = new GeneralLink(aChr, bChr, 100, 450, true);
+		GeneralLink linkB = new GeneralLink(aChr, bChr, 150, 400, true);
+		ArrayList<GeneralLink> links = new ArrayList();
+		links.add(linkA);
+		links.add(linkB);
+		return links;
 	}
 }

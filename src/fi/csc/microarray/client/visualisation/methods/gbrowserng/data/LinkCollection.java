@@ -11,14 +11,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+	 * Class for storing connections, aims to provide fast access for range queries
+	 */
 public class LinkCollection implements Runnable {
 
-	/**
-	 * Class for storing connections
-	 * aims to provide fast access
-	 * for range queries
-	 */
+	
 	private ArrayList<GeneralLink> links = new ArrayList<GeneralLink>();
 	private ConcurrentLinkedQueue<GeneralLink> newLinks = new ConcurrentLinkedQueue<GeneralLink>();
 	private final Object linkSyncLock = new Object();
@@ -32,6 +30,10 @@ public class LinkCollection implements Runnable {
 
 	public void setOverview(OverView o) {
 		overView = o;
+	}
+	
+	public OverView getOverview() {
+		return overView;
 	}
 	
 	public int queueSize() {
