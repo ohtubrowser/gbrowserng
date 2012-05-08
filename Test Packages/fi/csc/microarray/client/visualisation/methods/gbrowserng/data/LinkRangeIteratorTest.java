@@ -4,7 +4,10 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -14,7 +17,10 @@ import static org.junit.Assert.*;
  * Mammutti
  */
 public class LinkRangeIteratorTest {
-	
+
+	GeneralLink aB;
+	GeneralLink bA;
+
 	public LinkRangeIteratorTest() {
 	}
 
@@ -25,39 +31,56 @@ public class LinkRangeIteratorTest {
 	@AfterClass
 	public static void tearDownClass() throws Exception {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
 
 	/**
-	 * Test of rewind method, of class LinkRangeIterator.
+	 * Test
+	 * of
+	 * rewind
+	 * method,
+	 * of
+	 * class
+	 * LinkRangeIterator.
 	 */
 	@Test
 	public void testRewind() {
 		System.out.println("rewind");
-		LinkRangeIterator instance = null;
+		LinkRangeIterator instance = getIterator();
+		instance.inRange(1);
 		instance.rewind();
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals(instance.currentIndex, 0);
 	}
 
-	/**
-	 * Test of value method, of class LinkRangeIterator.
-	 */
-	@Test
-	public void testValue_0args() {
-		System.out.println("value");
-		LinkRangeIterator instance = null;
-		GeneralLink expResult = null;
-		GeneralLink result = instance.value();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+	private LinkRangeIterator getIterator() {
+		LinkCollection collection = getCollection();
+		LinkRangeIterator instance = new LinkRangeIterator(collection, 0, 10);
+		return instance;
+	}
+
+	private LinkCollection getCollection() {
+		GlobalVariables variables = new GlobalVariables();
+		variables.genome = new Genome();
+		LinkCollection collection = new LinkCollection(variables);
+		ViewChromosome aChromosome = new ViewChromosome(1, "1", 500, 500);
+		ViewChromosome bChromosome = new ViewChromosome(2, "2", 500, 500);
+		variables.genome.addChromosome(aChromosome);
+		variables.genome.addChromosome(bChromosome);
+		GeneralLink aB = new GeneralLink(aChromosome, bChromosome, 10, 20, false);
+		GeneralLink bA = new GeneralLink(bChromosome, aChromosome, 300, 400, true);
+		collection.addToQueue(aB);
+		collection.addToQueue(bA);
+		GenoWindow window = new GenoWindow(variables, 500, 500);
+		OverView overView = new OverView(variables, window, new LinkCollection(variables));
+		collection.setOverview(overView);
+		collection.syncAdditions();
+		return collection;
 	}
 
 	/**
@@ -66,41 +89,57 @@ public class LinkRangeIteratorTest {
 	@Test
 	public void testIncrement() {
 		System.out.println("increment");
-		LinkRangeIterator instance = null;
+		LinkRangeIterator instance = getIterator();
 		instance.increment();
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals(instance.currentIndex, 1);
 	}
 
 	/**
-	 * Test of decrement method, of class LinkRangeIterator.
+	 * Test
+	 * of
+	 * decrement
+	 * method,
+	 * of
+	 * class
+	 * LinkRangeIterator.
 	 */
 	@Test
 	public void testDecrement() {
 		System.out.println("decrement");
-		LinkRangeIterator instance = null;
+		LinkRangeIterator instance = getIterator();
+		instance.increment();
+		instance.increment();
 		instance.decrement();
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals(instance.currentIndex, 1);
 	}
 
 	/**
-	 * Test of value method, of class LinkRangeIterator.
+	 * Test
+	 * of
+	 * value
+	 * method,
+	 * of
+	 * class
+	 * LinkRangeIterator.
 	 */
 	@Test
 	public void testValue_int() {
 		System.out.println("value");
 		int i = 0;
-		LinkRangeIterator instance = null;
-		GeneralLink expResult = null;
+		LinkRangeIterator instance = getIterator();
+		GeneralLink expected = aB;
 		GeneralLink result = instance.value(i);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals(expected, result);
 	}
 
 	/**
-	 * Test of inRange method, of class LinkRangeIterator.
+	 * Test
+	 * of
+	 * inRange
+	 * method,
+	 * of
+	 * class
+	 * LinkRangeIterator.
 	 */
 	@Test
 	public void testInRange_GeneralLink() {
@@ -111,11 +150,17 @@ public class LinkRangeIteratorTest {
 		boolean result = instance.inRange(link);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		fail("This test includes generation of actual Links, not done yet.");
 	}
 
 	/**
-	 * Test of inRange method, of class LinkRangeIterator.
+	 * Test
+	 * of
+	 * inRange
+	 * method,
+	 * of
+	 * class
+	 * LinkRangeIterator.
 	 */
 	@Test
 	public void testInRange_int() {
@@ -126,6 +171,6 @@ public class LinkRangeIteratorTest {
 		boolean result = instance.inRange(index);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		fail("This test includes generation of actual Links, not done yet.");
 	}
 }

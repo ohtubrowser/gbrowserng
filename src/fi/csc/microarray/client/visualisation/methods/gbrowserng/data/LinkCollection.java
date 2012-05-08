@@ -33,6 +33,10 @@ public class LinkCollection implements Runnable {
 	public void setOverview(OverView o) {
 		overView = o;
 	}
+	
+	public int queueSize() {
+		return this.newLinks.size();
+	}
 
 	// TODO : maybe need to account for invalidation of existing iterators once this happens
 	public void syncAdditions() {

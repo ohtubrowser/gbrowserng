@@ -4,6 +4,7 @@
  */
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.data;
 
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneralLink;
 import java.util.ArrayList;
@@ -42,10 +43,9 @@ public class LinkCollectionTest {
 	@Test
 	public void testSyncAdditions() {
 		System.out.println("syncAdditions");
-//		LinkCollection instance = new LinkCollection();
-//		instance.syncAdditions();
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		GlobalVariables variables = new GlobalVariables();
+		LinkCollection instance = new LinkCollection(variables);
+		instance.syncAdditions();
 	}
 
 	/**
@@ -67,14 +67,14 @@ public class LinkCollectionTest {
 	@Test
 	public void testAddToQueue_4args() {
 		System.out.println("addToQueue");
-		ViewChromosome aChromosome = null;
-		ViewChromosome bChromosome = null;
-		long aStart = 0L;
-		long bStart = 0L;
-//		LinkCollection instance = new LinkCollection();
-//		instance.addToQueue(aChromosome, bChromosome, aStart, bStart);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		ViewChromosome aChromosome = new ViewChromosome(1, "1", 500, 500);
+		ViewChromosome bChromosome = new ViewChromosome(2, "2", 500, 500);
+		long aStart = 1L;
+		long bStart = 1L;
+		GlobalVariables variables = new GlobalVariables();
+		LinkCollection instance = new LinkCollection(variables);
+		instance.addToQueue(aChromosome, bChromosome, aStart, bStart);
+		assertEquals(instance.queueSize(), 2);
 	}
 
 	/**
@@ -98,12 +98,10 @@ public class LinkCollectionTest {
 	@Test
 	public void testGetLinks() {
 		System.out.println("getLinks");
-//		LinkCollection instance = new LinkCollection();
-//		ArrayList expResult = null;
-//		ArrayList result = instance.getLinks();
-//		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		LinkCollection instance = getCollection();
+		ArrayList expResult = null;
+		ArrayList result = instance.getLinks();
+		assertEquals(expResult, result);
 	}
 
 	/**
@@ -133,6 +131,12 @@ public class LinkCollectionTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+	
+	private LinkCollection getCollection() {
+		GlobalVariables variables = new GlobalVariables();
+		LinkCollection collection = new LinkCollection(variables);
+		return collection;
+	}
 
 	/**
 	 * Test of addToQueue method, of class LinkCollection.
@@ -140,11 +144,9 @@ public class LinkCollectionTest {
 	@Test
 	public void testAddToQueue_GeneralLink() {
 		System.out.println("addToQueue");
-		GeneralLink l = null;
-//		LinkCollection instance = new LinkCollection();
+//		GeneralLink l = new GeneralLink();
+//		LinkCollection instance = 
 //		instance.addToQueue(l);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
 	}
 
 	/**
