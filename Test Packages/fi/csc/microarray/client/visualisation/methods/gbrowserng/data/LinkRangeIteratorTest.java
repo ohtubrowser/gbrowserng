@@ -108,7 +108,6 @@ public class LinkRangeIteratorTest {
 	public void testDecrementOverZero() {
 		System.out.println("decrementOverZero");
 		LinkRangeIterator instance = getIterator();
-		System.out.println(instance.currentIndex);
 		instance.increment();
 		instance.increment();
 		instance.decrement();
