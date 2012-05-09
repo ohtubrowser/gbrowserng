@@ -38,19 +38,6 @@ public class LinkCollectionTest {
 	@After
 	public void tearDown() {
 	}
-
-	/**
-	 * Test of syncAdditions method, of class LinkCollection.
-	 */
-	@Test
-	public void testSyncAdditions() {
-		System.out.println("syncAdditions");
-		GlobalVariables variables = new GlobalVariables();
-		LinkCollection instance = new LinkCollection(variables);
-		instance.addToQueue(getGeneralLink());
-		instance.syncAdditions();
-
-	}
 	
 	/**
 	 * Test of filterLinks method, of class LinkCollection.
@@ -84,21 +71,6 @@ public class LinkCollectionTest {
 	}
 
 	/**
-	 * Test of valueAt method, of class LinkCollection.
-	 */
-	@Test
-	public void testValueAt() {
-		System.out.println("valueAt");
-		int index = 0;
-		LinkCollection instance = getCollection();
-		GeneralLink expResult = null;
-//		GeneralLink result = instance.valueAt(index);
-//		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("Overview needed for testing, not yet implemented");
-	}
-
-	/**
 	 * Test of getLinks method, of class LinkCollection.
 	 */
 	@Test
@@ -120,20 +92,7 @@ public class LinkCollectionTest {
 		int result = instance.numLinks();
 		assertEquals(expResult, result);
 	}
-	
-	/**
-	 * Test of tick method, of class LinkCollection.
-	 */
-	@Test
-	public void testTick() {
-		System.out.println("tick");
-		float dt = 0.0F;
-		GeneCircle geneCircle = null;
-//		LinkCollection instance = new LinkCollection();
-//		instance.tick(dt, geneCircle);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("Overview needed for testing, not yet implemented");
-	}
+
 	
 	private LinkCollection getCollection() {
 		GlobalVariables variables = new GlobalVariables();
@@ -189,20 +148,7 @@ public class LinkCollectionTest {
 		int result = instance.queueSize();
 		assertEquals(expected, result);
 	}
-	
-	/**
-	 * Test of updateNewLinkPositions method, of class LinkCollection.
-	 */
-	@Test
-	public void testUpdateNewLinkPositions() {
-		System.out.println("updateNewLinkPositions");
-		GeneCircle geneCircle = null;
-//		LinkCollection instance = new LinkCollection();
-//		instance.updateNewLinkPositions(geneCircle);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("Overview neede for testing, not yet implemented.");
-	}
-	
+		
 	private GeneralLink getGeneralLink() {
 		ViewChromosome aChr = new ViewChromosome(1, 50);
 			ViewChromosome bChr = new ViewChromosome(2, 50);

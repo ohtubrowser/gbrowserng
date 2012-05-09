@@ -41,13 +41,7 @@ public class LinkRangeIteratorTest {
 	}
 
 	/**
-	 * Test
-	 * of
-	 * rewind
-	 * method,
-	 * of
-	 * class
-	 * LinkRangeIterator.
+	 * Test of rewind method, of class LinkRangeIterator. 
 	 */
 	@Test
 	public void testRewind() {
@@ -60,7 +54,7 @@ public class LinkRangeIteratorTest {
 
 	private LinkRangeIterator getIterator() {
 		LinkCollection collection = getCollection();
-		LinkRangeIterator instance = new LinkRangeIterator(collection, 0, 10);
+		LinkRangeIterator instance = new LinkRangeIterator(collection, 0, 4);
 		return instance;
 	}
 
@@ -72,8 +66,8 @@ public class LinkRangeIteratorTest {
 		ViewChromosome bChromosome = new ViewChromosome(2, "2", 500, 500);
 		variables.genome.addChromosome(aChromosome);
 		variables.genome.addChromosome(bChromosome);
-		GeneralLink aB = new GeneralLink(aChromosome, bChromosome, 10, 20, false);
-		GeneralLink bA = new GeneralLink(bChromosome, aChromosome, 300, 400, true);
+		aB = new GeneralLink(aChromosome, bChromosome, 10, 20, false);
+		bA = new GeneralLink(bChromosome, aChromosome, 300, 400, true);
 		collection.addToQueue(aB);
 		collection.addToQueue(bA);
 		GenoWindow window = new GenoWindow(variables, 500, 500);
@@ -95,13 +89,7 @@ public class LinkRangeIteratorTest {
 	}
 
 	/**
-	 * Test
-	 * of
-	 * decrement
-	 * method,
-	 * of
-	 * class
-	 * LinkRangeIterator.
+	 * Test of decrement method, of class LinkRangeIterator.
 	 */
 	@Test
 	public void testDecrement() {
@@ -112,65 +100,114 @@ public class LinkRangeIteratorTest {
 		instance.decrement();
 		assertEquals(instance.currentIndex, 1);
 	}
-
+	
 	/**
-	 * Test
-	 * of
-	 * value
-	 * method,
-	 * of
-	 * class
-	 * LinkRangeIterator.
+	 * Test of decrement method, of class LinkRangeIterator.
 	 */
 	@Test
-	public void testValue_int() {
+	public void testDecrementOverZero() {
+		System.out.println("decrementOverZero");
+		LinkRangeIterator instance = getIterator();
+		System.out.println(instance.currentIndex);
+		instance.increment();
+		instance.increment();
+		instance.decrement();
+		instance.decrement();
+		instance.decrement();
+		assertEquals(3, instance.currentIndex);
+	}
+
+	/**
+	 * Test of value method, of class LinkRangeIterator.
+	 */
+	@Test
+	public void testValue_intChr1() {
 		System.out.println("value");
 		int i = 0;
 		LinkRangeIterator instance = getIterator();
 		GeneralLink expected = aB;
 		GeneralLink result = instance.value(i);
-		assertEquals(expected, result);
+		assertEquals(expected.getAChromosome().getChromosomeNumber(), result.getAChromosome().getChromosomeNumber());
+	}
+
+	
+	/**
+	 * Test of value method, of class LinkRangeIterator.
+	 */
+	@Test
+	public void testValue_intChr2() {
+		System.out.println("value");
+		int i = 1;
+		LinkRangeIterator instance = getIterator();
+		GeneralLink expected = bA;
+		GeneralLink result = instance.value(i);
+		assertEquals(expected.getAChromosome().getChromosomeNumber(), result.getAChromosome().getChromosomeNumber());
 	}
 
 	/**
-	 * Test
-	 * of
-	 * inRange
-	 * method,
-	 * of
-	 * class
-	 * LinkRangeIterator.
+	 * Test of inRange method, of class LinkRangeIterator.
 	 */
 	@Test
-	public void testInRange_GeneralLink() {
+	public void testInRange_GeneralLink_ExistingLink() {
 		System.out.println("inRange");
-		GeneralLink link = null;
-		LinkRangeIterator instance = null;
+		LinkRangeIterator instance = getIterator();
+		GeneralLink link = aB;
+		boolean expResult = true;
+		boolean result = instance.inRange(link);
+		assertEquals(expResult, result);
+	}
+	
+	/**
+	 * Test of inRange method, of class LinkRangeIterator.
+	 */
+	@Test
+	public void testInRange_GeneralLink_NonExistingLink() {
+		System.out.println("inRange");
+		LinkRangeIterator instance = getIterator();
+		ViewChromosome a2Chromosome = new ViewChromosome(3, "3", 500, 500);
+		ViewChromosome b2Chromosome = new ViewChromosome(4, "4", 500, 500);
+		GeneralLink link = new GeneralLink(a2Chromosome, b2Chromosome, 10, 20, false);;
 		boolean expResult = false;
 		boolean result = instance.inRange(link);
 		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("This test includes generation of actual Links, not done yet.");
 	}
 
 	/**
-	 * Test
-	 * of
-	 * inRange
-	 * method,
-	 * of
-	 * class
-	 * LinkRangeIterator.
+	 * Test of inRange method, of class LinkRangeIterator.
 	 */
 	@Test
-	public void testInRange_int() {
-		System.out.println("inRange");
+	public void testInRange_int_true() {
+		System.out.println("inRange_int_true");
 		int index = 0;
-		LinkRangeIterator instance = null;
+		LinkRangeIterator instance = getIterator();
+		boolean expResult = true;
+		boolean result = instance.inRange(index);
+		assertEquals(expResult, result);
+	}
+	
+	/**
+	 * Test of inRange method, of class LinkRangeIterator.
+	 */
+	@Test
+	public void testInRange_int_false() {
+		System.out.println("inRange_int_false");
+		int index = 5;
+		LinkRangeIterator instance = getIterator();
 		boolean expResult = false;
 		boolean result = instance.inRange(index);
 		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("This test includes generation of actual Links, not done yet.");
+	}
+	
+	/**
+	 * Test of inRange method, of class LinkRangeIterator.
+	 */
+	@Test
+	public void testInRange_int_negative() {
+		System.out.println("inRange_int_negative");
+		int index = -1;
+		LinkRangeIterator instance = getIterator();
+		boolean expResult = false;
+		boolean result = instance.inRange(index);
+		assertEquals(expResult, result);
 	}
 }
