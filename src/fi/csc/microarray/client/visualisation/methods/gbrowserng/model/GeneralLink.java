@@ -30,6 +30,15 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		initLinkColor();
 	}
 
+	/**
+	 * Instantiates a dummy object for use as a temporary comparison point.
+	 * @param aC
+	 * @param bC
+	 * @param aS
+	 * @param bS
+	 * @param aOcc
+	 * @return 
+	 */
 	public static GeneralLink createComparisonObject(ViewChromosome aC, ViewChromosome bC, long aS, long bS, boolean aOcc) {
 		return new GeneralLink(aC, bC, aS, bS, aOcc);
 	}
@@ -60,6 +69,11 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		}
 	}
 
+	/**
+	 * Calculates the coordinates for arc end points.
+	 * @param globals
+	 * @param geneCircle 
+	 */
 	public void calculatePositions(GlobalVariables globals, GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
 		bCirclePos = -0.25f + geneCircle.getRelativePosition(bChromosome.getChromosomeNumber() - 1, (float) bStart / bChromosome.length());
@@ -81,6 +95,11 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		bY = CoordinateManager.toCircleCoordsY(globals, bY);
 	}
 
+	/**
+	 * Prepare OpenGL state for drawing links.
+	 * @param gl
+	 * @param zoomLevel 
+	 */
 	public static void beginDrawing(GL2 gl, float zoomLevel) {
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.BEZIER);
 
@@ -102,6 +121,10 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		gl.glVertexAttribPointer(0, 2, GL2.GL_FLOAT, false, Float.SIZE / Byte.SIZE, 0);
 	}
 
+	/**
+	 * Restore OpenGL state after links are all drawn.
+	 * @param gl 
+	 */
 	public static void endDrawing(GL2 gl) {
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 		gl.glDisableVertexAttribArray(0);
@@ -120,6 +143,12 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		return (float) Math.sqrt(Math.pow(x1 - x2, 2f) + Math.pow(y1 - y2, 2f));
 	}
 
+	/**
+	 * Determine if the point (x,y) lies on this arc.
+	 * @param x
+	 * @param y
+	 * @return 
+	 */
 	public boolean isHit(float x, float y) {
 		boolean hit = false;
 		for (float i = 1; i <= 100; i++) {
