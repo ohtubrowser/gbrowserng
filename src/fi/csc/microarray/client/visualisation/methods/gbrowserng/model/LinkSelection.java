@@ -9,6 +9,9 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeI
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import java.awt.event.KeyEvent;
 import javax.media.opengl.GL2;
+/**
+ * Represents a selection of links inside a LinkCollection.
+ */
 
 public class LinkSelection {
 
@@ -29,6 +32,9 @@ public class LinkSelection {
 		this.geneCircle = geneCircle;
 	}
 
+	/**
+	 * Reset the selection so that all links belong in it.
+	 */
 	public void reset() {
 		begin = 0.0f;
 		end = 1.0f;
@@ -36,6 +42,11 @@ public class LinkSelection {
 		area = GlobalVariables.selectSize;
 	}
 
+	/**
+	 * Center the selection on a given position on the genecircle.
+	 * @param pointerGenePosition The position on the genecircle.
+	 * @param linkCollection
+	 */
 	public void update(float pointerGenePosition, LinkCollection linkCollection) {
 		begin = pointerGenePosition - 0.25f - area / 2;
 		end = pointerGenePosition - 0.25f + area / 2;
@@ -43,6 +54,10 @@ public class LinkSelection {
 		updateActiveLinks(linkCollection);
 	}
 
+	/**
+	 * Update the selection when the selection size has been altered.
+	 * @param linkCollection 
+	 */
 	public void updateArea(LinkCollection linkCollection) {
 		float oldArea = getCurrentArea();
 		float change = (area - oldArea) / 2;
@@ -52,6 +67,9 @@ public class LinkSelection {
 		updateActiveLinks(linkCollection);
 	}
 
+	/**
+	 * Ensure begin and end are within [0,1]
+	 */
 	private void clamp() {
 		if (begin < 0.0f) {
 			begin += 1.0f;
@@ -67,6 +85,10 @@ public class LinkSelection {
 		}
 	}
 
+	/**
+	 * 
+	 * @return The current area selected. 1.0f == Entire circle
+	 */
 	private float getCurrentArea() {
 		if (begin > end) {
 			return 1.0f - begin + end;
@@ -74,6 +96,10 @@ public class LinkSelection {
 		return end - begin;
 	}
 
+	/**
+	 * Draw the yellow clamps indicating the selected region.
+	 * @param gl 
+	 */
 	public void drawClamps(GL2 gl) {
 		// TODO : remove magic numbers
 		Shader shader = GenoShaders.getProgram(GenoShaders.ShaderID.PLAINMVP);
@@ -122,6 +148,10 @@ public class LinkSelection {
 		shader.stop(gl);
 	}
 
+	/**
+	 * 
+	 * @return The selected link.
+	 */
 	public GeneralLink getActiveLink() {
 		return currentSelection == null ? null : currentSelection.value();
 	}
@@ -154,6 +184,9 @@ public class LinkSelection {
 		}
 	}
 
+	/**
+	 * Resets the selection (called when user clicks outside circle)
+	 */
 	public void deactivate() {
 		upKeyDown = downKeyDown = false;
 		resetArea();
@@ -169,6 +202,11 @@ public class LinkSelection {
 		}
 	}
 
+	/**
+	 * Move the selection on the genecircle.
+	 * @param value Amount to move.
+	 * @param linkCollection 
+	 */
 	public void move(float value, LinkCollection linkCollection) {
 		begin += value;
 		end += value;
@@ -176,16 +214,29 @@ public class LinkSelection {
 		updateActiveLinks(linkCollection);
 	}
 
+	/**
+	 * Reset the selection area to the default.
+	 */
 	public void resetArea() {
 		area = GlobalVariables.selectSize;
 	}
 
+	/**
+	 * Changes the area by f and updates the changes.
+	 * @param f
+	 * @param linkCollection 
+	 */
 	public void updateArea(float f, LinkCollection linkCollection) {
 		area += f;
 		area = Math.min(0.9f, Math.max(area, 0.001f));
 		updateArea(linkCollection);
 	}
 
+	/**
+	 * 
+	 * @param link
+	 * @return True if link is inside the current selection.
+	 */
 	public boolean inSelection(GeneralLink link) {
 		if (link.isMinimized()) {
 			return false;
@@ -196,13 +247,21 @@ public class LinkSelection {
 		return currentSelection.inRange(link);
 	}
 
+	/**
+	 * 
+	 * @param index
+	 * @return True if the link at index is inside the current selection.
+	 */
 	public boolean inSelection(int index) {
 		if (currentSelection == null) {
 			return true;
 		}
 		return currentSelection.inRange(index);
 	}
-
+/**
+ * Refreshes the underlying iterator to reflect the current begin and end coordinates.
+ * @param linkCollection 
+ */
 	private void updateActiveLinks(LinkCollection linkCollection) {
 		synchronized (linkSelectionLock) {
 			currentSelection = geneCircle.getRangeIterator(end, begin, linkCollection);
