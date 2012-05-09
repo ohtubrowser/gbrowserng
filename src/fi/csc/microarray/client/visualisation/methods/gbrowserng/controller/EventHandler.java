@@ -2,7 +2,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.controller;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import java.awt.AWTEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
@@ -11,6 +10,11 @@ import java.awt.event.WindowEvent;
 
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Main event handler and queue manager for main process (GBrowserNG). 
+ * Occuring user-initiated events are sent here by Window (OverView) and then placed in queue. Also handles events, that change appearance of Overview: switching to full screen mode
+ * setting resolution of screen and setting screen visible.
+ */
 public class EventHandler {
 
 	private BlockingQueue<AWTEvent> eventQueue = null;
@@ -42,6 +46,11 @@ public class EventHandler {
 		}
 	}
 
+	/**
+	 * Events from EventQueue are handled here.
+	 * Method can handle KeyEvents, MouseEvents, ComponentEvents and WindowEvents.
+	 * @throws InterruptedException
+	 */
 	public void handleEvents() throws InterruptedException {
 		for (;;) {
 			AWTEvent event = this.eventQueue.take();

@@ -17,23 +17,24 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+
 /**
  * Handles the drawing and functionality of a context menu opened by right clicking.
  * @author Elias Laitala
  */
 
 public class ContextMenu {
-	OverView overview;
-	GenoWindow window;
-	ViewChromosome chromosome;
-	GeneCircle geneCircle;
-	int width, selHeight, border, shadow;
-	float x, y;
-	Vector2 position, dimensions;
-	TextRenderer textRenderer;
-	ArrayList<Selection> selections;
-	int selected;
-	boolean close;
+	private OverView overview;
+	private GenoWindow window;
+	private ViewChromosome chromosome;
+	private GeneCircle geneCircle;
+	private int width, selHeight, border, shadow;
+	private float x, y;
+	private Vector2 position, dimensions;
+	private TextRenderer textRenderer;
+	private ArrayList<Selection> selections;
+	private int selected;
+	private boolean close;
 
 	private Color menuColor = new Color(0.7f, 0.7f, 0.7f, 0.9f);
 	private Color selectColor = new Color(0.9f,0.9f,0.9f,0.95f);
@@ -48,19 +49,25 @@ public class ContextMenu {
 	 * @param my			mouse y position
 	 * @param overview		the OverView object
 	 */
-	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float mx, float my, OverView overview) {
+	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float x, float y, OverView overview) {
 		this.overview = overview;
 		this.window = overview.window;
 		close = false;
 		this.chromosome = chromosome;
-		x = mx;
-		y = my;
+		this.x = x;
+		this.y = y;
 		this.geneCircle = geneCircle;
 
 		width = 200;
 		selHeight = 26;
 		border = 4;
 		shadow = 6;
+
+		initializeMenu(overview);
+		initTextRenderers();
+	}
+
+	private void initializeMenu(OverView overview) {
 		selections = new ArrayList<Selection>();
 		
 		int chromosomes = overview.globals.genome.getNumChromosomes();
@@ -71,8 +78,8 @@ public class ContextMenu {
 		}
 		boolean oneMaximized = minimized==overview.globals.genome.getNumChromosomes()-1;
 
-		if (oneMaximized)
-		{
+		if (oneMaximized) {
+			
 			if(this.chromosome.isMinimized()) {
 				selections.add(new Selection("Open",1));
 				selections.add(new Selection("Maximize",2));
@@ -92,7 +99,6 @@ public class ContextMenu {
 		}
 
 		selected = 0;
-		initTextRenderers();
 	}
 
 	/**
@@ -292,7 +298,6 @@ public class ContextMenu {
 	}
 
 }
-
 /**
  * A data structure for menu options.
  * @author Elias Laitala
