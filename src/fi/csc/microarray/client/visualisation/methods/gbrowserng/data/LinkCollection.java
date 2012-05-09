@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
-	 * Class for storing connections, aims to provide fast access for range queries
-	 */
+ * Class for storing connections, aims to provide fast access for range queries
+ */
 public class LinkCollection implements Runnable {
 
 	
@@ -39,8 +39,9 @@ public class LinkCollection implements Runnable {
 	public int queueSize() {
 		return this.newLinks.size();
 	}
-
-	// TODO : maybe need to account for invalidation of existing iterators once this happens
+/**
+ * Synchronizes links added to the queue to be in the actual data structure
+ */
 	public void syncAdditions() {
 		updateNewLinkPositions();
 		ArrayList<GeneralLink> temp = new ArrayList<GeneralLink>();
@@ -59,6 +60,13 @@ public class LinkCollection implements Runnable {
 		updateColors();
 	}
 
+	/**
+	 * Filters links from linkArray so that no two links will be closer 
+	 * than minDistance to each other at both ends
+	 * @param minDistance Links that are closer than minDistance to each other from both ends will be joined
+	 * @param linkArray Link collection to be filtered
+	 * @return 
+	 */
 	public ArrayList<GeneralLink> filterLinks(long minDistance, ArrayList<GeneralLink> linkArray) {
 		BitSet removeIndex = new BitSet(linkArray.size());
 		for (int i = 0; i < linkArray.size(); ++i) {
@@ -75,6 +83,15 @@ public class LinkCollection implements Runnable {
 		return newLinks;
 	}
 
+	/**
+	 * Adds a new link to the queue, NOT yet the actual data structure until syncAdditions has been called.
+	 * Parameters are just the positions of both ends.
+	 * @param aChromosome
+	 * @param bChromosome
+	 * @param aStart
+	 * @param bStart 
+	 */
+	
 	public void addToQueue(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart) {
 		synchronized (linkSyncLock) {
 			GeneralLink a = new GeneralLink(aChromosome, bChromosome, aStart, bStart, true);
@@ -84,6 +101,10 @@ public class LinkCollection implements Runnable {
 		}
 	}
 
+	/**
+	 * @param index
+	 * @return value at index 'index' in the data structure
+	 */
 	public GeneralLink valueAt(int index) {
 		return links.get(index);
 	}
@@ -100,6 +121,11 @@ public class LinkCollection implements Runnable {
 		addToQueue(l.getAChromosome(), l.getBChromosome(), l.getaStart(), l.getbStart());
 	}
 
+	/**
+	 * Checks that the collection is properly sorted.
+	 * Should always be true, useful for debugging/testing.
+	 * @return 
+	 */
 	private boolean isSorted() {
 		for (int i = 1; i < links.size(); ++i) {
 			if (links.get(i).compareTo(links.get(i - 1)) < 0) {
@@ -115,6 +141,15 @@ public class LinkCollection implements Runnable {
 		}
 	}
 
+	/**
+	 * Helper function for filtering, checks if link at index i should be joined to something or not
+	 * @param linkArray
+	 * @param i
+	 * @param minDistance
+	 * @param removeIndex
+	 * @return 
+	 */
+	
 	private boolean isOk(ArrayList<GeneralLink> linkArray, int i, long minDistance, BitSet removeIndex) {
 		for (int j = i - 1; j > 0; --j) {
 			if (removeIndex.get(j)) {
@@ -143,6 +178,12 @@ public class LinkCollection implements Runnable {
 		return true;
 	}
 
+	/**
+	 * @param linkArray collection where link1 and link2 reside
+	 * @param i index of link1
+	 * @param j index of link2
+	 * @return Distance between the starting positions of link1 and link2
+	 */
 	private long startDistance(ArrayList<GeneralLink> linkArray, int i, int j) {
 		GeneralLink a = linkArray.get(i),
 				b = linkArray.get(j);
@@ -155,6 +196,12 @@ public class LinkCollection implements Runnable {
 		return Math.abs(aPos - bPos);
 	}
 
+	/**
+	 * @param linkArray collection where link1 and link2 reside
+	 * @param i index of link1
+	 * @param j index of link2
+	 * @return Distance between the ending positions of link1 and link2
+	 */
 	private long endDistance(ArrayList<GeneralLink> linkArray, int i, int j) {
 		GeneralLink a = linkArray.get(i),
 				b = linkArray.get(j);
@@ -169,6 +216,9 @@ public class LinkCollection implements Runnable {
 		return Math.abs(aPos - bPos);
 	}
 
+	/**
+	 * Updates the colors of all links to reflect how many links they have been joined with.
+	 */
 	private void updateColors() {
 		// must be synced with linksynclock
 		long avgCounter = 0;
@@ -182,6 +232,9 @@ public class LinkCollection implements Runnable {
 		}
 	}
 
+	/**
+	 * This thread handles the timing of synchronizing new additions to the data structure.
+	 */
 	@Override
 	public void run() {
 		while (!overView.die) {
@@ -189,7 +242,7 @@ public class LinkCollection implements Runnable {
 				Thread.sleep(GlobalVariables.linkSyncInterval);
 			} catch (InterruptedException ex) {
 				Logger.getLogger(LinkCollection.class.getName()).log(Level.SEVERE, null, ex);
-			}
+			}	
 			if (!newLinks.isEmpty()) {
 				syncAdditions();
 			}
