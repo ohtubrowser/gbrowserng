@@ -1,9 +1,6 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import java.awt.event.KeyEvent;
-import java.util.Random;
 
 /**
  * Handles KeyEvents in Overview window.

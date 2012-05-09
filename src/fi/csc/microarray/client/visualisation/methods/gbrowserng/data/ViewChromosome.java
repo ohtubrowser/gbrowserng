@@ -4,7 +4,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 
 public class ViewChromosome {
 
-    private float relativeSize = 1f;
     private final long size;
     private final int id;
     private boolean minimized = false;

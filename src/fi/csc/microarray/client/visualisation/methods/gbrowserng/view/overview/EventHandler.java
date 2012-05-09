@@ -10,7 +10,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.LinkSelec
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.TrackviewManager;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Superclass for all EventHandlers. Contains variables used and update of these

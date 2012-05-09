@@ -5,13 +5,12 @@ import com.soulaim.tech.gles.primitives.PrimitiveBuffers;
 import com.soulaim.tech.gles.renderer.PrimitiveRenderer;
 import com.soulaim.tech.gles.renderer.TextRenderer;
 import com.soulaim.tech.managers.AssetManager;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
+
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GenoSideTimer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

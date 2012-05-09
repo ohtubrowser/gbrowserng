@@ -1,21 +1,22 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+import com.soulaim.tech.gles.Color;
 import com.soulaim.tech.math.Vector2;
 import javax.media.opengl.GL2;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
-import com.soulaim.tech.gles.Color;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+
 
 
 /**

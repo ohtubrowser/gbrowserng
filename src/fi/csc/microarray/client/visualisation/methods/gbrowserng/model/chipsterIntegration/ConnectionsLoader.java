@@ -21,8 +21,6 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class ConnectionsLoader implements AreaResultListener {
 
 	public SAMHandlerThread dataThread;

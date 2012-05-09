@@ -1,9 +1,11 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
+import com.soulaim.tech.math.Matrix4;
+import com.soulaim.tech.math.Vector2;
 import com.jogamp.opengl.util.awt.TextRenderer;
+
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CapsuleManager;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.Genome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
@@ -14,17 +16,18 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import javax.media.opengl.GL2;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import com.soulaim.tech.math.Matrix4;
-import com.soulaim.tech.math.Vector2;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+
 
 import java.util.concurrent.ConcurrentHashMap;
-import javax.media.opengl.GL2;
+
 
 public class OverView extends GenosideComponent {
 

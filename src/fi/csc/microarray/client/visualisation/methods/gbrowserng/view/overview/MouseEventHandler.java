@@ -1,6 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview;
 
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CapsuleManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.CoordinateManager;
 import java.awt.event.MouseEvent;

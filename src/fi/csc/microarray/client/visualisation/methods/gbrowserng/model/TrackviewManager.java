@@ -1,7 +1,5 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager.GBrowserPreview;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
@@ -16,7 +14,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

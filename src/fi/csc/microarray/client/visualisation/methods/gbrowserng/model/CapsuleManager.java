@@ -2,7 +2,6 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.SessionViewCapsule;
-
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 

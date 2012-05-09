@@ -7,6 +7,7 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+
 import fi.csc.microarray.client.visualisation.methods.gbrowser.PreviewManager;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Chromosome;
 import fi.csc.microarray.client.visualisation.methods.gbrowser.message.Region;
@@ -15,6 +16,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -24,7 +26,6 @@ import javax.media.opengl.GL2;
 public class SessionViewCapsule {
 
 	private static IntBuffer frameBufferHandle = IntBuffer.allocate(1);
-	private IntBuffer textureHandle = IntBuffer.allocate(1);
 	private boolean needsTextureUpdate = true;
 	private Texture texture;
 
@@ -34,14 +35,13 @@ public class SessionViewCapsule {
 	private final long chrPosition;
 	
 	private boolean dying = false;
-	private float death = 0;
 	private Color backGroundColor = new Color(0, 0, 0, 1.0f);
 
 	private Vector2 capsulePosition = new Vector2(0.4f, 0.5f);
 	private Vector2 circlePosition = new Vector2(1, 0);
 
 	private float relativePosition;
-
+	private int death = 0;
 	private float dimX = 0.2f;
 	private float dimY = 0.1f;
 	private boolean hover = false;

@@ -4,10 +4,11 @@ import com.soulaim.tech.gles.shaders.Shader;
 import com.soulaim.tech.gles.shaders.ShaderMemory;
 import com.soulaim.tech.math.Matrix4;
 import com.soulaim.tech.math.Vector2;
+
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces.GenosideComponent;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.OpenGLBuffers;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
+
 import javax.media.opengl.GL2;
 
 public class LinkGFX {
