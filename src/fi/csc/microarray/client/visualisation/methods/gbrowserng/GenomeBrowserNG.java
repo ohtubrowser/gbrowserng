@@ -17,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.media.opengl.GLProfile;
 
 /**
- * Main class of program. Opens the overview window containing the genome circle and shows links between chromosomes
+ * Main class of the program. Opens the overview window containing the genome circle and shows links between chromosomes
  * Contains main and run methods, which together open the program. Contains methods to use either human or rat data for genome and links
  * @author Kristiina Paloheimo
  */

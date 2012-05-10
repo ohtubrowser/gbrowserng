@@ -6,6 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Class for adding keyboard actions to the event queue.
+ * @author 
+ */
 public class Keyboard implements KeyListener {
 	private BlockingQueue<AWTEvent> eventQueue;
 

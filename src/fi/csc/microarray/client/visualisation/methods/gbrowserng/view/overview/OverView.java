@@ -28,7 +28,10 @@ import java.util.LinkedList;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * Overview class. Handles the main window and functionality of the program.
+ * @author 
+ */
 public class OverView extends GenosideComponent {
 
 	public GeneCircle geneCircle;
@@ -57,6 +60,12 @@ public class OverView extends GenosideComponent {
 	public GeneralLink activeLink;
 	private Thread linkSyncThread;
 
+	/**
+	 * Constructor
+	 * @param globals Data structure with variables used throughout the program
+	 * @param window Window object
+	 * @param linkCollection Data loading object
+	 */
 	public OverView(GlobalVariables globals, GenoWindow window, LinkCollection linkCollection) {
 		this.globals = globals;
 		geneCircle = new GeneCircle(globals);
@@ -82,6 +91,9 @@ public class OverView extends GenosideComponent {
 		keyEventHandler = new KeyEventHandler(this);
 	}
 
+	/**
+	 * Initializes fonts for text rendering.
+	 */
 	private void initTextRenderers() {
 		Font font;
 		float fontSize = 16f;
@@ -106,12 +118,18 @@ public class OverView extends GenosideComponent {
 		this.chromosomeNameRenderer = new com.jogamp.opengl.util.awt.TextRenderer(smallFont, true, true);
 	}
 
+	/**
+	 * Initializes chromosome names.
+	 */
 	private void initChromoNames() {
 		for (ViewChromosome chromosome : globals.genome.getChromosomes()) {
 			chromoNames.add(new ChromoName(chromosome));
 		}
 	}
 
+	/**
+	 * Updates the genome circle size if resized.
+	 */
 	public void updateCircleSize() {
 		for (SessionViewCapsule capsule : sessions.values()) {
 			capsule.setRelativePosition(geneCircle);
@@ -121,16 +139,32 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	/**
+	 * Handles keyboard events with KeyEventHandler class and returns a boolean value about was the action successful.
+	 * @param event event to be handled
+	 * @return 
+	 */
 	@Override
 	public boolean handle(KeyEvent event) {
 		return this.keyEventHandler.handle(event);
 	}
 
+	/**
+	 * Handles mouse events with MouseEventHandler class and returns a boolean value about was the action successful.
+	 * @param event mouse event
+	 * @param screen_x mouse x-coordinate
+	 * @param screen_y mouse y-coordinate
+	 * @return 
+	 */
 	@Override
 	public boolean handle(MouseEvent event, float screen_x, float screen_y) {
 		return mouseEventHandler.handle(event, screen_x, screen_y, this.geneCircle);
 	}
 
+	/**
+	 * Opens a trackview session based on a SessionViewCapsule object.
+	 * @param capsule capsule object
+	 */
 	public void openSession(SessionViewCapsule capsule) {
 		if (capsule.isLinkSession()) {
 			trackviewManager.openLinkSession(capsule.getLink());
@@ -140,6 +174,10 @@ public class OverView extends GenosideComponent {
 		trackviewManager.toggleVisible();
 	}
 
+	/**
+	 * Draws the content of the window.
+	 * @param gl Gl interface
+	 */
 	@Override
 	public void draw(GL2 gl) {
 		if (linkCollection.loading) {
@@ -192,6 +230,10 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	/**
+	 * Draws opened trackview session capsules.
+	 * @param gl 
+	 */
 	private void drawCapsules(GL2 gl) {
 		synchronized (textureUpdateListLock) {
 			for (SessionViewCapsule capsule : textureUpdateList) {
@@ -205,6 +247,11 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	/**
+	 * Draws chromosome names.
+	 * @param width screen width
+	 * @param height screen height
+	 */
 	private void drawNumbers(int width, int height) {
 		chromosomeNameRenderer.beginRendering(width, height);
 		chromosomeNameRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
@@ -260,6 +307,11 @@ public class OverView extends GenosideComponent {
 		chromosomeNameRenderer.endRendering();
 	}
 
+	/**
+	 * Draws information about the mouse position.
+	 * @param width
+	 * @param height 
+	 */
 	private void renderText(int width, int height) {
 		textRenderer.beginRendering(width, height);
 		textRenderer.setColor(0.1f, 0.1f, 0.1f, 0.8f);
@@ -306,6 +358,10 @@ public class OverView extends GenosideComponent {
 		textRenderer.endRendering();
 	}
 
+	/**
+	 * Fades out links connected to minimized chromosomes.
+	 * @param dt 
+	 */
 	private void fadeLinks(float dt) {
 		ViewChromosome thisChromo;
 		thisChromo = geneCircle.getChromosome();
@@ -327,6 +383,10 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	/**
+	 * Handles animations.
+	 * @param dt 
+	 */
 	@Override
 	public void tick(float dt) {
 		if (geneCircle.animating) {
@@ -355,87 +415,171 @@ public class OverView extends GenosideComponent {
 		}
 	}
 
+	/**
+	 * Returns drawCounter object.
+	 * @return draw counter
+	 */
 	public GenoFPSCounter getDrawCounter() {
 		return drawCounter;
 	}
 
+	/**
+	 * returns tickCounter object.
+	 * @return tick counter
+	 */
 	public GenoFPSCounter getTickCounter() {
 		return tickCounter;
 	}
 
+	/**
+	 * Sets the active capsule (the mouse cursor is over).
+	 * @param capsule 
+	 */
 	public void setHoverCapsule(SessionViewCapsule capsule) {
 		this.hoverCapsule = capsule;
 	}
 
+	/**
+	 * Returns the active capsule.
+	 * @return the capsule under the mouse cursor
+	 */
 	public SessionViewCapsule getHoverCapsule() {
 		return this.hoverCapsule;
 	}
 
+	/**
+	 * Returns open trackview sessions.
+	 * @return open sessions
+	 */
 	public ConcurrentHashMap<Integer, SessionViewCapsule> getSessions() {
 		return this.sessions;
 	}
 
+	/**
+	 * Returns the chromosome names.
+	 * @return chromosome names
+	 */
 	public ArrayList<ChromoName> getChromoNames() {
 		return this.chromoNames;
 	}
 
+	/**
+	 * Returns the GeneCircle-object.
+	 * @return gene circle object
+	 */
 	public GeneCircle getGeneCircle() {
 		return this.geneCircle;
 	}
 
+	/**
+	 * Returns a boolean value about is arc hilighting locked.
+	 * @return is the arc highlight locked
+	 */
 	public boolean isArcHighlightLocked() {
 		return this.arcHighlightLocked;
 	}
 
+	/**
+	 * Returns the links selected to be shown with the hilight selector.
+	 * @return selected links
+	 */
 	public LinkSelection getLinkSelection() {
 		return this.linkSelection;
 	}
 
+	/**
+	 * Sets the boolean value about is the arc hilighting in use.
+	 * @param b value to be set
+	 */
 	public void setArcHighlightLocked(boolean b) {
 		this.arcHighlightLocked = b;
 	}
 
+	/**
+	 * Sets the variables for mouse position.
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 */
 	public void setMousePositionX(float x, float y) {
 		this.mousePosition.x = x;
 		this.mousePosition.y = y;
 	}
 
+	/**
+	 * Returns list of capsules whose texture is to be updated.
+	 * @return texture update list
+	 */
 	public LinkedList<SessionViewCapsule> getTextureUpdateList() {
 		return this.textureUpdateList;
 	}
 
+	/**
+	 * Adds a capsule to the texture update list.
+	 * @param capsule the capsule to be added
+	 */
 	public void addCapsuleToTextureUpdateList(SessionViewCapsule capsule) {
 		this.textureUpdateList.add(capsule);
 	}
 
+	/**
+	 * Gets the link collection.
+	 * @return the link collection
+	 */
 	public LinkCollection getLinkCollection() {
 		return linkCollection;
 	}
 
+	/**
+	 * Gets the track view manager.
+	 * @return the track view manager
+	 */
 	public TrackviewManager getTrackviewManager() {
 		return trackviewManager;
 	}
 
+	/**
+	 * Opens the context menu to the given position.
+	 * @param x mouse x coordinate
+	 * @param y mouse y coordinate
+	 */
 	public void openContextMenu(float x, float y) {
 		contextMenu = new ContextMenu(geneCircle.getChromosome(), geneCircle, x, y, this);
 	}
 
+	/**
+	 * Returns the context menu object. Null if no context menu open.
+	 * @return context menu object
+	 */
 	public ContextMenu getContextMenu() {
 		return this.contextMenu;
 	}
 
+	/**
+	 * Returns the mouse position as a vector object.
+	 * @return 
+	 */
 	protected Vector2 getMousePosition() {
 		return this.mousePosition;
 	}
 
+	/**
+	 * Closes the context menu.
+	 */
 	public void closeContextMenu() {
 		this.contextMenu = null;
 	}
 
+	/**
+	 * Toggles the drawing of the arcs either on or off.
+	 */
 	public void setDrawArcs() {
 		this.drawArcs = !this.drawArcs;
 	}
 
+	/**
+	 * Sets the boolean value about if the circle needs updating.
+	 * @param b should the circle be updated
+	 */
 	void setCircleUpdate(boolean b) {
 		this.circleNeedsUpdate = b;
 	}

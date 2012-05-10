@@ -9,10 +9,20 @@ import java.awt.event.KeyEvent;
 public class KeyEventHandler extends EventHandler {
 
 	private KeyEvent event;
+	
+	/**
+	 * Constructor.
+	 * @param overview OverView object the events are to be handled for
+	 */
 	public KeyEventHandler(OverView overview) {
 		super(overview);
 	}
 
+	/**
+	 * Handles keyboard events.
+	 * @param event a keyboard event
+	 * @return was the event handled by the context menu
+	 */
 	public boolean handle(KeyEvent event) {
 		this.event = event;
 		updateVariables();
@@ -31,6 +41,10 @@ public class KeyEventHandler extends EventHandler {
 
 	}
 
+	/**
+	 * Handles keyboard events for the context menu if it is open.
+	 * @return was the keyboard event a context menu action
+	 */
 	private boolean handleContextMenuCommands() {
 		if ((event.getKeyCode() == KeyEvent.VK_DOWN
 				|| event.getKeyCode() == KeyEvent.VK_UP
@@ -46,6 +60,9 @@ public class KeyEventHandler extends EventHandler {
 		return false;
 	}
 
+	/**
+	 * Handles the selection of an arc (opens the trackview).
+	 */
 	private void handleLockedArch() {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER) {
 				trackviewManager.clearContainer();
@@ -55,6 +72,9 @@ public class KeyEventHandler extends EventHandler {
 			linkSelection.handle(event);
 	}
 
+	/**
+	 * Handles other keyboard events. Z and A resize the circle.
+	 */
 	private void handleOtherKeyEvents() {
 		if (KeyEvent.VK_D == event.getKeyCode()) {
 			overview.setDrawArcs();
