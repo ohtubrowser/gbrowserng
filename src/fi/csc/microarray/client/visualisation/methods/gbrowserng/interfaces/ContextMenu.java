@@ -1,18 +1,19 @@
 package fi.csc.microarray.client.visualisation.methods.gbrowserng.interfaces;
 
+import com.jogamp.opengl.util.awt.TextRenderer;
 import com.soulaim.tech.gles.Color;
-import com.soulaim.tech.math.Vector2;
+
 import javax.media.opengl.GL2;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import com.jogamp.opengl.util.awt.TextRenderer;
+
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.model.GeneCircle;
-import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.PrimitiveRenderer;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
@@ -26,12 +27,10 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromo
 
 public class ContextMenu {
 	private OverView overview;
-	private GenoWindow window;
 	private ViewChromosome chromosome;
 	private GeneCircle geneCircle;
 	private int width, selHeight, border, shadow;
 	private float x, y;
-	private Vector2 position, dimensions;
 	private TextRenderer textRenderer;
 	private ArrayList<Selection> selections;
 	private int selected;
@@ -52,7 +51,6 @@ public class ContextMenu {
 	 */
 	public ContextMenu(ViewChromosome chromosome, GeneCircle geneCircle, float x, float y, OverView overview) {
 		this.overview = overview;
-		this.window = overview.window;
 		close = false;
 		this.chromosome = chromosome;
 		this.x = x;
@@ -106,7 +104,7 @@ public class ContextMenu {
 	 * Performs an action and closes the menu.
 	 * @param selection		the number of the action to be performed
 	 */
-	private void action(int selection) {
+	private void action() {
 		if(selections.get(selected).action==0) {
 			chromosome.setMinimized(true);
 			geneCircle.animating = true;
@@ -157,14 +155,14 @@ public class ContextMenu {
 	 */
 	public boolean handle(MouseEvent event, float mx, float my) {
 		if(inComponent(mx,my)) {
-			for(int i = 0; i<selections.size(); i++) {
+			for(int i = 0; i <selections.size(); i++) {
 				if(my > y - convertH(selHeight) * 0.5f - convertH(selHeight)*i && my < y + convertH(selHeight) * 0.5f - convertH(selHeight)*i) {
 					selected = i;
 					break;
 				}
 			}
 			if (MouseEvent.MOUSE_CLICKED == event.getID()) {
-				action(selections.get(selected).action);
+				action();
 			}
 		}
 		return true;
@@ -183,7 +181,7 @@ public class ContextMenu {
 			if(selected == selections.size()-1) selected = 0;
 			else selected++;
 		} else if(event.getKeyCode()==KeyEvent.VK_ENTER && event.getID() == KeyEvent.KEY_PRESSED) {
-			action(selected);
+			action();
 			close=true;
 		}
 		return true;

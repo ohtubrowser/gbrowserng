@@ -2,6 +2,11 @@ package fi.csc.microarray.client.visualisation.methods.gbrowserng.model;
 
 import java.text.DecimalFormat;
 
+/**
+ * Keeps track of how many Frames Per Second are drawn.
+ * This counter returns information regarding intensity of work of drawing image seen on screen. This it does based on knowledge of frames rendered and time since last update.
+ * 
+ */
 public class GenoFPSCounter {
 
 	int renderedFrames = 0;

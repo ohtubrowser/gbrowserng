@@ -15,8 +15,8 @@ import javax.media.opengl.GL2;
 
 public class LinkSelection {
 
-	LinkRangeIterator currentSelection;
-	float begin, end, area;
+	private LinkRangeIterator currentSelection;
+	private float begin, end, area;
 	private boolean upKeyDown = false, downKeyDown = false;
 	public final Object linkSelectionLock = new Object();
 	private float mouseX, mouseY;
@@ -248,7 +248,7 @@ public class LinkSelection {
 	}
 
 	/**
-	 * 
+	 * Method checks whether link can be located in range of previously selected link (in overview window).
 	 * @param index
 	 * @return True if the link at index is inside the current selection.
 	 */

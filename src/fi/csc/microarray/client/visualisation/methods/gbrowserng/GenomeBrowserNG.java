@@ -9,6 +9,7 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.*;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.GenoWindow;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.overview.OverView;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
+
 import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -9,6 +9,13 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromo
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.view.ids.GenoShaders;
 import javax.media.opengl.GL2;
 
+/**
+ * Represents a connection between two points on the genome, here defined as a link between points two chromosomes.
+ * The chromosomes can be the same chromosomes, if link is internal to it. Link represent any connection between the two points.
+ * The link has a starting and ending chromosome, and starting point on each chromosome. Each link occurs twice in data used for creating links,
+ * one for each chromosome involved. The link knows whether it is the first or second occurence.
+ * 
+ */
 public class GeneralLink implements Comparable<GeneralLink> {
 
 	private ViewChromosome aChromosome, bChromosome;
@@ -20,6 +27,17 @@ public class GeneralLink implements Comparable<GeneralLink> {
 	private float opacity;
 	private long counter = 1;
 
+	/**
+	 * Creates a new GeneralLink, which is a connection between two chromosomes.
+	 * The link has a starting and ending chromosome, and starting point on each chromosome. Each link occurs twice in data used for creating links,
+	 * one for each chromosome involved. The link knows whether it is the first or second occurence.
+	 * 
+	 * @param aChromosome The first chromosome
+	 * @param bChromosome The Second chromosome
+	 * @param aStart Starting point on the first chromosome
+	 * @param bStart Starting point on the second chromososome
+	 * @param aOcc Whether link has previously occured
+	 */
 	public GeneralLink(ViewChromosome aChromosome, ViewChromosome bChromosome, long aStart, long bStart, boolean aOcc) {
 		this.aChromosome = aChromosome;
 		this.bChromosome = bChromosome;
@@ -32,16 +50,18 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 	/**
 	 * Instantiates a dummy object for use as a temporary comparison point.
-	 * @param aC
-	 * @param bC
-	 * @param aS
-	 * @param bS
-	 * @param aOcc
-	 * @return 
+	 * @param aC The first chromosome
+	 * @param bC The Second chromosome
+	 * @param aS Starting point on the first chromosome
+	 * @param bS Starting point on the second chromososome
+	 * @param aOcc Whether link has previously occured
+	 * @return The created comparison-Link
 	 */
 	public static GeneralLink createComparisonObject(ViewChromosome aC, ViewChromosome bC, long aS, long bS, boolean aOcc) {
 		return new GeneralLink(aC, bC, aS, bS, aOcc);
 	}
+	
+	// color and fading methods
 
 	private void initLinkColor() {
 		this.r = ((float) Math.random() * 0.3f + 0.7f);
@@ -69,10 +89,12 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		}
 	}
 
+	// calculation of positions
+	 
 	/**
 	 * Calculates the coordinates for arc end points.
-	 * @param globals
-	 * @param geneCircle 
+	 * @param globals GlobalVariables used for storing all global data about program
+	 * @param geneCircle The GeneCircle to shich the chromosomes belong
 	 */
 	public void calculatePositions(GlobalVariables globals, GeneCircle geneCircle) {
 		aCirclePos = -0.25f + geneCircle.getRelativePosition(aChromosome.getChromosomeNumber() - 1, (float) aStart / aChromosome.length()); // Need -1 because of AbstractChromosome indexing
@@ -95,6 +117,8 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		bY = CoordinateManager.toCircleCoordsY(globals, bY);
 	}
 
+	// Drawing methods
+	
 	/**
 	 * Prepare OpenGL state for drawing links.
 	 * @param gl
@@ -135,34 +159,6 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		shader.stop(gl);
 	}
 
-	public float bezier(float t, float p1, float p2, float p3) {
-		return (1.0f - t) * ((1.0f - t) * p1 + t * p2) + t * ((1.0f - t) * p2 + t * p3);
-	}
-
-	public float distance(float x1, float y1, float x2, float y2) {
-		return (float) Math.sqrt(Math.pow(x1 - x2, 2f) + Math.pow(y1 - y2, 2f));
-	}
-
-	/**
-	 * Determine if the point (x,y) lies on this arc.
-	 * @param x
-	 * @param y
-	 * @return 
-	 */
-	public boolean isHit(float x, float y) {
-		boolean hit = false;
-		for (float i = 1; i <= 100; i++) {
-			float bezierX = bezier(i / 100, aX, 0, bX);
-			float bezierY = bezier(i / 100, aY, 0, bY);
-			float dist = distance(x, y, bezierX, bezierY);
-			if (dist < 0.01f) {
-				hit = true;
-				break;
-			}
-		}
-		return hit;
-	}
-
 	public boolean draw(GL2 gl, float x, float y) {
 		boolean hit = isHit(x, y);
 		if (hit) {
@@ -190,6 +186,72 @@ public class GeneralLink implements Comparable<GeneralLink> {
 		this.draw(gl, r, g, b);
 	}
 
+	// Knowledge of mouse hover over link in Overview
+	
+	/**
+	 * Determine if the point (x,y) lies on this arc.
+	 * @param x
+	 * @param y
+	 * @return 
+	 */
+	public boolean isHit(float x, float y) {
+		boolean hit = false;
+		for (float i = 1; i <= 100; i++) {
+			float bezierX = bezier(i / 100, aX, 0, bX);
+			float bezierY = bezier(i / 100, aY, 0, bY);
+			float dist = distance(x, y, bezierX, bezierY);
+			if (dist < 0.01f) {
+				hit = true;
+				break;
+			}
+		}
+		return hit;
+	}
+	
+	public float bezier(float t, float p1, float p2, float p3) {
+		return (1.0f - t) * ((1.0f - t) * p1 + t * p2) + t * ((1.0f - t) * p2 + t * p3);
+	}
+
+	public float distance(float x1, float y1, float x2, float y2) {
+		return (float) Math.sqrt(Math.pow(x1 - x2, 2f) + Math.pow(y1 - y2, 2f));
+	}
+
+	// getters, setters and comparators
+	
+	public boolean isaocc() {
+		return aOcc;
+	}
+
+	public ViewChromosome getStartChromosome() {
+		return aOcc ? aChromosome : bChromosome;
+	}
+
+	public ViewChromosome getEndChromosome() {
+		return aOcc ? bChromosome : aChromosome;
+	}
+
+	public long getStartPosition() {
+		return aOcc ? aStart : bStart;
+	}
+
+	public long getEndPosition() {
+		return aOcc ? bStart : aStart;
+	}
+
+	public long getCounter() {
+		return counter;
+	}
+
+	public void addCounter(long value) {
+		counter += value;
+	}
+
+	public void setColorByCounter(long avgCounter) {
+		float r = Math.min(1.0f, 0.5f*counter / avgCounter);
+		this.r = (r * 0.5f + 0.5f);
+		this.g = this.b = 0.3f;
+	}
+	
 	public boolean isMinimized() {
 		return aChromosome.isMinimized() || bChromosome.isMinimized();
 	}
@@ -234,38 +296,5 @@ public class GeneralLink implements Comparable<GeneralLink> {
 
 		return ret;
 	}
-
-	public boolean isaocc() {
-		return aOcc;
-	}
-
-	public ViewChromosome getStartChromosome() {
-		return aOcc ? aChromosome : bChromosome;
-	}
-
-	public ViewChromosome getEndChromosome() {
-		return aOcc ? bChromosome : aChromosome;
-	}
-
-	public long getStartPosition() {
-		return aOcc ? aStart : bStart;
-	}
-
-	public long getEndPosition() {
-		return aOcc ? bStart : aStart;
-	}
-
-	public long getCounter() {
-		return counter;
-	}
-
-	public void addCounter(long value) {
-		counter += value;
-	}
-
-	public void setColorByCounter(long avgCounter) {
-		float r = Math.min(1.0f, 0.5f*counter / avgCounter);
-		this.r = (r * 0.5f + 0.5f);
-		this.g = this.b = 0.3f;
-	}
+	
 }
