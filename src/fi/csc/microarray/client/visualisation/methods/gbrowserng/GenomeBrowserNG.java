@@ -33,23 +33,23 @@ public class GenomeBrowserNG implements Runnable {
 	public GlobalVariables globals;
 
 	/**
-	 * Returns the created EventHandler
-	 * @return
+	 * Returns the EventHandler created by GenomeBrowserNG
+	 * @return created EventHandler
 	 */
 	public EventHandler getEventHandler() {
 		return eventHandler;
 	}
 
 	/**
-	 * Returns the created BlockingQueue of user created Events
-	 * @return
+	 * Returns the created BlockingQueue of user-initiated Events
+	 * @return created BlockingQueue
 	 */
 	public BlockingQueue<AWTEvent> getEventQueue() {
 		return eventQueue;
 	}
 
 	/**
-	 * Returns the created GenoWindow
+	 * Returns the GenoWindow created by GenomeBrowserNG
 	 * @return
 	 */
 	public GenoWindow getGenoWindow() {
@@ -57,8 +57,8 @@ public class GenomeBrowserNG implements Runnable {
 	}
 
 	/**
-	 * Returns the created GLListener
-	 * @return 
+	 * Returns the GLListener created by GenomeBrowserNG
+	 * @return created GenoGLListener
 	 */
 	public GenoGLListener getGlListener() {
 		return glListener;
@@ -114,8 +114,8 @@ public class GenomeBrowserNG implements Runnable {
 	 * Here choice can be made whether to use Rat or Human data. Links between chromosomes, and gehome, are loaded based on this choice.
 	 * @param width	screen width in pixels
 	 * @param height screen height in pixels
-	 * @param filtering
-	 * @param data
+	 * @param filtering range of filtering of arcs
+	 * @param data whether to use human or rat data
 	 * @throws ArrayIndexOutOfBoundsException  
 	 */
 	public GenomeBrowserNG(int width, int height, long filtering, int data, boolean debug, String bam, String bai) throws ArrayIndexOutOfBoundsException {
