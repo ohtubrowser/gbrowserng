@@ -23,7 +23,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * Handles the creation of TrackView elements and switching between the overview and trackview screens.
+ */
 public class TrackviewManager extends Container {
 
 	private static URL BAM_DATA_FILE;
@@ -77,11 +79,18 @@ public class TrackviewManager extends Container {
 		});
 	}
 
+	/**
+	 * Remove the currently present GBrowserPreview objects.
+	 */
 	public void clearContainer() {
 		removeAll();
 		add(closeButton, BorderLayout.NORTH);
 	}
 
+	/**
+	 * Set the container to have 2 GBrowserPreview objects from link l.
+	 * @param l 
+	 */
 	public void openLinkSession(GeneralLink l) {
 			clearContainer();
 			ViewChromosome a = l.getAChromosome();
@@ -101,7 +110,10 @@ public class TrackviewManager extends Container {
 			Logger.getLogger(TrackviewManager.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-
+	
+	/**
+	 * Set the container to have a GBrowserPreview object from the position specified by parameters.
+	 */
 	public void openAreaSession(ViewChromosome c, long start, long end) {
 			clearContainer();
 			regionA = new Region(start, end, new Chromosome(c.getName()));
@@ -116,10 +128,18 @@ public class TrackviewManager extends Container {
 		}
 	}
 
+	/**
+	 * Generate a SessionViewCapsule from the currentLink (attribute)
+	 * @param overview
+	 * @return 
+	 */
 	public SessionViewCapsule generateLinkCapsule(OverView overview) {
 		return new SessionViewCapsule(genoWindow.overView, currentLink.getEndChromosome(), currentLink.getEndPosition(), currentLink, overview.getGeneCircle());
 	}
 
+	/**
+	 * Toggle the visibility of overview/trackview.
+	 */
 	public void toggleVisible() {
 		genoWindow.toggleVisible();
 	}
@@ -135,6 +155,11 @@ public class TrackviewManager extends Container {
 		return currentLink;
 	}
 
+	/**
+	 * 
+	 * @param region
+	 * @return GBrowserPreview object from the specified region.
+	 */
 	public GBrowserPreview getPreview(Region region) {
 		try {
 			return previewManager.createPreview(region, BAM_DATA_FILE, BAI_DATA_FILE, CYTOBAND_FILE, CYTOBAND_REGION_FILE, CYTOBAND_COORD_SYSTEM_FILE, GTF_ANNOTATION_FILE);
@@ -144,6 +169,10 @@ public class TrackviewManager extends Container {
 		return null;
 	}
 	
+	/**
+	 * Show the specified GBrowserPreview object.
+	 * @param preview 
+	 */
 	public void showPreview(GBrowserPreview preview) {
 		clearContainer();
 		try {
@@ -156,7 +185,11 @@ public class TrackviewManager extends Container {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Show the specified GBrowserPreview objects and set currentLink accordingly.
+	 * @param preview 
+	 */
 	public void showPreviews(GBrowserPreview preview1, GBrowserPreview preview2, GeneralLink link) {
 		clearContainer();
 		try {

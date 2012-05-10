@@ -6,6 +6,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class for adding mouse events to the event queue.
+ * @author 
+ */
 public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener
 {
 	private BlockingQueue<AWTEvent> eventQueue;
