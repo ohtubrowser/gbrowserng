@@ -13,8 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Superclass for all EventHandlers. Contains variables used and update of these
- * 
- * @author Paloheimo
  */
 public class EventHandler {
 	

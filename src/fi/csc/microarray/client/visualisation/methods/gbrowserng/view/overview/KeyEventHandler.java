@@ -4,11 +4,7 @@ import java.awt.event.KeyEvent;
 
 /**
  * Handles KeyEvents in Overview window.
- * Commenting needs work - work in progress
- * Code also still a bit confusing and not well named - working on that, too
  *
- * @author
- * Paloheimo
  */
 public class KeyEventHandler extends EventHandler {
 
