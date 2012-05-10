@@ -9,6 +9,11 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollec
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkRangeIterator;
 import java.util.Collections;
 
+/**
+ * Class represents all Genome data, as sections of an arc with dividers between all chromosomes.
+ * Data about Chromosomes on Circle can be retrieved in various ways. 
+ * Class also provides information about where a Chromosome can be found on the circle. 
+ */
 public class GeneCircle {
 
 	private final float chromosomeSeperatorSize = 0.004f;
@@ -23,6 +28,10 @@ public class GeneCircle {
 	public boolean animating = true;
 	public Genome Genome;
 
+	/**
+	 * Creates a ne GeneCircle, retrieves 1st chromosome in circle and turns animation on.
+	 * @param globals GlobalVariabels used throughout program
+	 */
 	public GeneCircle(GlobalVariables globals) {
 		Genome = globals.genome;
 		chromosome = globals.genome.getChromosome(0);
@@ -78,7 +87,12 @@ public class GeneCircle {
 		chromosomePosition = getPositionInChr(chromosome, relativePosition);
 	}
 
-	// Relativeposition == relative position on CIRCLE
+	/**
+	 * Returns the position on the chromosome at the specified location on the circle
+	 * @param chr the chromosome desired
+	 * @param relativePosition the relative position on the Circle
+	 * @return position on chromosome
+	 */
 	public long getPositionInChr(ViewChromosome chr, float relativePosition) {
 		long length = chr.length();
 		float thisChromoBound = chromosomeBoundaries[chr.getChromosomeNumber()];
@@ -90,6 +104,11 @@ public class GeneCircle {
 		return Math.max(0l, Math.min(length, (long) (length * (relPosInChromosome / relChromoLength))));
 	}
 
+	/**
+	 * Returns the chromosome found at the specified location on the circle.
+	 * @param relativePosition on the circle
+	 * @return desired chromosome
+	 */
 	public ViewChromosome getChromosomeByRelativePosition(float relativePosition) {
 		for (int i = 1; i < chromosomeBoundaries.length; ++i) {
 			if (chromosomeBoundaries[i] <= relativePosition) {
@@ -140,6 +159,10 @@ public class GeneCircle {
 		return minimumChromosomeSlice;
 	}
 
+	/**
+	 * Sets the size of the Circle, adjusts the chromsome boundaries accordingly.
+	 * @param size
+	 */
 	public void setSize(float size) {
 		this.size = size;
 		Vector2[] chromosomeBoundariesPositions = new Vector2[Genome.getNumChromosomes()];
@@ -159,6 +182,13 @@ public class GeneCircle {
 		return ret;
 	}
 
+	/**
+	 * Creates a new LinkRangeIterator, based on information passed to method as parameters
+	 * @param relativeStart point on circle
+	 * @param relativeEnd point on circle
+	 * @param links links to be included in iterator
+	 * @return new LinkRangeIterator created with desired data
+	 */
 	public LinkRangeIterator getRangeIterator(float relativeStart, float relativeEnd, LinkCollection links) {
 		ViewChromosome a = getChromosomeByRelativePosition(relativeStart);
 		ViewChromosome b = getChromosomeByRelativePosition(relativeEnd);
