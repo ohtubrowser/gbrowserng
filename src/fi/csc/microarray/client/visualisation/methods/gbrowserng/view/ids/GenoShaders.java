@@ -11,6 +11,11 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Class creates and manages Shaders used for drawing purposes. 
+ * Independently compatible units working together are called Shaders.
+ * A program is a set of Shaders working together.
+ */
 public class GenoShaders {
 
 	public enum ShaderID {
@@ -23,8 +28,15 @@ public class GenoShaders {
 		PLAINMVP
 	}
 	
+	/**
+	 * Contains all created Shaders used by program
+	 */
 	private static final Map<ShaderID, Shader> programs = new EnumMap<ShaderID, Shader>(ShaderID.class);
 
+	/**
+	 * Creates all Shaders used, a GL2 is needed to create each program (collection of Shaders).
+	 * @param gl The GL2 needed
+	 */
 	public static void createShaders(GL2 gl) {
 		programs.put(ShaderID.CIRCLESEPARATOR, createProgram(gl, "shaders/genecircleseparator.vert", "shaders/genecircleseparator.frag"));
 		programs.put(ShaderID.TORRENT, createProgram(gl, "shaders/torrent.vert", "shaders/torrent.frag"));
@@ -39,6 +51,13 @@ public class GenoShaders {
 		return programs.get(program);
 	}
 	
+	/**
+	 * Creates a program (collection of Shaders) from the combination of the specified Shaders.
+	 * @param gl The GL2 needed
+	 * @param vertexshader Vextex Shader
+	 * @param fragmentshader Fragment Shader
+	 * @return The created program
+	 */
 	public static Shader createProgram(GL2 gl, String vertexshader, String fragmentshader) {
 		try {
 			return new Shader(gl, readFile(vertexshader), readFile(fragmentshader));
@@ -48,6 +67,12 @@ public class GenoShaders {
 		}
 	}
 	
+	/**
+	 * Reads in data from the file containing Shader data. 
+	 * @param filename Where file is located
+	 * @return String containing data
+	 * @throws FileNotFoundException
+	 */
 	private static String readFile(String filename) throws FileNotFoundException {
 		InputStream is = AssetManager.get(filename);
 		if(is==null) {
