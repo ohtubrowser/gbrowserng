@@ -21,6 +21,8 @@ import fi.csc.microarray.client.visualisation.methods.gbrowserng.GlobalVariables
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.LinkCollection;
 import fi.csc.microarray.client.visualisation.methods.gbrowserng.data.ViewChromosome;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ConnectionsLoader implements AreaResultListener {
 
 	public SAMHandlerThread dataThread;
@@ -95,14 +97,22 @@ public class ConnectionsLoader implements AreaResultListener {
 			for (ViewChromosome c : chromosomes) {
 				if (c.getName().equals(readChr.toNormalisedString())) {
 					begin = c;
-				} else if (c.getName().equals(mateChr.toNormalisedString())) {
+				} 
+				
+				if (c.getName().equals(mateChr.toNormalisedString())) {
 					end = c;
 				}
+			
+				//stop loop if both ends of the connection are found
 				if (begin != null && end != null) {
 					break;
 				}
 			}
-			this.links.addToQueue(begin, end, readbp, matebp);
+			
+			//add only connections that have both ends
+			if (begin != null && end != null) {
+				this.links.addToQueue(begin, end, readbp, matebp);
+			}
 		}
 	}
 }
