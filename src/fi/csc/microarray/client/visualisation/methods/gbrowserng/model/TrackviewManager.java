@@ -38,10 +38,10 @@ public class TrackviewManager extends Container {
 
 	static {
 		try {
-//			dataPath = "/cs/group2/home/gbrowsng/";
-			dataPath = "";
-			BAM_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam").toURI().toURL();
-			BAI_DATA_FILE = new File(dataPath + "ohtu-within-chr.bam.bai").toURI().toURL();
+			dataPath = "/cs/group2/home/gbrowsng/";
+//			dataPath = "";
+			BAM_DATA_FILE = new File(dataPath + "SRR064438-chr17-chr20.bam").toURI().toURL();
+			BAI_DATA_FILE = new File(dataPath + "SRR064438-chr17-chr20.bam.bai").toURI().toURL();
 			CYTOBAND_FILE = new File(dataPath + "karyotypeHuman.txt").toURI().toURL();
 			CYTOBAND_REGION_FILE = new File(dataPath + "seq_regionHuman.txt").toURI().toURL();
 
