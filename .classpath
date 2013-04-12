@@ -18,6 +18,24 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="ext/lib/soulaim-tech.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/chipster"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/jogl-all-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jogamp/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="ext/lib/chipster_all.jar"/>
+	<classpathentry kind="lib" path="ext/lib/com-vladium-emma.nbm"/>
+	<classpathentry kind="lib" path="ext/lib/eclipse-icons.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jcommon-1.0.9.jar"/>
+	<classpathentry kind="lib" path="ext/lib/jfreechart-1.0.5.jar"/>
+	<classpathentry kind="lib" path="ext/lib/org-netbeans-modules-coverage.nbm"/>
+	<classpathentry kind="lib" path="ext/lib/sam-1.32.jar"/>
+	<classpathentry kind="lib" path="ext/lib/soulaimtech.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
